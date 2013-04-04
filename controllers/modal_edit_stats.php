@@ -1,0 +1,30 @@
+<?php
+
+$stats = array (
+	'games' => array ('G', "Games Played"),
+	'at_bat' => array ('AB', "At Bat"),
+	'runs' => array ('R', "Runs"),
+	'bunts' => array ('B', "Bunts"),
+	'singles' => array ('1B', "Singles"),
+	'doubles' => array ('2B', "Doubles"),
+	'triples' => array ('3B', "Triples"),
+	'home_runs' => array ('HR', "Home Runs"),
+	'runs_batted_in' => array ('RBI', "Runs Batted In"),
+	'bases_on_balls' => array ('BB', "Bases on Balls"),
+	'strike_outs' => array ('SO', "Strike Outs"),
+	'hits_by_pitch' => array ('HBP', "Hits By Pitch"),
+	'stolen_bases' => array ('SB', "Stolen Bases"),
+	'caught_stealing' => array ('CS', "Caught Steling"),
+	'reached_on_error' => array ('ROE', "Reached On Error"),
+	'fielders_choice' => array ('FC', "Fielder's Choice"),
+	'pitching_games' => array ('G', "Games Pitched"),
+	'pitching_wins' => array ('W', "Wins"),
+	'pitching_losses' => array ('L', "Losses"),
+	'pitching_saves' => array ('SV', "Saves"),
+	'pitching_innings_pitched' => array ('IP', "Innings Pitched"),
+	'pitching_runs_allowed' => array ('R', "Runs allowed"),
+	'pitching_earned_runs' => array ('ER', "Earned Runs"),
+	'pitching_earned_runs_average' => array ('ERA', "Earned Runs Average"),
+	'pitching_strike_outs' => array ('K', "Strike Outs"),
+	'pitching_bases_on_balls' => array ('BB', "Bases on Balls")
+);

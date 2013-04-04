@@ -1,0 +1,24 @@
+﻿TODOS
+
+-move from theme to plugin:
+	-user_meta_box
+	-roles
+	-post_types teams, games, locations
+-à quoi sert d'avoir le slug de l'équipe dans la table des players?? Il devrait au moins il y a avoir le nom de l'équipe pour chaque ligue avec laquelle le joueur joue.
+	- {"0":"paycers"}
+	- OR have player_id field in teams table with an array of sm_ids
+-add_stats by sports
+-$_GET au lieu de $_SESSION...... REALLY?
+-beerpong league demo
+-update install function()
+-prevent focus on first td element when using search tool on filter table
+-make ajax call to update autocomplete arrays
+-editer functions/ajax.php
+-define color palette
+-create importer
+-test paypal donation
+-create logo
+-change menu item icon & favicon
+-phpDoc that shit
+-when new row is added, clear search filter!
+-create a clubs table!!! with children teams
