@@ -9,6 +9,7 @@
 	- OR have player_id field in teams table with an array of sm_ids
 -add_stats by sports
 -$_GET au lieu de $_SESSION...... REALLY?
+	-when session is set and new row added, automatically place session params in new row
 -beerpong league demo
 -update install function()
 -prevent focus on first td element when using search tool on filter table
@@ -22,3 +23,5 @@
 -phpDoc that shit
 -when new row is added, clear search filter!
 -create a clubs table!!! with children teams
+-remove /icons folder
+	-only keep used icons
