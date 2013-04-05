@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 /**
  * Sports Manager
  */
@@ -131,7 +133,7 @@ a:active {
 }
 .dataTables_filter label {
 	padding:0 10px 0 20px;
-	background:url(../images/icons/loupe.png) no-repeat;
+	background:url(../images/icon_loupe.png) no-repeat;
 }
 
 /* bottom */

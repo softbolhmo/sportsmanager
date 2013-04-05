@@ -225,7 +225,7 @@ SM.behaviors.filter_add_row = function() {
 			for (i = 1; i < new_row.columns.length; i++) {
 				new_row.data.push("");
 			};
-			new_row.data[new_row.data.length - 1] = '<button class="sm_delete_row_btn"><img src="' + SM.settings.SPORTSMANAGER_URL + 'images/icons/trashcan.png" /></button>';
+			new_row.data[new_row.data.length - 1] = '<button class="sm_delete_row_btn"><img src="' + SM.settings.SPORTSMANAGER_URL + 'images/icon_trashcan.png" /></button>';
 			var i = SM.filters.filter_data.fnAddData(new_row.data, false);
 			var added_row = $(SM.filters.filter_data.fnGetNodes(i));
 			added_row.attr("id", new_row.filter + "-" + new_row.id).attr("data-row", new_row.id);

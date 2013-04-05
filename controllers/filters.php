@@ -50,5 +50,5 @@ $headers = array (
 		'slug' => array ('Slug', '')
 	)
 );
-$icon_url = SPORTSMANAGER_URL.'images/icons/trashcan.png';
+$icon_url = SPORTSMANAGER_URL.'images/icon_trashcan.png';
 $filter = SPORTSMANAGER_FILTER;
