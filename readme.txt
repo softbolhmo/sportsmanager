@@ -15,11 +15,18 @@ Manage your league like a pro! Sports Manager is a light WordPress plugin that a
 
 == Installation ==
 
+Please, take note, that version 1.0 is functional, but not production ready. Too many features are still under development. Version 2.0 will be LEGEN... wait for it...
+
 1. Upload the 'sportsmanager.zip' file via the plugin uploader in your admin section, '/wp-admin/plugin-install.php?tab=upload'.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Start managing your league!
 
+DARY.
+
 == Frequently Asked Questions ==
+
+= Is it production ready yet? =
+Mmmmm. No. Actually I would suggest you a bit longer before using it. A lot of changes are expected over the next few weeks.
 
 = What sports do you support? =
 
