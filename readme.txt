@@ -7,11 +7,11 @@ Tested up to: 3.0.0
 Stable tag: trunk
 License: GPL2
 
-Manage your league like a pro! Sports Manager is a WordPress plugin that allows you to manage you sports leagues for your website.
+BETA VERSION. Manage your league like a pro! Sports Manager is a WordPress plugin that allows you to manage you sports leagues for your website.
 
 == Description ==
 
-Manage your league like a pro! Sports Manager is a light WordPress plugin that allows you to manage you sports leagues, register games, players and provides statistics on your website. Sports Manager is also very easy to use, simple user interface, completely WordPress-proof.
+BETA VERSION. Manage your league like a pro! Sports Manager is a light WordPress plugin that allows you to manage you sports leagues, register games, players and provides statistics on your website. Sports Manager is also very easy to use, simple user interface, completely WordPress-proof.
 
 == Installation ==
 
