@@ -2,8 +2,8 @@
 Contributors: lacroixca
 Donate link: http://lac.roix.ca/en/sportsmanager/
 Tags: sports managing system, league managing system, sports league, sports, league, players stats, stats
-Requires at least: 3.0.0
-Tested up to: 3.0.0
+Requires at least: 3.5.1
+Tested up to: 3.5.1
 Stable tag: trunk
 License: GPL2
 
@@ -42,6 +42,12 @@ Yes. You can manages, games, locations and more. But not individual player stats
 
 == Changelog ==
 
+= 1.1 =
+* Clubs have been added.
+* Autocomplete added.
+* Full AJAX completed.
+* Database restructuration.
+
 = 1.0 =
 * First commit.
 * Many more features to come.
@@ -50,6 +56,9 @@ Yes. You can manages, games, locations and more. But not individual player stats
 * Pre-production development.
 
 == Upgrade Notice ==
+
+= 1.1 =
+Major upgrade. Completely new database structure. An upgrade requires erasing all Sports Manager tables.
 
 = 1.0 =
 First working version of Sports Manager.

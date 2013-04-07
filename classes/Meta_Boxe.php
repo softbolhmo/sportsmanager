@@ -115,7 +115,7 @@ class LBO_meta_boxes {
 						'name' => 'Checkbox',
 						'desc' => 'Check options here',
 						'id' => 'checkbox',
-						'type' => 'checkbox' // missing stuff?
+						'type' => 'checkbox' //missing stuff?
 					),
 					array (
 						'name' => 'File Upload',

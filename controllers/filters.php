@@ -2,6 +2,16 @@
 
 global $SM;
 $headers = array (
+	'clubs' => array (
+		'id' => array ('ID', ''),
+		'league_id' => array ('League ID', ''),
+		'sport' => array ('Sport', ''),
+		'name' => array ('Name', ''),
+		'slug' => array ('Slug', ''),
+		'description' => array ('Description', ''),
+		'small_logo_url' => array ('Small Logo URL', ''),
+		'large_logo_url' => array ('Large Logo URL', '')
+	),
 	'games' => array (
 		'id' => array ('ID', ''),
 		'league_id' => array ('League ID', ''),
@@ -20,17 +30,22 @@ $headers = array (
 	'leagues' => array (
 		'id' => array ('ID', ''),
 		'name' => array ('Name', ''),
-		'slug' => array ('Slug', '')
+		'slug' => array ('Slug', ''),
+		'description' => array ('Description', ''),
+		'small_logo_url' => array ('Small Logo URL', ''),
+		'large_logo_url' => array ('Large Logo URL', '')
 	),
 	'locations' => array (
 		'id' => array ('ID', ''),
 		'name' => array ('Name', ''),
-		'slug' => array ('Slug', '')
+		'slug' => array ('Slug', ''),
+		'description' => array ('Description', ''),
+		'small_logo_url' => array ('Small Logo URL', ''),
+		'large_logo_url' => array ('Large Logo URL', '')
 	),
 	'players' => array (
 		'id' => array ('ID', ''),
-		'user_id' => array ('User ID', ''),
-		'team_slug' => array ('Team Slug', '')
+		'user_id' => array ('WP User ID', ''),
 	),
 	'scoresheets' => array (
 		'id' => array ('ID', ''),
@@ -43,11 +58,9 @@ $headers = array (
 	),
 	'teams' => array (
 		'id' => array ('ID', ''),
-		'league_id' => array ('League ID', ''),
+		'club_id' => array ('Club ID', ''),
 		'season' => array ('Season', ''),
-		'sport' => array ('Sport', ''),
-		'name' => array ('Name', ''),
-		'slug' => array ('Slug', '')
+		'players_id' => array ('Players ID', '')
 	)
 );
 $icon_url = SPORTSMANAGER_URL.'images/icon_trashcan.png';

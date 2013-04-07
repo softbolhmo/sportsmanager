@@ -7,7 +7,7 @@
 	</div><!--end .sm_inner_container-->
 </div><!--end .sm_main_container-->
 
-<?php $SM->include_view('modal_page_loading'); ?>
+<?php $this->include_view('modal_page_loading'); ?>
 
 <div id="sm_backdrop"></div><!--end #sm_backdrop-->
 <div id="sm_backdrop_disabled"></div><!--end #sm_backdrop_disabled-->

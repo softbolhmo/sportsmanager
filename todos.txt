@@ -1,27 +1,18 @@
 ﻿TODOS
 
--move from theme to plugin:
-	-user_meta_box
-	-roles
-	-post_types teams, games, locations
--à quoi sert d'avoir le slug de l'équipe dans la table des players?? Il devrait au moins il y a avoir le nom de l'équipe pour chaque ligue avec laquelle le joueur joue.
-	- {"0":"paycers"}
-	- OR have player_id field in teams table with an array of sm_ids
--add_stats by sports
--$_GET au lieu de $_SESSION...... REALLY?
-	-when session is set and new row added, automatically place session params in new row
--beerpong league demo
+IMPORTANT
 -update install function()
--prevent focus on first td element when using search tool on filter table
--make ajax call to update autocomplete arrays
--editer functions/ajax.php
--define color palette
--create importer
+-create db importer (recover backup)
+
+CAN WAIT
 -test paypal donation
+-when session is set and new row added, automatically place session params in new row
+-add_stats by sports
+-uniformiser functions/ajax.php
+-create standard classes: meta_box, post_typerole, taxonomy, user_meta_box
+
+ONE DAY...
+-phpDoc that shit
 -create logo
 -change menu item icon & favicon
--phpDoc that shit
--when new row is added, clear search filter!
--create a clubs table!!! with children teams
--remove /icons folder
-	-only keep used icons
+-define color palette

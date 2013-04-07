@@ -12,33 +12,37 @@ function sm_backup($file, $host, $user, $pass, $name, $tables = '*') {
 	} else {
 		$tables = is_array($tables) ? $tables : explode(',', $tables);
 	};
-	$return = '';
+	$query = '';
 	foreach ($tables as $table) {
 		$result = mysql_query('SELECT * FROM '.$table);
 		$num_fields = mysql_num_fields($result);
-		$return .= 'DROP TABLE '.$table.';';
+		$query .= 'DROP TABLE '.$table.';';
 		$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
-		$return .= "\n\n".$row2[1].";\n\n";
+		$query .= "\n\n".$row2[1].";\n\n";
 		for ($i = 0; $i < $num_fields; $i++) {
 			while ($row = mysql_fetch_row($result)) {
-				$return.= 'INSERT INTO '.$table.' VALUES(';
+				$query.= 'INSERT INTO '.$table.' VALUES(';
 				for ($j = 0; $j < $num_fields; $j++) {
 					$row[$j] = addslashes($row[$j]);
 					$row[$j] = ereg_replace("\n", "\\n", $row[$j]);
 					if (isset($row[$j])) {
-						$return.= '"'.$row[$j].'"' ;
+						$query.= '"'.$row[$j].'"' ;
 					} else {
-						$return.= '""';
+						$query.= '""';
 					};
-					if ($j < ($num_fields-1) ) $return.= ',';
+					if ($j < ($num_fields-1) ) $query.= ',';
 				};
-				$return.= ");\n";
+				$query.= ");\n";
 			};
 		};
-		$return.="\n\n";
+		$query.="\n\n";
 	};
-
 	$handle = fopen($file, 'w+');
-	fwrite($handle, $return);
-	fclose($handle);
+	if ($handle) {
+		fwrite($handle, $query);
+		fclose($handle);
+		return true;
+	} else {
+		return false;
+	};
 }

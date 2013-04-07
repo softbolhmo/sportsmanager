@@ -1,5 +1,42 @@
 <?php
 
+function sm_autocomplete() {
+	global $wpdb;
+	$keys = array ('do', 'tab');
+	foreach ($keys as $k) {
+		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
+	};
+
+	//load
+	if ($data->do == 'load') {
+		$SM = new SportsManager_Backend;
+		if ($SM->query_dependancies($data->tab)) {
+			$autocomplete = (object) array ();
+			foreach (array ('clubs', 'leagues', 'locations', 'players', 'teams', 'users') as $filter) {
+				$data = isset($SM->db->$filter) ? $SM->db->$filter : '';
+				if ($data != '') {
+					$items = array ();
+					foreach ($data as $object) {
+						$label = $object->name.(isset($object->season) ? ' '.$object->season : '').' ('.$object->id.')';
+						$items[] = (object) array (
+							'label' => $label,
+							'value' => $object->id
+						);
+					};
+					$array = $items;
+				} else {
+					$array = array ();
+				};
+				$autocomplete->{$filter.'-name'} = $array;
+			};
+			echo json_encode($autocomplete);
+		};
+		die;
+	};
+}
+
+add_action('wp_ajax_sm_autocomplete', 'sm_autocomplete');
+
 function sm_db() {
 	global $wpdb;
 	$SM = new SportsManager_Backend;
@@ -14,27 +51,37 @@ function sm_db() {
 		foreach (array ('email', 'emailed') as $k) {
 			update_option(SPORTSMANAGER_PREFIX.$k, $data->$k);
 		};
-		die();
+		die;
 	};
 
 	//backup_db
 	if ($data->do == 'backup_db') {
-		$file = SPORTSMANAGER_DIR.'backups/'.DB_NAME.'---'.$data->date_time.'.sql';
-		$tables = array ();
-		foreach ($SM->objects as $object) {
-			$tables[] = $object->table;
+		$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---'.$data->date_time.'.sql';
+		$to = get_option('sportsmanager_email', '');
+		$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
+		if ($to != '') {
+			$tables = array ();
+			foreach ($SM->objects as $object) {
+				$tables[] = $object->table;
+			};
+			if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
+				add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
+				//$to, $subject, $message, $headers, $attachments
+				wp_mail(
+					$to,
+					'SPORTS MANAGER BACKUP',
+					"<h1>SPORTS MANAGER BACKUP</h1>".
+					"<p>Thank you for using this plugin.</p>",
+					"From: Sports Manager Plugin <".$from.">",
+					$file
+				);
+			} else {
+				echo "no-backup-file";
+			};
+		} else {
+			echo "no-email";
 		};
-		sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables);
-		add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
-		//$to, $subject, $message, $headers, $attachments
-		wp_mail(
-			get_option('sportsmanager_email'),
-			'SPORTS MANAGER BACKUP',
-			"<h1>SPORTS MANAGER BACKUP</h1>".
-			"<p>Thank you for using this plugin.</p>",
-			"", //"From: My Name <myname@mydomain.com>",
-			$file
-		);
+		die;
 	};
 }
 
@@ -87,19 +134,7 @@ function sm_row() {
 add_action('wp_ajax_sm_row', 'sm_row');
 
 function sm_session() {
-	if (!session_id()) session_start();
-	$out = array ();
-	$session = (object) array (
-		'sm_league' => '',
-		'sm_season' => date('Y'),
-		'sm_sport' => ''
-	);
-	foreach ($session as $k => $v) {
-		if (!isset($_SESSION[$k])) $_SESSION[$k] = $v;
-		if (isset($_REQUEST[$k])) $_SESSION[$k] = $_REQUEST[$k];
-		$out[] = $_SESSION[$k];
-	};
-	echo strtoupper(implode(' ', $out));
+	echo sm_define_session();
 	die;
 }
 

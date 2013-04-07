@@ -17,6 +17,6 @@ License: GPL2
 $f = dirname(__FILE__).'/config.php';
 if (file_exists($f)) {require_once($f);} else {die($f.' does not exist');};
 
-sm_gather_files('functions', array ('ajax', 'backup', 'db', 'frontend', 'html', 'install'));
-sm_gather_files('classes', array ('Backend', 'Frontend', 'Backend_Default', 'Frontend_Default', 'Game', 'League', 'Location', 'Player', 'Scoresheet', 'Team'));
+sm_gather_files('functions', array ('ajax', 'backend', 'backup', 'frontend', 'html'));
+sm_gather_files('classes', array ('SportsManager', 'Backend', 'Frontend', 'Backend_Default', 'Frontend_Default', 'Club', 'Game', 'League', 'Location', 'Player', 'Scoresheet', 'Team', 'Role'));
 $SM = new SportsManager_Backend;

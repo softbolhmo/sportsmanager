@@ -1,57 +1,44 @@
 <?php
+/**
+ * Backend role class
+ * @package SportsManager
+ * @subpackage classes
+ */
 
-/* REGISTER ROLES & CAPABILITIES */
-/* remove useless roles */
-foreach (array ('editor', 'author') as $role) {
-	remove_role($role);
-};
+/**
+ * Class for backend role object
+ * @package SportsManager
+ */
+class SportsManager_Role extends SportsManager_Backend_Default {
+	function __construct($data) {
+		parent::__construct($data);
+	}
 
-/* player */
-add_role('player', 'Joueur', array (
-    'read' => true
-));
+	function add_role() {
+		if (isset($this->slug, $this->name, $this->capabilities) && $this->slug != '' && $this->name != '') {
+			add_role($this->slug, $this->name, $this->capabilities);
+		};
+	}
 
-/* captain */
-add_role('captain', 'Capitaine', array (
-	'delete_posts' => true,
-	'delete_published_posts' => true,
-    'edit_posts' => true,
-	'edit_published_posts' => true,
-	'publish_posts' => true,
-	'read' => true,
-	'upload_files' => true
-));
+	function add_capability($capability) {
+		$role = get_role($this->slug);
+		if (is_array($capability)) {
+			foreach ($capability as $k) {
+				$role->add_cap($k);
+			};
+		} else {
+			$role->add_cap($capability);
+		};
+	}
 
-/* executive */
-add_role('executive', 'Exécutif', array (
-	'delete_posts' => true,
-	'delete_published_posts' => true,
-    'edit_posts' => true,
-	'edit_published_posts' => true,
-	'publish_posts' => true,
-	'read' => true,
-	'upload_files' => true
-));
-
-global $wp_roles;
-foreach ($wp_roles->get_names() as $k => $v) {
-	$role = get_role($k);
-	if ($k != 'subscriber') {
-		$role->add_cap('login');
-		//$role->remove_cap('login');
-	};
-
-	//sportsmanager
-	if (in_array($k, array ('administrator', 'executive'))) {
-		$role->add_cap('edit_sportsmanager');
-	};
-};
-
-function restrict_wp_admin() {
-	if (is_admin() && !current_user_can('edit_posts')) {
-		header('Location: '.NOWP_HOME_URL);
-		die;
-	};
+	function remove_capability($capability) {
+		$role = get_role($this->slug);
+		if (is_array($capability)) {
+			foreach ($capability as $k) {
+				$role->remove_cap($k);
+			};
+		} else {
+			$role->remove_cap($capability);
+		};
+	}
 }
-
-//add_action('init', 'restrict_wp_admin');

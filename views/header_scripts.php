@@ -17,11 +17,12 @@
 			ajax_url: ajaxurl,
 			autocomplete: {
 				arrays: {
-					'teams-name': <?php echo $autocomplete_teams; ?>,
-					'leagues-name': <?php echo $autocomplete_leagues; ?>,
-					'locations-name': <?php echo $autocomplete_locations; ?>,
-					'players-name': <?php echo $autocomplete_players; ?>,
-					'users-username': <?php echo $autocomplete_users; ?> 
+					'clubs-name': [],
+					'teams-name': [],
+					'leagues-name': [],
+					'locations-name': [],
+					'players-name': [],
+					'users-name': []
 				},
 				map: {
 					away_team_id: 'teams-name',
@@ -30,7 +31,7 @@
 					league_id: 'leagues-name',
 					location_id: 'locations-name',
 					player_id: 'players-name',
-					user_id: 'users-username'
+					user_id: 'users-name'
 				}
 			},
 			current_cell: '',

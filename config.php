@@ -12,6 +12,7 @@
 function sm_constants() {
 	define('SPORTSMANAGER_VERSION', '1.0');
 	define('SPORTSMANAGER_PREFIX', 'sportsmanager_');
+	define('SPORTSMANAGER_CAPABILITY_PREFIX', 'edit_sportsmanager_');
 	if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', rtrim(get_option('siteurl'), '/').'/'.'wp-content/');
 	if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', rtrim(ABSPATH, '/').'/'.'wp-content/');
 	if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', rtrim(WP_CONTENT_URL, '/').'/'.'plugins/');

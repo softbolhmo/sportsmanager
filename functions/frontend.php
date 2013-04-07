@@ -6,7 +6,7 @@ function sm_frontend_table($atts) {
 		'season' => date('Y'),
 	), $atts));
 	$SM = new SportsManager_Frontend;
-	$SM->display_table(array ('filter' => 'rankings'));
+	$SM->generate(array ('filter' => 'rankings'));
 };
 
 add_shortcode('SportsManager', 'sm_frontend_table');

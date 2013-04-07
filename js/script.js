@@ -34,6 +34,7 @@ SM.fn.load_behaviors = function(context) {
  * init address
  */
 SM.fn.address = function() {
+	SM.fn.clean_address();
 	if ("onhashchange" in window) { //if event is supported
 		window.onhashchange = function () {
 			SM.fn.address_change();
@@ -46,10 +47,28 @@ SM.fn.address = function() {
 	}
 }
 
+SM.fn.clean_address = function() {
+	var $ = jQuery;
+	SM.query = {};
+	var q = window.location.search.substring(1);
+	var pairs = q.split("&");
+	$.each(pairs, function(i, pair) {
+		pair = pair.split("=");
+		pair = {
+			k: pair[0],
+			v: pair[1]
+		};
+		SM.query[pair.k] = pair.v;
+	});
+	if (typeof SM.query.tab !== "undefined") {
+		window.location.hash = "#/!/tab=" + SM.query.tab;
+	}
+}
+
 SM.fn.address_change = function(trigger) {
 	var $ = jQuery;
-	var hash = window.location.hash.substring(4);
 	SM.hash = {};
+	var hash = window.location.hash.substring(4);
 	var pairs = hash.split("&");
 	$.each(pairs, function(i, pair) {
 		if (pair != "") {
@@ -96,17 +115,7 @@ if (SM.fn.jsEnabled) {
  * behaviors
  */
 SM.behaviors.init = function() {
-	var $ = jQuery;
-	q = window.location.search.substring(1);
-	var pairs = q.split("&");
-	$.each(pairs, function(i, pair) {
-		pair = pair.split("=");
-		pair = {
-			k: pair[0],
-			v: pair[1]
-		};
-		SM.query[pair.k] = pair.v;
-	});
+	//init
 }
 
 SM.behaviors.menu = function() {
@@ -181,13 +190,13 @@ SM.behaviors.filter_navigation = function() {
 				return false;
 			}
 		}
-		if (e.keyCode == SM.settings.keycodes.esc) {
-			$(".sm_modal_box .close").click();
-			return false;
-		}
 		if (e.target.nodeName == "INPUT" && $(e.target).parents("div").first().hasClass("dataTables_filter")) {
 			if (e.keyCode == SM.settings.keycodes.enter) {
 				$(".sm_filter_table").find("td").first().focus();
+			}
+			if (e.keyCode == SM.settings.keycodes.esc) {
+				SM.filters.filter_data.fnResetAllFilters();
+				SM.filters.filter_input.val("");
 			}
 		}
 		if (e.target.nodeName == "TABLE" && $(e.target).parents("div").first().hasClass("sm_modal_footer")) {
@@ -198,6 +207,10 @@ SM.behaviors.filter_navigation = function() {
 					$(e.target).click();
 				}
 			}
+		}
+		if (e.keyCode == SM.settings.keycodes.esc) {
+			$(".sm_modal_box .close").click();
+			return false;
 		}
 	});
 }
@@ -224,16 +237,20 @@ SM.behaviors.filter_add_row = function() {
 			});
 			for (i = 1; i < new_row.columns.length; i++) {
 				new_row.data.push("");
-			};
-			new_row.data[new_row.data.length - 1] = '<button class="sm_delete_row_btn"><img src="' + SM.settings.SPORTSMANAGER_URL + 'images/icon_trashcan.png" /></button>';
-			var i = SM.filters.filter_data.fnAddData(new_row.data, false);
-			var added_row = $(SM.filters.filter_data.fnGetNodes(i));
-			added_row.attr("id", new_row.filter + "-" + new_row.id).attr("data-row", new_row.id);
-			added_row.find("td").each(function(i, cell) {
-				$(cell).attr("id", new_row.filter + "-" + new_row.id + "-" + new_row.columns[i]).addClass("column-" + new_row.columns[i]).attr("tabindex", 1);
-			});
-			SM.filters.filter_data.fnDraw();
-			SM.filters.filter_data.fnSort([[0, "desc"]]);
+			}
+			if (is_number(response)) {
+				new_row.data[new_row.data.length - 1] = '<button class="sm_delete_row_btn"><img src="' + SM.settings.SPORTSMANAGER_URL + 'images/icon_trashcan.png" /></button>';
+				var i = SM.filters.filter_data.fnAddData(new_row.data, false);
+				var added_row = $(SM.filters.filter_data.fnGetNodes(i));
+				added_row.attr("id", new_row.filter + "-" + new_row.id).attr("data-row", new_row.id);
+				added_row.find("td").each(function(i, cell) {
+					$(cell).attr("id", new_row.filter + "-" + new_row.id + "-" + new_row.columns[i]).addClass("column-" + new_row.columns[i]).attr("tabindex", 1);
+				});
+				SM.filters.filter_data.fnResetAllFilters();
+				SM.filters.filter_input.val("");
+				SM.filters.filter_data.fnDraw();
+				SM.filters.filter_data.fnSort([[0, "desc"]]);
+			}
 		});
 	});
 }
@@ -249,7 +266,7 @@ SM.behaviors.filter_autocomplete = function() {
 			}
 		});
 		$(".sm_autocomplete_item:not(.blank)").remove();
-		if (array != "") {
+		if (array != "" && typeof SM.settings.autocomplete.arrays[array] !== "undefined") {
 			$.each(SM.settings.autocomplete.arrays[array], function(k, v) {
 				var blank = $(".sm_autocomplete_item.blank").clone();
 				blank.attr("data-value", v.value).html(v.label).removeClass("blank");
@@ -308,7 +325,8 @@ SM.behaviors.filter_modals = function() {
 			value: $("#sm_current_cell").val()
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.settings.current_cell.html(response);
+			SM.fn.load_autocomplete();
+			SM.settings.current_cell.html(response).focus();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_cell_modal, #sm_backdrop").hide();
 			$("#sm_edit_cell_modal .loader").hide();
@@ -349,6 +367,7 @@ SM.behaviors.filter_modals = function() {
 			value: SM.fn.return_json_form($("#sm_edit_stats_form"))
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
+			SM.fn.load_autocomplete();
 			SM.settings.current_cell.html(response);
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_stats_modal, #sm_backdrop").hide();
@@ -379,6 +398,7 @@ SM.behaviors.filter_modals = function() {
 			id: $("#sm_delete_row_id").val()
 		};
 		$.get(SM.settings.ajax_url, data, function(response) {
+			SM.fn.load_autocomplete();
 			var row = SM.settings.current_cell.parents("tr").first();
 			var i = SM.filters.filter_data.fnGetPosition(row.get(0));
 			SM.filters.filter_data.fnDeleteRow(i);
@@ -444,8 +464,12 @@ SM.behaviors.home_settings = function() {
 			date_time: d.Y + "-" + d.M + "-" + d.D + "-" + d.H + "-" + d.M + "-" + d.S
 		};
 		$.get(SM.settings.ajax_url, data, function(response) {
-			$("#sm_backup_ajax_return").html("Check your emails!").show() ; //html(data).hide();
-			SM.fn.highlight(form, "sm_current_cell");
+			if (response == "") {
+				$("#sm_backup_ajax_return").html("Check your emails!").show(); //html(data).hide();
+				SM.fn.highlight(form, "sm_current_cell");
+			} else {
+				$("#sm_backup_ajax_return").html("Error: " + response).show();
+			};
 		});
 		return false;
 	});
@@ -494,8 +518,23 @@ SM.fn.init_filter_tables = function() {
 			}
 		});
 	}
-	SM.filters.filter_container.show(); //slideDown(600);
-	SM.filters.filter_table.find("td").first().focus()
+	SM.filters.filter_container.slideDown(100, function() { //slideDown(600);
+		SM.filters.filter_input = $(".dataTables_filter input");
+		SM.filters.filter_table.find("td").first().focus()
+	});
+}
+
+SM.fn.load_autocomplete = function() {
+	var $ = jQuery;
+	var data = {
+		action: "sm_autocomplete",
+		do: "load",
+		tab: SM.hash.tab
+	};
+	$.post(SM.settings.ajax_url, data, function(response) {
+		SM.settings.autocomplete.arrays = jQuery.parseJSON(response);
+		console.log(response);
+	});
 }
 
 SM.fn.reset_form = function(form) {
@@ -514,6 +553,7 @@ SM.fn.switch_tab = function(tab) {
 	$("#sm_page_loading_modal, #sm_backdrop_disabled").show();
 	$(".sm_main_container").load(SM.settings.SPORTSMANAGER_ADMIN_URL_PREFIX + "&tab=" + tab + " .sm_inner_container", function() {
 		SM.fn.init_filter_tables();
+		SM.fn.load_autocomplete();
 		$("#sm_page_loading_modal, #sm_backdrop_disabled").hide();
 	});
 }
@@ -593,4 +633,16 @@ SM.fn.return_clean_str = function(s) {
  */
 is_number = function(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+/*
+ * datatables api
+ */
+jQuery.fn.dataTableExt.oApi.fnResetAllFilters = function (oSettings, bDraw) {
+	for (iCol = 0; iCol < oSettings.aoPreSearchCols.length; iCol++) {
+		oSettings.aoPreSearchCols[ iCol ].sSearch = "";
+	}
+	oSettings.oPreviousSearch.sSearch = "";
+	if (typeof bDraw === "undefined") bDraw = true;
+	if (bDraw) this.fnDraw();
 }

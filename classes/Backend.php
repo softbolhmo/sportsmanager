@@ -9,57 +9,107 @@
  * Class for backend plugin object
  * @package SportsManager
  */
-class SportsManager_Backend {
+class SportsManager_Backend extends SportsManager {
 	function __construct() {
-		global $wpdb;
-		$this->prefix = SPORTSMANAGER_PREFIX;
-		$this->objects = (object) array (
-			'games' => (object) array (
-				'class' => 'SportsManager_Game',
-				'table' => $wpdb->prefix.$this->prefix.'games'
+		parent::__construct();
+		$this->build(array (
+			'league_slug' => isset($_SESSION['sm_league']) ? $_SESSION['sm_league'] : '',
+			'season' => isset($_SESSION['sm_season']) ? $_SESSION['sm_season'] : '',
+			'sport' => isset($_SESSION['sm_sport']) ? $_SESSION['sm_sport'] : ''
+		));
+		$this->add_user_roles();
+		$this->edit_admin_roles();
+		add_action('init', 'sm_define_session', 1);
+		add_action('admin_menu', array (&$this, 'add_menu_items'));
+	}
+
+	function add_user_roles() {
+		$roles = array (
+			(object) array (
+				'slug' => 'player',
+				'name' => 'Player',
+				'capabilities' => array (
+					'read' => true
+				)
 			),
-			'leagues' => (object) array (
-				'class' => 'SportsManager_League',
-				'table' => $wpdb->prefix.$this->prefix.'leagues'
+			(object) array (
+				'slug' => 'captain',
+				'name' => 'Captain',
+				'capabilities' => array (
+					'delete_posts' => true,
+					'delete_published_posts' => true,
+					'edit_posts' => true,
+					'edit_published_posts' => true,
+					'publish_posts' => true,
+					'read' => true,
+					'upload_files' => true
+				)
 			),
-			'locations' => (object) array (
-				'class' => 'SportsManager_Location',
-				'table' => $wpdb->prefix.$this->prefix.'locations'
+			(object) array (
+				'slug' => 'executive',
+				'name' => 'Executive',
+				'capabilities' => array (
+					'delete_posts' => true,
+					'delete_published_posts' => true,
+					'edit_posts' => true,
+					'edit_published_posts' => true,
+					'publish_posts' => true,
+					'read' => true,
+					'upload_files' => true
+				)
 			),
-			'players' => (object) array (
-				'class' => 'SportsManager_Player',
-				'table' => $wpdb->prefix.$this->prefix.'players'
+		);
+		foreach ($roles as $role) {
+			$role = new SportsManager_Role($role);
+			$role->add_role();
+		};
+	}
+
+	function edit_admin_roles() {
+		$roles = array (
+			(object) array (
+				'slug' => 'administrator',
+				'capabilities' => array ('all')
 			),
-			'scoresheets' => (object) array (
-				'class' => 'SportsManager_Scoresheet',
-				'table' => $wpdb->prefix.$this->prefix.'scoresheets'
-			),			
-			'teams' => (object) array (
-				'class' => 'SportsManager_Team',
-				'table' => $wpdb->prefix.$this->prefix.'teams'
+			(object) array (
+				'slug' => 'executive',
+				'capabilities' => array ('games', 'scoresheets', 'import')
 			)
 		);
-		sm_install_plugin();
-		//register_activation_hook(__FILE__,'sm_install_plugin');
-		//register_deactivation_hook(__FILE__ , 'sm_uninstall_plugin');
-		add_action('init', array (&$this, 'session'), 1);
-		add_action('admin_menu', array (&$this, 'add_menu_items'));
+		foreach ($roles as $role) {
+			$data = (object) array ('slug' => $role->slug);
+			$capabilities = array ();
+			foreach ($role->capabilities as $capability) {
+				$capabilities[] = SPORTSMANAGER_CAPABILITY_PREFIX.$capability;
+			};
+			$role = new SportsManager_Role($data);
+			$role->add_capability($capabilities);
+			//$role->remove_capability(array ('', 'all', 'home', 'clubs', 'games', 'locations', 'leagues', 'players', 'scoresheets', 'teams', 'import', 'donate'));
+		};
+	}
+
+	function add_menu_items() {
+		$plugin_page = add_menu_page('Sports Manager', 'Sports Manager', 'edit_sportsmanager', 'sportsmanager', array (&$this, 'generate'));
+		add_action('admin_head-'.$plugin_page, array (&$this, 'include_scripts'));
+	}
+
+	function include_scripts() {
+		$this->include_view('header_scripts');
 	}
 
 	function query_dependancies($filter) {
 		$this->dependancies = (object) array (
-			'games' => array ('games', 'leagues', 'locations', 'teams'), //always name primary object first
+			'clubs' => array ('clubs', 'leagues'), //always name primary object first
+			'games' => array ('games', 'leagues', 'locations', 'teams'),
 			'leagues' => array ('leagues'),
 			'locations' => array ('locations'),
 			'players' => array ('players'),
 			'scoresheets' => array ('scoresheets', 'games', 'leagues', 'players'),
-			'teams' => array ('teams', 'leagues'),
+			'teams' => array ('teams', 'clubs', 'leagues'),
 		);
 		if (array_key_exists($filter, $this->dependancies)) {
 			foreach ($this->dependancies->$filter as $dependancy) {
-				if (!isset($this->db->$dependancy)) {
-					$this->db->$dependancy = $this->query_objects($dependancy);
-				};
+				$this->db->$dependancy = $this->query_objects($dependancy);
 			};
 			return true;
 		} else {
@@ -69,7 +119,7 @@ class SportsManager_Backend {
 
 	function query_objects($filter) {
 		global $wpdb;
-		$table = $wpdb->prefix.SPORTSMANAGER_PREFIX.$filter;
+		$table = $this->objects->$filter->table;
 		$q = "SELECT * FROM $table ";
 		$wheres = array ();
 		if (isset($_SESSION['sm_league']) && $_SESSION['sm_league'] != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
@@ -82,12 +132,13 @@ class SportsManager_Backend {
 		if (isset($_SESSION['sm_sport']) && $_SESSION['sm_sport'] != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
 			$wheres[] = "sport IN ('".$_SESSION['sm_sport']."', '')";
 		};
-		$q .= $this->where_string($wheres);
+		$q .= $this->mysql_where_string($wheres);
 		$objects = array ();
 		$results = $wpdb->get_results($q);
 		foreach ($results as $result) {
 			$objects[] = new SportsManager_Backend_Default($result, $filter);
 		};
+		//this could go in the SportsManager_Backend_Default class... instead of going through each object after objects were defined, why not simply defining them properly in the first place?
 		if ($filter == 'players') {
 			foreach ((array) $objects as $object) {
 				if (isset($object->user_id)) {
@@ -96,71 +147,26 @@ class SportsManager_Backend {
 							$v = get_user_meta($object->user_id, $k, true);
 							if ($v != '') $object->$k = $v;
 						};
-						if (isset($object->first_name, $object->last_name)) {
-							$object->name = $object->first_name.' '.$object->last_name;
-						};
 					};
+					if (isset($object->first_name, $object->last_name)) {
+						$object->name = $object->first_name.' '.$object->last_name;
+					};
+				};
+			};
+		} elseif ($filter == 'teams') {
+			foreach ((array) $objects as $object) {
+				if (isset($object->club_id)) {
+					$object->name = $wpdb->get_var("SELECT name FROM ".$this->objects->clubs->table." WHERE id = '".$object->club_id."'");
 				};
 			};
 		};
 		return $objects;
 	}
 
-	function where_string($wheres) {
-		if (!empty($wheres)) {
-			$q = 'WHERE ';
-			foreach ($wheres as $where) {
-				$q .= $where.' AND ';
-			};
-			$q = rtrim($q, 'AND ').' ';
-			return $q;
-		};
-	}
-
-	function session() {
-		if(!session_id()) session_start();
-		$session = (object) array (
-			'sm_league' => '(Select league)',
-			'sm_season' => date('Y'),
-			'sm_sport' => '(Select sport)'
-		);
-		foreach ($session as $k => $v) {
-			if (!isset($_SESSION[$k])) $_SESSION[$k] = $v;
-			if (isset($_REQUEST[$k])) $_SESSION[$k] = $_REQUEST[$k];
-		};
-	}
-
-	/*
-	 * REGISTER THE PAGE IN WP ADMIN
-	 */
-	function add_menu_items() {
-		$plugin_pages = array ();
-		//add parent
-		//make sure user has custom capability in roles.php
-		$plugin_pages[] = add_menu_page('Sports Manager', 'Sports Manager', 'edit_sportsmanager', 'sportsmanager', array (&$this, 'generate'));
-		//add children
-		foreach($plugin_pages as $plugin_page) {
-			add_action('admin_head-'.$plugin_page, array (&$this, 'load_scripts'));
-		};
-	}
-	
-	/*
-	 * VIEWS
-	 */
-	function include_view($s) {
-		$f = SPORTSMANAGER_DIR.'controllers/'.$s.'.php';
-		if (file_exists($f)) {include($f);};
-		$f = SPORTSMANAGER_DIR.'views/'.$s.'.php';
-		if (file_exists($f)) {include($f);} else {echo $f.' view file does not exist';};
-	}
-
-	function load_scripts() {
-		$this->include_view('header_scripts');
-	}
-
 	function generate() {
 		$views = array (
 			'default' => 'home',
+			'clubs' => 'filters',
 			'games' => 'filters',
 			'locations' => 'filters',
 			'leagues' => 'filters',
@@ -171,18 +177,20 @@ class SportsManager_Backend {
 			'donate' => 'donate'
 		);
 		$view = isset($views[SPORTSMANAGER_FILTER]) ? $views[SPORTSMANAGER_FILTER] : $views['default'];
-		if ($view == 'filters') {
-			if ($this->query_dependancies(SPORTSMANAGER_FILTER)) {
-				$primary_object = reset($this->dependancies->{SPORTSMANAGER_FILTER});
-				$this->rows = $this->db->$primary_object;
-				$this->include_view('header');
+		$this->include_view('header');
+		if (current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.SPORTSMANAGER_FILTER) || current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.'all')) {
+			if ($view == 'filters') {
+				if ($this->query_dependancies(SPORTSMANAGER_FILTER)) {
+					$primary_object = reset($this->dependancies->{SPORTSMANAGER_FILTER});
+					$this->rows = $this->db->$primary_object;
+					$this->include_view($view);
+				};
+			} else {
 				$this->include_view($view);
-				$this->include_view('footer');
 			};
 		} else {
-			$this->include_view('header');
-			$this->include_view($view);
-			$this->include_view('footer');
+			$this->include_view('unauthorized');
 		};
+		$this->include_view('footer');
 	}
 }

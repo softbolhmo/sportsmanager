@@ -1,0 +1,86 @@
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+
+CREATE TABLE wp_sportsmanager_clubs (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  league_id int(11) NOT NULL,
+  sport varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  slug varchar(100) NOT NULL,
+  description text NOT NULL,
+  small_logo_url varchar(256) NOT NULL,
+  large_logo_url varchar(256) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_games (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  league_id int(11) NOT NULL,
+  season year(4) NOT NULL,
+  sport varchar(100) NOT NULL,
+  home_team_id int(11) NOT NULL,
+  away_team_id int(11) NOT NULL,
+  home_score int(11) NOT NULL,
+  away_score int(11) NOT NULL,
+  winner_team_id int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `type` varchar(2) NOT NULL,
+  location_id int(11) NOT NULL,
+  cancelled int(1) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_leagues (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  slug varchar(100) NOT NULL,
+  description text NOT NULL,
+  small_logo_url varchar(256) NOT NULL,
+  large_logo_url varchar(256) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_locations (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  slug varchar(100) NOT NULL,
+  description text NOT NULL,
+  small_logo_url varchar(256) NOT NULL,
+  large_logo_url varchar(256) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_players (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  user_id int(11) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_scoresheets (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  league_id int(11) NOT NULL,
+  season year(4) NOT NULL,
+  sport varchar(100) NOT NULL,
+  game_id int(11) NOT NULL,
+  player_id int(11) NOT NULL,
+  stats text NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE wp_sportsmanager_teams (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  club_id int(11) NOT NULL,
+  season year(4) NOT NULL,
+  players_id text NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
