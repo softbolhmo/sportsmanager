@@ -53,8 +53,6 @@ class SportsManager {
 		global $wpdb;
 		$q = file_get_contents(SPORTSMANAGER_DIR.'structure.sql');
 		if ($q != false) {
-			echo "IT WORKED";
-			die;
 			$wpdb->query($q);
 		};
 	}
