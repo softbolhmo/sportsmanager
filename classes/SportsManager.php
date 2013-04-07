@@ -45,27 +45,6 @@ class SportsManager {
 			)
 		);
 		$this->args = (object) array ();
-		register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', array (&$this, 'install_plugin'));
-		register_uninstall_hook($this->plugin_name, array('SportsManager', 'uninstall')); //register_uninstall_hook(SPORTSMANAGER_DIR.'sportsmanager.php', array (&$this, 'uninstall_plugin'));
-	}
-
-	function install_plugin() {
-		global $wpdb;
-		$q = file_get_contents(SPORTSMANAGER_DIR.'structure.sql');
-		if ($q != false) {
-			$wpdb->query($q);
-		};
-	}
-
-	function uninstall_plugin() {
-		if (defined('WP_UNINSTALL_PLUGIN')) {
-			global $wpdb;
-			$q = '';
-			foreach ($this->objects as $object) {
-				$q .= "DROP TABLE ".$object->table." \n";
-			};
-			$wpdb->query($q);
-		};
 	}
 
 	function build($args) {
