@@ -15,7 +15,7 @@ function sm_install_plugin() {
 		PRIMARY KEY  (id)
 	);";
 	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
-	dbDelta($sql);
+	dbDelta($q);
 }
 
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
