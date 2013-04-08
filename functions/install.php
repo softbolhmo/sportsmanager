@@ -77,6 +77,15 @@ function sm_install_plugin() {
 		$q = str_replace('@table_name@', $table_name, $v);
 		dbDelta($q);
 	};
+/*
+If there are errors when plugin is activated, put this piece of code at the very end of /wp-admin/includes/plugin.php:
+
+add_action('activated_plugin', 'save_plugin_activation_error');
+
+function save_plugin_activation_error() {
+	file_put_contents(ABSPATH. 'wp-content/uploads/2013/04/error_activation.html', ob_get_contents());
+}
+*/
 }
 
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
@@ -86,7 +95,7 @@ function sm_uninstall_plugin() {
 		global $wpdb;
 		$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
 		foreach ($tables as $table) {
-			$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table." \n";
+			$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
 			$wpdb->query($q);
 		};
 	};

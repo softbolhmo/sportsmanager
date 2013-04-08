@@ -89,7 +89,7 @@ class SportsManager_Backend extends SportsManager {
 	}
 
 	function add_menu_items() {
-		$plugin_page = add_menu_page('Sports Manager', 'Sports Manager', 'edit_sportsmanager', 'sportsmanager', array (&$this, 'generate'));
+		$plugin_page = add_menu_page('Sports Manager', 'Sports Manager', 'edit_sportsmanager', 'sportsmanager', array (&$this, 'generate'), '', '26.6973216'); //26.6973216 is a random decimal number
 		add_action('admin_head-'.$plugin_page, array (&$this, 'include_scripts'));
 	}
 
