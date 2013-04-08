@@ -8,9 +8,9 @@ function sm_install_plugin() {
 	};
 }
 
-register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'install_plugin');
+register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
 
-function uninstall_plugin() {
+function sm_uninstall_plugin() {
 	if (defined('WP_UNINSTALL_PLUGIN')) {
 		global $wpdb;
 		$q = '';
@@ -22,4 +22,4 @@ function uninstall_plugin() {
 	};
 }
 
-register_uninstall_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'uninstall_plugin');
+register_uninstall_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_uninstall_plugin');
