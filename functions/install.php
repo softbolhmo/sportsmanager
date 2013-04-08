@@ -91,14 +91,14 @@ function save_plugin_activation_error() {
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
 
 function sm_uninstall_plugin() {
-	if (defined('WP_UNINSTALL_PLUGIN')) {
+	//if (defined('WP_UNINSTALL_PLUGIN')) {
 		global $wpdb;
 		$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
 		foreach ($tables as $table) {
 			$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
 			$wpdb->query($q);
 		};
-	};
+	//};
 }
 
 register_uninstall_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_uninstall_plugin');
