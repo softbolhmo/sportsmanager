@@ -301,7 +301,7 @@ SM.behaviors.filter_modals = function() {
 	var $ = jQuery;
 
 	//edit_cell modal
-	$(".sm_filter_table td:not(.column-id, .column-stats, .column-delete)").live("dblclick", function() {
+	$(".sm_filter_table td:not(.column-id, .column-stats, .column-delete, .dataTables_empty)").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
 		var form = $("#sm_edit_stats_form");
 		var input = $("input[name=current_cell]");
