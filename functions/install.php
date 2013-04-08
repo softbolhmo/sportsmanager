@@ -92,10 +92,10 @@ register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plug
 
 function sm_uninstall_plugin() {
 	global $wpdb;
+	$wpdb->show_errors();
 	$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
 	foreach ($tables as $table) {
 		$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
-		die($q);
 		$wpdb->query($q);
 	};
 }
