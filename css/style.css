@@ -79,10 +79,18 @@ a:active {
 	border-top:none;
 	border-radius:0 0 3px 3px;
 }
-.sm_page_footer p {
+.sm_page_footer a,
+.sm_page_footer span {
 	font-size:16px;
 	color:#fff;
 	text-shadow:1px 1px #666;
+	text-decoration:none;
+}
+.sm_page_footer .left {
+	float:left;
+}
+.sm_page_footer .right {
+	float:right;
 }
 #sm_import_scoresheet_form {
 }
