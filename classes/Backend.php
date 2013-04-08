@@ -170,7 +170,8 @@ class SportsManager_Backend extends SportsManager {
 
 	function generate() {
 		$views = array (
-			'default' => 'home',
+			'default' => '404',
+			'home' => 'home',
 			'clubs' => 'filters',
 			'games' => 'filters',
 			'locations' => 'filters',
@@ -179,6 +180,7 @@ class SportsManager_Backend extends SportsManager {
 			'scoresheets' => 'filters',
 			'teams' => 'filters',
 			'import' => 'import',
+			'faq' => 'faq',
 			'donate' => 'donate'
 		);
 		$view = isset($views[SPORTSMANAGER_FILTER]) ? $views[SPORTSMANAGER_FILTER] : $views['default'];

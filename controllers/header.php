@@ -5,7 +5,7 @@ $league = $wpdb->get_var("SELECT name FROM ".$this->objects->leagues->table." WH
 $season = $_SESSION['sm_season'];
 $sport = ucfirst($_SESSION['sm_sport']);
 $page_titles = array (
-	'default' => '[Page title]',
+	'default' => '[Page not found]',
 	'home' => 'Sports Manager ©',
 	'clubs' => "Club Manager",
 	'games' => "Game Manager",
@@ -15,6 +15,7 @@ $page_titles = array (
 	'scoresheets' => "Scoresheet Manager",
 	'teams' => "Team Manager",
 	'import' => "Import Tool",
+	'faq' => "FAQ",
 	'donate' => "Donate"
 );
 $page_title = isset($page_titles[SPORTSMANAGER_FILTER]) ? $page_titles[SPORTSMANAGER_FILTER] : $page_titles['default'];
@@ -46,6 +47,7 @@ $menu = array (
 	'scoresheets' => "Scoresheets",
 	'teams' => "Teams",
 	'import' => "Import Tool",
+	'faq' => "FAQ",
 	'donate' => "Donate"
 );
 $active = SPORTSMANAGER_FILTER;
