@@ -340,31 +340,49 @@ SM.behaviors.filter_modals = function() {
 
 	//edit_stats modal
 	$(".sm_filter_table td.column-stats").live("dblclick", function() {
-		SM.settings.current_cell = $(this);
-		var form = $("#sm_edit_stats_form");
-		var inputs = form.find("input:text");
-		inputs.val("").removeAttr("checked").removeAttr("selected"); //clear form
-		if (SM.settings.current_cell.html() != "") {
-			var stats = jQuery.parseJSON(SM.settings.current_cell.html());
-			if (typeof stats === "object") {
-				$.each(stats, function(stat, value) { //insert value in form
-					form.find("input[name=" + stat + "]").val(value);
-				});
+		var sport = $(this).siblings(".column-sport").html();
+		if (sport != "") {
+			SM.settings.current_cell = $(this);
+			var form = $("#sm_edit_stats_form");
+			var rows = form.find("tr.stat");
+			var inputs = rows.find("input:text");
+			rows.hide();
+			inputs.val("").removeAttr("checked").removeAttr("selected"); //clear form
+			form.find("tr.stat.all, tr.stat." + sport).show();
+			if (SM.settings.current_cell.html() != "") {
+				var stats = jQuery.parseJSON(SM.settings.current_cell.html());
+				if (typeof stats === "object") {
+					$.each(stats, function(stat, value) { //insert value in form
+						form.find("input[name=" + stat + "]").val(value);
+					});
+				}
 			}
-		}
-		$("#sm_edit_stats_modal, #sm_backdrop").show();
-		inputs.first().focus();
+			$("#sm_edit_stats_modal, #sm_backdrop").show();
+			inputs.first().focus();
+		} else {
+			alert("You first need to define a sport for this scoresheet.");
+			$(this).siblings(".column-sport").focus();
+		};
 	});
 
 	$("#sm_edit_stats_btn").live("click", function() {
 		$(this).hide();
 		$(this).siblings(".loader").show();
+		//only include data from visible inputs!!
+		var form = $("#sm_edit_stats_form");
+		var rows = form.find("tr.stat:visible");
+		var inputs = rows.find("input:text");
+		var stats = {};
+		$.each(inputs, function() {
+			var name = $(this).attr("name");
+			stats[name] = $(this).val();
+		});
 		var data = {
 			action: "sm_row",
 			do: "edit",
 			tab: SM.hash.tab,
 			id: SM.settings.current_cell.attr("id"),
-			value: SM.fn.return_json_form($("#sm_edit_stats_form"))
+			value: SM.fn.return_object_to_json(stats)
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
 			SM.fn.load_autocomplete();
@@ -533,7 +551,6 @@ SM.fn.load_autocomplete = function() {
 	};
 	$.post(SM.settings.ajax_url, data, function(response) {
 		SM.settings.autocomplete.arrays = jQuery.parseJSON(response);
-		console.log(response);
 	});
 }
 
@@ -586,7 +603,7 @@ SM.fn.return_date_str = function() {
 	return d;
 }
 
-SM.fn.return_json_form = function(form) {
+SM.fn.return_form_to_json = function(form) {
 	var $ = jQuery;
 	var o = {};
 	var a = form.serializeArray();
@@ -600,10 +617,15 @@ SM.fn.return_json_form = function(form) {
 			o[this.name] = this.value || "";
 		}
 	});
+	return SM.fn.return_object_to_json(o);
+}
+
+SM.fn.return_object_to_json = function(object) {
+	var $ = jQuery;
 	var json = "{";
-	$.each(o, function(i, v) {
+	$.each(object, function(k, v) {
 		if (v == "") v = 0;
-		json += '"' + i + '":"' + v + '",';
+		json += '"' + k + '":"' + v + '",';
 	});
 	json = json.replace(/,$/gi, "");
 	json += "}";

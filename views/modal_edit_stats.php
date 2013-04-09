@@ -24,7 +24,7 @@
 
 <?php foreach ($stats as $k => $v) { ?>
 
-		<tr>
+		<tr class="stat <?php foreach ($v[2] as $sport) echo $sport.' '; ?>">
 			<td><?php echo $v[1]; ?></td>
 			<td><?php echo $v[0]; ?></td>
 			<td><input type="text" id="stats-<?php echo $k; ?>" name="<?php echo $k; ?>" value="" tabindex="1" /></td>
