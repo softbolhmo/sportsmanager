@@ -49,6 +49,7 @@ class SportsManager {
 
 	function build($args) {
 		$defaults = array (
+			'display' => '',
 			'filter' => '',
 			'game_id' => '',
 			'game_type' => '',

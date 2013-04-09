@@ -17,18 +17,18 @@ class SportsManager_Frontend extends SportsManager {
 
 	function query_dependancies($filter) {
 		$this->dependancies = (object) array (
-			'game_results' => array ('games', 'locations', 'teams'), //always name primary object first
+			'game_results' => array ('games', 'clubs', 'locations', 'teams'), //always name primary object first
 			'game_stats' => array ('scoresheets', 'players'),
 			'leaders_stats' => array ('players', 'scoresheets', 'games'),
 			'pitching_stats' => array ('players', 'scoresheets'),
 			'player_stats' => array ('players', 'scoresheets'),
 			'players_stats' => array ('players', 'scoresheets'),
-			'rankings' => array ('teams', 'games'),
-			'schedule' => array ('games', 'locations', 'teams'),
-			'schedule_playoff' => array ('games', 'locations', 'teams'),
-			'team_players_stats' => array ('players', 'scoresheets', 'teams'),
-			'team_stats' => array ('players', 'scoresheets', 'teams'),
-			'teams_stats' => array ('players', 'scoresheets', 'teams')
+			'rankings' => array ('teams', 'clubs', 'games'),
+			'schedule' => array ('games', 'clubs', 'locations', 'teams'),
+			'schedule_playoff' => array ('games', 'clubs', 'locations', 'teams'),
+			'team_players_stats' => array ('players', 'clubs', 'scoresheets', 'teams'),
+			'team_stats' => array ('players', 'clubs', 'scoresheets', 'teams'),
+			'teams_stats' => array ('players', 'clubs', 'scoresheets', 'teams')
 		);
 		if (array_key_exists($filter, $this->dependancies)) {
 			foreach ($this->dependancies->$filter as $dependancy) {
@@ -73,8 +73,8 @@ class SportsManager_Frontend extends SportsManager {
 
 	function generate($args) {
 		$this->build($args);
-		if ($this->query_dependancies($this->args->filter)) {
-			$filter = $this->args->filter;
+		if ($this->query_dependancies($this->args->display)) {
+			$filter = $this->args->display; //watch out for name change, from display to filter
 			$this->rows = array ();
 			$primary_object = reset($this->dependancies->$filter);
 			foreach ($this->db->$primary_object as $row) {
