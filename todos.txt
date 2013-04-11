@@ -1,0 +1,50 @@
+﻿TODOS
+
+IMPORTANT
+-create db importer (recover backup)
+-change "games" stat to "games_played"
+-verify all autocompletes
+	-clubs:
+		-league id: ok
+		-sport: todo
+	-games:
+		-league id: ok
+		-sport: todo
+		...
+	-leagues:
+	-locations: none
+	-players:
+		-user_id: todo
+	-scoresheets:
+		-league_id: ok
+		-player_id: todo
+	-teams:
+		-club_id: todo... error...
+-put query_dependencies() in main SportsManager class, define $this->dependencies before $this->build() in __construct()
+-build User class, user object...
+-players_id modal
+-update screenshot-1.jpg
+-walkthrough steps: intro_modal, only disapears if sportsmanager_disable_intro is true
+	-add a league
+	-add clubs
+	-create WP users with Player role
+	-add players, matching them with your WP users
+	-add teams, with players
+	-add locations
+	-add games
+	-add scoresheets, a.k.a. game results
+-'deactivate' menu links except Leagues if no league exists
+-inner filter pages don't shoe up in IE7: js error? jQuery slide down?
+
+CAN WAIT
+-test paypal donation
+-when session is set and new row added, automatically place session params in new row
+-add_stats by sports
+-uniformiser functions/ajax.php
+-create standard classes: meta_box, post_typerole, taxonomy, user_meta_box
+
+ONE DAY...
+-phpDoc that shit
+-create logo
+-change menu item icon & favicon
+-define color palette
