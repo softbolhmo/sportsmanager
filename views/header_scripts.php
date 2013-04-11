@@ -17,24 +17,34 @@
 			ajax_url: ajaxurl,
 			autocomplete: {
 				arrays: {
-					'clubs-name': [],
-					'teams-name': [],
-					'leagues-name': [],
-					'locations-name': [],
-					'players-name': [],
-					'users-name': []
+					"clubs-name": [],
+					"game-type": [],
+					"leagues-name": [],
+					"locations-name": [],
+					"players-name": [],
+					"sports-slug": [],
+					"teams-name": [],
+					"users-name": [],
+					"yes-no": []
 				},
 				map: {
-					away_team_id: 'teams-name',
-					home_team_id: 'teams-name',
-					winner_team_id: 'teams-name',
-					league_id: 'leagues-name',
-					location_id: 'locations-name',
-					player_id: 'players-name',
-					user_id: 'users-name'
+					away_team_id: "teams-name",
+					cancelled: "yes-no",
+					club_id: "clubs-name",
+					home_team_id: "teams-name",
+					league_id: "leagues-name",
+					location_id: "locations-name",
+					player_id: "players-name",
+					sport: "sports-slug",
+					type: "game-type",
+					user_id: "users-name",
+					winner_team_id: "teams-name",
 				}
 			},
-			current_cell: '',
+			current_cell: "",
+			intro: {
+				disabled: "<?php echo get_option('sportsmanager_disable_intro', 'enabled'); ?>"
+			},
 			keycodes: {
 				enter: 13,
 				esc: 27,

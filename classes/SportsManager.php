@@ -42,12 +42,35 @@ class SportsManager {
 			'teams' => (object) array (
 				'class' => 'SportsManager_Team',
 				'table' => $wpdb->prefix.$this->prefix.'teams'
+			),
+			'users' => (object) array (
+				'class' => 'SportsManager_User',
+				'table' => $wpdb->prefix.'users'
 			)
 		);
 		$this->args = (object) array ();
 	}
 
-	function build($args) {
+	function query_dependancies($filter) {
+		if (array_key_exists($filter, $this->dependancies)) {
+			foreach ($this->dependancies->$filter as $dependancy) {
+				if ($dependancy == 'users') {
+					$objects = array ();
+					foreach (array ('player', 'captain', 'executive') as $role) {
+						$objects = array_merge($objects, $this->query_users($role));
+					};
+				} else {
+					$objects = $this->query_objects($dependancy);
+				};
+				$this->db->$dependancy = $objects;
+			};
+			return true;
+		} else {
+			return false;
+		};
+	}
+
+	function build($args = array ()) {
 		$defaults = array (
 			'display' => '',
 			'filter' => '',
@@ -88,5 +111,24 @@ class SportsManager {
 			$q = rtrim($q, 'AND ').' ';
 			return $q;
 		};
+	}
+
+	function order_array_objects_by($keys, $objects, $reverse = false) {
+		if ($keys == '') return $objects;
+		if (!is_array($keys)) $keys = (array) $keys;
+		foreach (array_reverse($keys) as $key) {
+			$order = array ();
+			foreach ($objects as $i => $object) {
+				$order[$i] = isset($object->$key) ? $object->$key : '';
+			};
+			asort($order);
+			$in_order = array ();
+			foreach ($order as $k => $v) {
+				$in_order[] = $objects[$k];
+			};
+			if ($reverse) $in_order = array_reverse($in_order);
+			$objects = $in_order;
+		};
+		return $objects;
 	}
 }

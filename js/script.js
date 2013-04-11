@@ -121,11 +121,16 @@ SM.behaviors.init = function() {
 SM.behaviors.menu = function() {
 	var $ = jQuery;
 	$(".sm_page_menu a").live("click", function() {
-		var tab = $(this).attr("data-tab");
-		if (typeof tab === "undefined" || tab == "") {
-			tab = "home";
+		if (!$(this).hasClass("disabled")) {
+			var tab = $(this).attr("data-tab");
+			if (typeof tab === "undefined" || tab == "") {
+				tab = "home";
+			}
+			SM.fn.switch_tab(unescape(tab));
+		} else {
+			$("#sm_alerts_modal, #sm_backdrop_disabled").show();
+			$("#sm_alerts_modal").find(".alert").html("You must create a league first.");
 		}
-		SM.fn.switch_tab(unescape(tab));
 		return false;
 	});
 }
@@ -250,6 +255,7 @@ SM.behaviors.filter_add_row = function() {
 				SM.filters.filter_input.val("");
 				SM.filters.filter_data.fnDraw();
 				SM.filters.filter_data.fnSort([[0, "desc"]]);
+				if (data.tab == "leagues") $(".sm_page_menu a").removeClass("disabled");
 			}
 		});
 	});
@@ -259,12 +265,13 @@ SM.behaviors.filter_autocomplete = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td").live("dblclick", function() {
 		var cell = $(this);
-		var array = "";
+		SM.settings.current_array = "";
 		$.each(SM.settings.autocomplete.map, function(k, v) {
 			if (cell.hasClass("column-" + k)) {
-				array = v;
+				SM.settings.current_array = v;
 			}
 		});
+		var array = SM.settings.current_array;
 		$(".sm_autocomplete_item:not(.blank)").remove();
 		if (array != "" && typeof SM.settings.autocomplete.arrays[array] !== "undefined") {
 			$.each(SM.settings.autocomplete.arrays[array], function(k, v) {
@@ -272,23 +279,28 @@ SM.behaviors.filter_autocomplete = function() {
 				blank.attr("data-value", v.value).html(v.label).removeClass("blank");
 				$("#sm_autocomplete").append(blank);
 			});
+			if (array == "yes-no") {
+				$(".sm_autocomplete_item:not(.blank)").css("display", "inline-block");
+			};
 		}
 	});
 
 	$("#sm_current_cell").live("keyup", function() {
-		var needle = SM.fn.return_clean_str($(this).val());
-		var items = $(".sm_autocomplete_item:not(.blank)");
-		items.hide();
-		if (needle != "") {
-			$.each(items, function() {
-				var item = $(this);
-				var label = $(this).html();
-				var string = SM.fn.return_clean_str(label);
-				if (string.search(needle) != -1) {
-					item.css("display", "inline-block");
-				}
-			});
-		}
+		if (SM.settings.current_array != "yes-no") {
+			var needle = SM.fn.return_clean_str($(this).val());
+			var items = $(".sm_autocomplete_item:not(.blank)");
+			items.hide();
+			if (needle != "") {
+				$.each(items, function() {
+					var item = $(this);
+					var label = $(this).html();
+					var string = SM.fn.return_clean_str(label);
+					if (string.search(needle) != -1) {
+						item.css("display", "inline-block");
+					}
+				});
+			}
+		};
 	});
 
 	$(".sm_autocomplete_item").live("click", function() {
@@ -301,7 +313,7 @@ SM.behaviors.filter_modals = function() {
 	var $ = jQuery;
 
 	//edit_cell modal
-	$(".sm_filter_table td:not(.column-id, .column-stats, .column-delete, .dataTables_empty)").live("dblclick", function() {
+	$(".sm_filter_table td:not(.column-id, .column-stats, .column-players_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
 		var form = $("#sm_edit_stats_form");
 		var input = $("input[name=current_cell]");
@@ -398,6 +410,50 @@ SM.behaviors.filter_modals = function() {
 		return false;
 	});
 
+	//edit_players_id modal
+	$(".sm_filter_table td.column-players_id").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
+		var form = $("#sm_edit_players_id_form");
+		var input = form.find("input:text");
+		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
+		if (SM.settings.current_cell.html() != "") {
+			var players_id = jQuery.parseJSON(SM.settings.current_cell.html());
+			if (typeof players_id === "object") {
+				$.each(players_id, function(i, id) { //insert value in form
+					//fill autocomplete with names
+				});
+			}
+		}
+		$("#sm_edit_players_id_modal, #sm_backdrop").show();
+		input.focus();
+	});
+
+	$("#sm_edit_players_id_btn").live("click", function() {
+		$(this).hide();
+		$(this).siblings(".loader").show();
+		/*
+		var data = {
+			action: "sm_row",
+			do: "edit",
+			tab: SM.hash.tab,
+			id: SM.settings.current_cell.attr("id"),
+			value: SM.fn.return_object_to_json(stats)
+		};
+		$.post(SM.settings.ajax_url, data, function(response) {
+			SM.fn.load_autocomplete();
+			SM.settings.current_cell.html(response);
+			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			$("#sm_edit_stats_modal, #sm_backdrop").hide();
+			$("#sm_edit_stats_modal .loader").hide();
+			$("#sm_edit_stats_btn").show();
+		});
+		*/
+	});
+
+	$("#sm_edit_players_id_form").live("submit", function() {
+		return false;
+	});
+
 	//delete_row modal
 	$(".sm_filter_table td.column-delete").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
@@ -421,6 +477,11 @@ SM.behaviors.filter_modals = function() {
 			var i = SM.filters.filter_data.fnGetPosition(row.get(0));
 			SM.filters.filter_data.fnDeleteRow(i);
 			SM.filters.filter_data.fnDraw();
+			if (data.tab == "leagues" && response == 0) {
+				$.each(["clubs", "games", "locations", "players", "scoresheets", "teams"], function(i, v) {
+					$(".sm_page_menu a[data-tab='" + v + "']").addClass("disabled");
+				});
+			}
 			$("#sm_delete_row_modal, #sm_backdrop").hide();
 			$("#sm_delete_row_modal .loader").hide();
 			$("#sm_delete_row_btn").show();
@@ -456,7 +517,7 @@ SM.behaviors.filter_modals = function() {
 	//all modals
 	$(".sm_modal_box .close, #sm_backdrop").live("click", function() {
 		SM.fn.reset_form($(".sm_modal_box form"));
-		$(".sm_modal_box, #sm_backdrop").hide();
+		$(".sm_modal_box, #sm_backdrop, #sm_backdrop_disabled").hide();
 		SM.settings.current_cell.focus();
 	});
 }
@@ -465,9 +526,18 @@ SM.behaviors.home_settings = function() {
 	var $ = jQuery;
 	$("#sm_save_options_form").live("submit", function () {
 		var form = $(this);
-		$.get(SM.settings.ajax_url, form.serialize(), function(data) {
-			$("#sm_options_ajax_return").html("Options have been saved!"); //html(data).hide();
-			SM.fn.highlight(form, "sm_current_cell");
+		var data = {
+			action: "sm_db",
+			do: "backup_db",
+			tab: "",
+			date_time: d.Y + "-" + d.M + "-" + d.D + "-" + d.H + "-" + d.M + "-" + d.S,
+			value: form.serialize()
+		};
+		$.get(SM.settings.ajax_url, data, function(response) {
+			if (response == "") {
+				$("#sm_options_ajax_return").html("Options have been saved!");
+				SM.fn.highlight(form, "sm_current_cell");
+			}
 		});
 		return false;
 	});
@@ -503,6 +573,13 @@ SM.behaviors.import = function() {
 		};
 		return false;
 	});
+}
+
+SM.behaviors.intro = function() {
+	var $ = jQuery;
+	if (SM.settings.intro.disabled != "disabled") {
+		$("#sm_plugin_intro_modal").show();
+	}
 }
 
 /*
@@ -544,14 +621,16 @@ SM.fn.init_filter_tables = function() {
 
 SM.fn.load_autocomplete = function() {
 	var $ = jQuery;
-	var data = {
-		action: "sm_autocomplete",
-		do: "load",
-		tab: SM.hash.tab
+	if (SM.hash.tab != "") {
+		var data = {
+			action: "sm_autocomplete",
+			do: "load",
+			tab: SM.hash.tab
+		};
+		$.post(SM.settings.ajax_url, data, function(response) {
+			SM.settings.autocomplete.arrays = jQuery.parseJSON(response);
+		});
 	};
-	$.post(SM.settings.ajax_url, data, function(response) {
-		SM.settings.autocomplete.arrays = jQuery.parseJSON(response);
-	});
 }
 
 SM.fn.reset_form = function(form) {

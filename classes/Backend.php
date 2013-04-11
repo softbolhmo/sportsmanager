@@ -12,6 +12,15 @@
 class SportsManager_Backend extends SportsManager {
 	function __construct() {
 		parent::__construct();
+		$this->dependancies = (object) array (
+			'clubs' => array ('clubs', 'leagues'), //always name primary object first
+			'games' => array ('games', 'leagues', 'locations', 'teams'),
+			'leagues' => array ('leagues'),
+			'locations' => array ('locations'),
+			'players' => array ('players', 'users'),
+			'scoresheets' => array ('scoresheets', 'games', 'leagues', 'players'),
+			'teams' => array ('teams', 'clubs', 'leagues'),
+		);
 		$this->build(array (
 			'league_slug' => isset($_SESSION['sm_league']) ? $_SESSION['sm_league'] : '',
 			'season' => isset($_SESSION['sm_season']) ? $_SESSION['sm_season'] : '',
@@ -74,11 +83,17 @@ class SportsManager_Backend extends SportsManager {
 			(object) array (
 				'slug' => 'executive',
 				'capabilities' => array ('games', 'scoresheets', 'import')
+			),
+			/*
+			(object) array (
+				'slug' => 'subscriber',
+				'capabilities' => array ()
 			)
+			*/
 		);
 		foreach ($roles as $role) {
 			$data = (object) array ('slug' => $role->slug);
-			$capabilities = array ();
+			$capabilities = array ('edit_sportsmanager');
 			foreach ($role->capabilities as $capability) {
 				$capabilities[] = SPORTSMANAGER_CAPABILITY_PREFIX.$capability;
 			};
@@ -100,26 +115,6 @@ class SportsManager_Backend extends SportsManager {
 
 	function include_scripts() {
 		$this->include_view('header_scripts');
-	}
-
-	function query_dependancies($filter) {
-		$this->dependancies = (object) array (
-			'clubs' => array ('clubs', 'leagues'), //always name primary object first
-			'games' => array ('games', 'leagues', 'locations', 'teams'),
-			'leagues' => array ('leagues'),
-			'locations' => array ('locations'),
-			'players' => array ('players'),
-			'scoresheets' => array ('scoresheets', 'games', 'leagues', 'players'),
-			'teams' => array ('teams', 'clubs', 'leagues'),
-		);
-		if (array_key_exists($filter, $this->dependancies)) {
-			foreach ($this->dependancies->$filter as $dependancy) {
-				$this->db->$dependancy = $this->query_objects($dependancy);
-			};
-			return true;
-		} else {
-			return false;
-		};
 	}
 
 	function query_objects($filter) {
@@ -166,6 +161,18 @@ class SportsManager_Backend extends SportsManager {
 			};
 		};
 		return $objects;
+	}
+
+	function query_users($role = '') {
+		global $wpdb;
+		$table = $this->objects->users->table;
+		$q = "SELECT ID, display_name FROM $table ORDER BY display_name ASC";
+		$objects = array ();
+		$users = get_users('role='.$role);
+		foreach ($users as $user) {
+			$objects[] = new SportsManager_User($user);
+		};
+		return $this->order_array_objects_by('name', $objects);
 	}
 
 	function generate() {

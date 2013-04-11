@@ -13,21 +13,42 @@ function sm_autocomplete() {
 		if ($SM->query_dependancies($data->tab)) {
 			$autocomplete = (object) array ();
 			foreach (array ('clubs', 'leagues', 'locations', 'players', 'teams', 'users') as $filter) {
-				$data = isset($SM->db->$filter) ? $SM->db->$filter : '';
-				if ($data != '') {
+				$info = isset($SM->db->$filter) ? $SM->db->$filter : '';
+				if ($info != '') {
 					$items = array ();
-					foreach ($data as $object) {
-						$label = $object->name.(isset($object->season) ? ' '.$object->season : '').' ('.$object->id.')';
-						$items[] = (object) array (
-							'label' => $label,
-							'value' => $object->id
-						);
+					foreach ($info as $object) {
+						if (isset($object->id, $object->name)) {
+							$label = $object->name.(isset($object->season) ? ' '.$object->season : '').' ('.$object->id.')';
+							$items[] = (object) array (
+								'label' => $label,
+								'value' => $object->id
+							);
+						};
 					};
 					$array = $items;
 				} else {
 					$array = array ();
 				};
 				$autocomplete->{$filter.'-name'} = $array;
+			};
+			$static = array (
+				'sports-slug' => array (
+					(object) array ('label' => 'Baseball', 'value' => 'baseball'),
+					(object) array ('label' => 'Soccer/Football', 'value' => 'soccer')
+				),
+				'game-type' => array (
+					(object) array ('label' => 'Regular Season (S)', 'value' => 'S'),
+					(object) array ('label' => 'Finals (P1)', 'value' => 'P1'),
+					(object) array ('label' => 'Semi-finals (P2)', 'value' => 'P2'),
+					(object) array ('label' => 'Quarter-finals (P1)', 'value' => 'P3')
+				),
+				'yes-no' => array (
+					(object) array ('label' => 'Yes', 'value' => '1'),
+					(object) array ('label' => 'No', 'value' => '0')
+				)				
+			);
+			foreach ($static as $k => $v) {
+				$autocomplete->$k = $v;
 			};
 			echo json_encode($autocomplete);
 		};
@@ -41,16 +62,21 @@ function sm_db() {
 	global $wpdb;
 	$SM = new SportsManager_Backend;
 	$data = (object) array ();
-	$keys = array ('do', 'id', 'date_time', 'email', 'emailed', 'sport');
+	$keys = array ('do', 'id', 'date_time', 'option_disable_intro', 'option_email', 'option_email_name');
 	foreach ($keys as $k) {
-		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
+		$key = str_replace('option_', '', $k);
+		$data->$key = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
 	};
 
 	//set_options
 	if ($data->do == 'set_options') {
-		foreach (array ('email', 'emailed') as $k) {
-			update_option(SPORTSMANAGER_PREFIX.$k, $data->$k);
+		$options = (object) array ();
+		foreach (array ('disable_intro', 'email', 'email_name') as $k) {
+			$key = SPORTSMANAGER_PREFIX.$k;
+			$options->$key = $data->$k;
+			update_option($key, $options->$key);
 		};
+		echo json_encode($options);
 		die;
 	};
 
@@ -127,6 +153,7 @@ function sm_row() {
 	//delete
 	if ($_REQUEST['do'] == 'delete' && isset($_REQUEST['id'])) {
 		$wpdb->query("DELETE FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table." WHERE id = $data->id");
+		echo $wpdb->get_var("SELECT COUNT(*) FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table);
 		die;
 	};
 }

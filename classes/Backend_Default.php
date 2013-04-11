@@ -12,12 +12,12 @@
 class SportsManager_Backend_Default {
 	function __construct($data = '', $filter = '') {
 		if (is_int($data) && $filter != '') {
-			$this->query_db($filter, $data);
+			$this->query_row($filter, $data);
 		} elseif (is_object($data) || is_array($data)) {
 			$this->build($data);
 		};
 	}
-	function query_db($filter, $data) {
+	function query_row($filter, $data) {
 		global $wpdb;
 		$table = $wpdb->prefix.'sportsmanager_'.$filter;
 		$q = "SELECT * FROM $table WHERE id = $data";

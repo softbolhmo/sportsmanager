@@ -32,7 +32,9 @@ $session_string .= "<span class='sm_change_session_btn'>($session_action)</span>
 $page_subtitles = array (
 	'default' => $session_string,
 	'home' => 'Your favorite WordPress league manager.',
-	'import' => 'Tool to import scoresheet'
+	'import' => 'Tool to import scoresheet',
+	'faq' => 'Frequently asked questions',
+	'donate' => 'Support Sports Manager development'
 );
 $page_subtitle = isset($page_subtitles[SPORTSMANAGER_FILTER]) ? $page_subtitles[SPORTSMANAGER_FILTER] : $page_subtitles['default'];
 $admin_url = SPORTSMANAGER_ADMIN_URL_PREFIX;
@@ -51,3 +53,6 @@ $menu = array (
 	'donate' => "Donate"
 );
 $active = SPORTSMANAGER_FILTER;
+$table = $this->objects->leagues->table;
+$q = "SELECT COUNT(*) FROM $table";
+$count = $wpdb->get_var($q);

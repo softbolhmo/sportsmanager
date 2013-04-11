@@ -12,10 +12,6 @@
 class SportsManager_Frontend extends SportsManager {
 	function __construct() {
 		parent::__construct();
-		$this->build();
-	}
-
-	function query_dependancies($filter) {
 		$this->dependancies = (object) array (
 			'game_results' => array ('games', 'clubs', 'locations', 'teams'), //always name primary object first
 			'game_stats' => array ('scoresheets', 'players'),
@@ -30,14 +26,7 @@ class SportsManager_Frontend extends SportsManager {
 			'team_stats' => array ('players', 'clubs', 'scoresheets', 'teams'),
 			'teams_stats' => array ('players', 'clubs', 'scoresheets', 'teams')
 		);
-		if (array_key_exists($filter, $this->dependancies)) {
-			foreach ($this->dependancies->$filter as $dependancy) {
-				$this->db->$dependancy = $this->query_objects($dependancy);
-			};
-			return true;
-		} else {
-			return false;
-		};
+		$this->build();
 	}
 
 	function query_objects($filter) {
@@ -67,8 +56,8 @@ class SportsManager_Frontend extends SportsManager {
 			$wheres[] = "user_id = '".$this->args->user_id."'";
 		};
 		$q .= $this->mysql_where_string($wheres);
-		//if (is_int($this->args->top) && $this->args->top > 0) $q .= "LIMIT ".$this->args->top." "; //TODO: query limit
-		return $wpdb->get_results($q, ARRAY_N); //$nowp->db->query_array($q);
+		if (is_int($this->args->top) && $this->args->top > 0) $q .= "LIMIT ".$this->args->top." ";
+		return $wpdb->get_results($q, ARRAY_N);
 	}
 
 	function generate($args) {
@@ -86,6 +75,10 @@ class SportsManager_Frontend extends SportsManager {
 					if ($v->team_slug != $this->args->team) unset($this->rows[$k]);
 				};
 			};
+			echo "<pre>";
+			print_r($this);
+			echo "</pre>";
+			die;
 			$this->include_view('frontend_filters');
 		};
 	}
