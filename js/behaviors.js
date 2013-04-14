@@ -229,11 +229,6 @@ SM.behaviors.filter_modals = function() {
 	$("#sm_edit_cell_btn").live("click", function() {
 		$(this).hide();
 		$(this).siblings(".loader").show();
-		var value = [];
-		$("#sm_edit_players_id_form .sm_autocomplete_added_item:not(.blank)").each(function() {
-			value.push($(this).attr("data-value"));
-		});
-		return false;
 		var data = {
 			action: "sm_row",
 			do: "edit",

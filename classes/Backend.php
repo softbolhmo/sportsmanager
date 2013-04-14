@@ -110,14 +110,14 @@ class SportsManager_Backend extends SportsManager {
 	}
 
 	function include_general() {
-		$this->include_view('header_styles');
+		$this->include_view('header_general');
 	}
 
 	function include_specific() {
 		wp_enqueue_style('thickbox');
 		wp_enqueue_script('media-upload');
 		wp_enqueue_script('thickbox');
-		$this->include_view('header_scripts');
+		$this->include_view('header_specific');
 	}
 
 	function query_objects($filter) {
