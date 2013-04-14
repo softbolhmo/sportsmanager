@@ -1,5 +1,5 @@
-/*
- * SPORTS MANAGER
+/**
+ * Sports Manager
  * Copyright (c) 2013
  */
 var SM = SM || {
@@ -12,14 +12,10 @@ var SM = SM || {
 	settings: {}
 };
 
-/*
- * is js enabled?
- */
+/* is js enabled? */
 SM.fn.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
 
-/*
- * load behaviors
- */
+/* load behaviors */
 SM.fn.load_behaviors = function(context) {
 	var $ = jQuery;
 	context = context || document;
@@ -30,8 +26,8 @@ SM.fn.load_behaviors = function(context) {
 	}
 }
 
-/*
- * init address
+/**
+ * address
  */
 SM.fn.address = function() {
 	SM.fn.clean_address();
@@ -100,7 +96,7 @@ SM.fn.update_address = function(query) {
 	window.location.hash = "#/!/" + hash;
 }
 
-/*
+/**
  * init
  */
 if (SM.fn.jsEnabled) {

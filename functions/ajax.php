@@ -54,6 +54,7 @@ function sm_autocomplete() {
 		};
 		die;
 	};
+	die;
 }
 
 add_action('wp_ajax_sm_autocomplete', 'sm_autocomplete');
@@ -88,6 +89,7 @@ function sm_db() {
 		sm_prepare_backup($file, true);
 		die;
 	};
+	die;
 }
 
 add_action('wp_ajax_sm_db', 'sm_db');
@@ -139,6 +141,7 @@ function sm_import() {
 				$scoresheet
 			);
 		};
+		die;
 	};
 	die;
 }
@@ -170,7 +173,7 @@ function sm_row() {
 		$values = explode('-', $data->id);
 		$data = array_combine($keys, $values);
 		$data = (object) $data;
-		$data->value = stripslashes($_REQUEST['value']);
+		$data->value = stripslashes($data->value);
 		$wpdb->update(
 			$SM->objects->{SPORTSMANAGER_FILTER}->table,
 			array (
@@ -183,11 +186,12 @@ function sm_row() {
 	};
 
 	//delete
-	if ($_REQUEST['do'] == 'delete' && isset($_REQUEST['id'])) {
+	if ($data->do == 'delete' && isset($data->id)) {
 		$wpdb->query("DELETE FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table." WHERE id = $data->id");
 		echo $wpdb->get_var("SELECT COUNT(*) FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table);
 		die;
 	};
+	die;
 }
 
 add_action('wp_ajax_sm_row', 'sm_row');

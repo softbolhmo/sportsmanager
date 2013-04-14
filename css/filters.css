@@ -1,11 +1,11 @@
 /**
- * Filter Tables
+ * filter tables
  */
 /* extras */
 .dataTables_wrapper {
 	position:relative;
 	clear:both;
-	zoom:1; /* Feeling sorry for IE */
+	zoom:1;
 }
 .dataTables_processing {
 	position:absolute;
@@ -119,26 +119,16 @@ th:active {
 
 /* rows */
 tr.odd {
-	/*background-color:#f0f0f0;*/
 }
 tr.even {
-	/*background-color:white;*/
 }
 
 /* columns */
 tr.odd td.sorting_1 {
 	background-color:#f9f9f9;
 }
-tr.odd td.sorting_2 {
-}
-tr.odd td.sorting_3 {
-}
 tr.even td.sorting_1 {
 	background-color:#f3f3f3;
-}
-tr.even td.sorting_2 {
-}
-tr.even td.sorting_3 {
 }
 
 /* cells */
@@ -162,9 +152,6 @@ tr.even td.sorting_3 {
 .sm_filter_table td:focus {
 	box-shadow:0 0 1px 1px rgba(255,204,0,.5);
 }
-.sm_filter_table td.dataTables_empty {
-	cursor:default;
-}
 .sm_filter_table td.column-id,
 .sm_filter_table td.column-delete,
 .sm_filter_table td.center {
@@ -176,6 +163,16 @@ tr.even td.sorting_3 {
 	overflow:hidden;
 	cursor:pointer;
 }
+.sm_filter_table .dataTables_empty {
+	text-align:center;
+	vertical-align:middle;
+	cursor:default;
+}
+.sm_current_cell {
+	background:rgba(255,204,0,.5);
+}
+
+/* buttons */
 .sm_delete_row_btn {
 	background:none;
 	border:none;
@@ -200,11 +197,4 @@ tr.even td.sorting_3 {
 	border:1px solid #fff;
 	border-right:none;
 	border-left:none;
-}
-.sm_current_cell {
-	background:rgba(255,204,0,.5);
-}
-.dataTables_empty {
-	text-align:center;
-	vertical-align:middle;
 }

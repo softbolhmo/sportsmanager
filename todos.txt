@@ -10,6 +10,7 @@ IMPORTANT
 	-DONE? on activation: set disable_intro
 	-DONE? on plugin removal: delete all 4 options
 -DONE? do backup when upgrading
+-SESSION season should maybe be 2013W for the winter season...
 
 CAN WAIT
 -change "games" stat to "games_played"

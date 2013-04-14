@@ -2,7 +2,8 @@
 	header('Content-Type: text/css');
 	$css = '';
 	$files = array (
-		'sportsmanager.css',
+		'pages.css',
+		'modals.css',
 		'filters.css'
 	);
 	foreach ($files as $f) {

@@ -4,7 +4,10 @@
 	$files = array (
 		'jquery.dataTables.min.js',
 		'init.js',
-		'behaviors.js',
+		'navigation.js',
+		'autocomplete.js',
+		'modals.js',
+		'pages.js',
 		'fn.js'
 	);
 	foreach ($files as $f) {

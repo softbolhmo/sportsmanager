@@ -1,9 +1,9 @@
 <?php
 
 global $wpdb;
-$league = $wpdb->get_var("SELECT name FROM ".$this->objects->leagues->table." WHERE slug = '".$_SESSION['sm_league']."'");
-$season = $_SESSION['sm_season'];
-$sport = ucfirst($_SESSION['sm_sport']);
+$league = $wpdb->get_var("SELECT name FROM ".$this->objects->leagues->table." WHERE slug = '".$this->args->league_slug."'");
+$season = $this->args->season;
+$sport = ucfirst($this->args->sport);
 $page_titles = array (
 	'default' => '[Page not found]',
 	'home' => 'Sports Manager ©',

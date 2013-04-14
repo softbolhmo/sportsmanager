@@ -11,7 +11,7 @@
  */
 class SportsManager_Role extends SportsManager_Backend_Default {
 	function __construct($data) {
-		parent::__construct($data);
+		parent::__construct($data, 'role');
 	}
 
 	function add_role() {

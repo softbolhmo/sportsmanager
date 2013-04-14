@@ -1,6 +1,7 @@
-/*
- * navigation functions
+/**
+ * functions
  */
+/* navigation */
 SM.fn.highlight = function(e, style, delay) {
 	if (typeof delay === "undefined") delay = 2000;
 	e.addClass(style);
@@ -93,9 +94,7 @@ SM.fn.switch_tab = function(tab) {
 	});
 }
 
-/*
- * return functions
- */
+/* return */
 SM.fn.return_date_str = function() {
 	var d = new Date();
 	var year = d.getFullYear();
@@ -180,16 +179,12 @@ SM.fn.return_clean_str = function(s) {
 	return r;
 }
 
-/*
- * boolean functions
- */
+/* boolean */
 SM.fn.is_number = function(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-/*
- * datatables api
- */
+/* datatables */
 jQuery.fn.dataTableExt.oApi.fnResetAllFilters = function (oSettings, bDraw) {
 	for (iCol = 0; iCol < oSettings.aoPreSearchCols.length; iCol++) {
 		oSettings.aoPreSearchCols[ iCol ].sSearch = "";

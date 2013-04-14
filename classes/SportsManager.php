@@ -48,6 +48,22 @@ class SportsManager {
 				'table' => $wpdb->prefix.'users'
 			)
 		);
+		$this->sports = array (
+			'baseball' => 'Baseball',
+			'basketball' => 'Basketball',
+			'cricket' => 'Cricket',
+			'handball' => 'Handball',
+			'hockey' => 'Hockey',
+			'football' => 'Football',
+			'soccer' => 'Soccer',
+			'rugby' => 'Rugby',
+			'volleyball' => 'Volleyball',
+			'waterpolo' => 'Water Polo'
+		);
+		$this->languages = array (
+			'en' => 'English',
+			//'fr' => 'Français',
+		);
 		$this->args = (object) array ();
 	}
 
