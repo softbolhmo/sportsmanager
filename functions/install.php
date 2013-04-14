@@ -16,8 +16,8 @@ function sm_activate_plugin() {
 	global $wpdb;
 	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
 	update_option(SPORTSMANAGER_PREFIX.'disable_intro', 'enabled');
-	$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---UPGRADINGv'.SPORTSMANAGER_VERSION.'.sql';
-	sm_prepare_backup($file);
+	//$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---UPGRADINGv'.SPORTSMANAGER_VERSION.'.sql';
+	//sm_prepare_backup($file);
 	$tables = array (
 		'clubs'			=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
@@ -97,8 +97,8 @@ function sm_activate_plugin() {
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_activate_plugin');
 
 function sm_deactivate_plugin() {
-	$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
-	sm_prepare_backup($file);
+	//$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
+	//sm_prepare_backup($file);
 	foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
 		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
