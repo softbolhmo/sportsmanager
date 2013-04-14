@@ -4,12 +4,12 @@ function sm_prepare_backup($file, $echo = false) {
 	global $SM;
 	$to = get_option('sportsmanager_email', '');
 	$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
-	if ($to != '') {
-		$tables = array ();
-		foreach ($SM->objects as $k => $object) {
-			if ($k != 'users') $tables[] = $object->table;
-		};
-		if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
+	$tables = array ();
+	foreach ($SM->objects as $k => $object) {
+		if ($k != 'users') $tables[] = $object->table;
+	};
+	if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
+		if ($to != '') {
 			add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
 			wp_mail( //$to, $subject, $message, $headers, $attachments
 				$to,
@@ -20,10 +20,10 @@ function sm_prepare_backup($file, $echo = false) {
 				$file
 			);
 		} else {
-			if ($echo) echo "no-backup-file";
+			if ($echo) echo "no-email";
 		};
 	} else {
-		if ($echo) echo "no-email";
+		if ($echo) echo "no-backup-file";
 	};
 }
 

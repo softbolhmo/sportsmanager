@@ -1,5 +1,17 @@
 <?php
 
+/*
+If there are errors when plugin is activated, put this piece of code at the very end of /wp-admin/includes/plugin.php:
+
+add_action('activated_plugin', 'save_plugin_activation_error');
+function save_plugin_activation_error() {
+	file_put_contents(ABSPATH. 'wp-content/uploads/2013/04/error_activation.html', ob_get_contents());
+}
+add_action('deactivated_plugin', 'save_plugin_deactivation_error');
+function save_plugin_deactivation_error() {
+	file_put_contents(ABSPATH. 'wp-content/uploads/2013/04/error_deactivation.html', ob_get_contents());
+}
+*/
 function sm_activate_plugin() {
 	global $wpdb;
 	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
@@ -80,15 +92,6 @@ function sm_activate_plugin() {
 		$q = str_replace('@table_name@', $table_name, $v);
 		dbDelta($q);
 	};
-/*
-If there are errors when plugin is activated, put this piece of code at the very end of /wp-admin/includes/plugin.php:
-
-add_action('activated_plugin', 'save_plugin_activation_error');
-
-function save_plugin_activation_error() {
-	file_put_contents(ABSPATH. 'wp-content/uploads/2013/04/error_activation.html', ob_get_contents());
-}
-*/
 }
 
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_activate_plugin');
