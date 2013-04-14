@@ -1,6 +1,6 @@
 <?php
 
-function sm_install_plugin() {
+function sm_activate_plugin() {
 	global $wpdb;
 	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
 	update_option(SPORTSMANAGER_PREFIX.'disable_intro', 'enabled');
@@ -91,7 +91,7 @@ function save_plugin_activation_error() {
 */
 }
 
-register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
+register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_activate_plugin');
 
 function sm_deactivate_plugin() {
 	$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
@@ -101,7 +101,7 @@ function sm_deactivate_plugin() {
 	};
 }
 
-register_deactivation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_uninstall_plugin');
+register_deactivation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_deactivate_plugin');
 
 function sm_uninstall_plugin() {
 	global $wpdb;
@@ -109,6 +109,9 @@ function sm_uninstall_plugin() {
 	foreach ($tables as $table) {
 		$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
 		$wpdb->query($q);
+	};
+	foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
 }
 
