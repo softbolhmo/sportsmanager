@@ -214,7 +214,7 @@ SM.behaviors.add_row = function() {
 				SM.filters.filter_input.val("");
 				SM.filters.filter_data.fnDraw();
 				SM.filters.filter_data.fnSort([[0, "desc"]]);
-				if (data.tab == "leagues") $(".sm_page_menu a").removeClass("disabled");
+				if (data.tab == "leagues") $(".sm_page_menu_item").removeClass("disabled");
 				$("#sm_add_row_modal .close").click();
 			}
 		});
@@ -257,7 +257,7 @@ SM.behaviors.delete_row = function() {
 			SM.filters.filter_data.fnDraw();
 			if (data.tab == "leagues" && response == 0) {
 				$.each(["clubs", "games", "locations", "players", "scoresheets", "teams"], function(i, v) {
-					$(".sm_page_menu a[data-tab='" + v + "']").addClass("disabled");
+					$(".sm_page_menu_item[data-tab='" + v + "']").addClass("disabled");
 				});
 			}
 			$("#sm_delete_row_modal .close").click();

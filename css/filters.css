@@ -166,7 +166,6 @@ tr.even td.sorting_1 {
 .sm_filter_table .dataTables_empty {
 	text-align:center;
 	vertical-align:middle;
-	cursor:default;
 }
 .sm_current_cell {
 	background:rgba(255,204,0,.5);
