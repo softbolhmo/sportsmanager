@@ -2,8 +2,8 @@
 </div><!--end .sm_page_inside-->
 <div class="sm_page_footer fancyfont">
 	<div>
-		<span class="left">Sports Manager ©</span>
-		<span class="right"><a href="http://wordpress.org/extend/plugins/sportsmanager/changelog/" target="_blank">Change Log</a> | <a href="http://wordpress.org/support/plugin/sportsmanager" target="_blank">Support</a></span>
+		<span class="left"><a href="http://lac.roix.ca/en/sportsmanager/" target="_blank">Sports Manager ©</a></span>
+		<span class="right"><a href="#" class="sm_show_intro">Show Intro</a> | <a href="http://wordpress.org/extend/plugins/sportsmanager/changelog/" target="_blank">Change Log</a> | <a href="http://wordpress.org/support/plugin/sportsmanager" target="_blank">Support & Feedback</a></span>
 	</div>
 	<div class="clear"></div>
 </div><!--end .sm_page_footer-->

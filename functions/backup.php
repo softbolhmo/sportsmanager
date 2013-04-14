@@ -1,5 +1,31 @@
 <?php
 
+function sm_prepare_backup($file, $echo = false) {
+	$to = get_option('sportsmanager_email', '');
+	$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
+	if ($to != '') {
+		$tables = array ();
+		foreach ($SM->objects as $k => $object) {
+			if ($k != 'users') $tables[] = $object->table;
+		};
+		if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
+			add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
+			wp_mail( //$to, $subject, $message, $headers, $attachments
+				$to,
+				'SPORTS MANAGER BACKUP',
+				"<h1>SPORTS MANAGER BACKUP</h1>".
+				"<p>Thank you for using this plugin.</p>",
+				"From: Sports Manager Plugin <".$from.">",
+				$file
+			);
+		} else {
+			if ($echo) echo "no-backup-file";
+		};
+	} else {
+		if ($echo) echo "no-email";
+	};
+}
+
 function sm_backup($file, $host, $user, $pass, $name, $tables = '*') {
 	$link = mysql_connect($host, $user, $pass);
 	mysql_select_db($name, $link);

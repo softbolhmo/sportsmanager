@@ -16,9 +16,13 @@ class SportsManager_User extends SportsManager_Frontend_Default {
 	}
 
 	function build($data) {
+		$first_name = get_user_meta($data->ID, 'first_name', true);
+		$last_name = get_user_meta($data->ID, 'last_name', true);
+		$name = $first_name.' '.$last_name;
+		if ($name == ' ') $name = $data->display_name;
 		$keys = array (
 			'id' => $data->ID,
-			'name' => get_user_meta($data->ID, 'first_name', true).' '.get_user_meta($data->ID, 'last_name', true),
+			'name' => $name,
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';

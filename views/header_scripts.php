@@ -35,6 +35,7 @@
 					league_id: "leagues-name",
 					location_id: "locations-name",
 					player_id: "players-name",
+					players_id: "players-name",
 					sport: "sports-slug",
 					type: "game-type",
 					user_id: "users-name",
@@ -55,6 +56,7 @@
 				bottom: 40
 			},
 			SPORTSMANAGER_URL: "<?php echo SPORTSMANAGER_URL; ?>",
+			WP_ADMIN_URL: "<?php echo WP_ADMIN_URL; ?>",
 			SPORTSMANAGER_ADMIN_URL_PREFIX: "<?php echo SPORTSMANAGER_ADMIN_URL_PREFIX; ?>"
 		}
 	};

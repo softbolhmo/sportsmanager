@@ -1,5 +1,5 @@
 
-<div id="sm_edit_cell_modal" class="sm_modal_box">
+<div id="sm_edit_cell_modal" class="sm_modal_box sm_modal_edit_info">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>
@@ -12,8 +12,8 @@
 
 <form id="sm_edit_cell_form">
 
-<input type="text" id="sm_current_cell" name="current_cell" value="" tabindex="1" />
-<div id="sm_autocomplete">
+<input type="text" id="sm_current_input-edit_cell" class="sm_current_input" name="current_cell" value="" tabindex="1" />
+<div class="sm_autocomplete_container">
 	<div class="sm_autocomplete_item blank" data-value=""></div>
 </div>
 

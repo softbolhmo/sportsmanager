@@ -1,5 +1,5 @@
 
-<div id="sm_alerts_modal" class="sm_modal_box pale">
+<div id="sm_alerts_modal" class="sm_modal_box sm_modal_alerts pale">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>

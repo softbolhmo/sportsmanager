@@ -62,57 +62,89 @@ function sm_db() {
 	global $wpdb;
 	$SM = new SportsManager_Backend;
 	$data = (object) array ();
-	$keys = array ('do', 'id', 'date_time', 'option_disable_intro', 'option_email', 'option_email_name');
+	$keys = array ('do', 'id', 'date_time', 'value');
 	foreach ($keys as $k) {
-		$key = str_replace('option_', '', $k);
-		$data->$key = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
+		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
 	};
+	parse_str($data->value);
 
 	//set_options
 	if ($data->do == 'set_options') {
 		$options = (object) array ();
-		foreach (array ('disable_intro', 'email', 'email_name') as $k) {
+		foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+			$key = 'option_'.$k;
+			$value = isset($$key) ? $$key : '';
 			$key = SPORTSMANAGER_PREFIX.$k;
-			$options->$key = $data->$k;
+			$options->$key = $value;
 			update_option($key, $options->$key);
 		};
-		echo json_encode($options);
+		//echo json_encode($options);
 		die;
 	};
 
 	//backup_db
 	if ($data->do == 'backup_db') {
 		$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---'.$data->date_time.'.sql';
-		$to = get_option('sportsmanager_email', '');
-		$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
-		if ($to != '') {
-			$tables = array ();
-			foreach ($SM->objects as $object) {
-				$tables[] = $object->table;
-			};
-			if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
-				add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
-				//$to, $subject, $message, $headers, $attachments
-				wp_mail(
-					$to,
-					'SPORTS MANAGER BACKUP',
-					"<h1>SPORTS MANAGER BACKUP</h1>".
-					"<p>Thank you for using this plugin.</p>",
-					"From: Sports Manager Plugin <".$from.">",
-					$file
-				);
-			} else {
-				echo "no-backup-file";
-			};
-		} else {
-			echo "no-email";
-		};
+		sm_prepare_backup($file, true);
 		die;
 	};
 }
 
 add_action('wp_ajax_sm_db', 'sm_db');
 
+function sm_import() {
+	global $wpdb;
+	$SM = new SportsManager_Backend;
+	$data = (object) array ();
+	$keys = array ('do', 'value');
+	foreach ($keys as $k) {
+		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
+	};
+	parse_str($data->value);
+	$csv = file_get_contents($import_file_url);
+	$rows = explode("\n", $csv);
+	if (count($rows) < 4) die;
+	$infos = explode($import_delimiter, trim($rows[0]));
+
+	//scoresheet
+	if ($data->do == 'scoresheet') {
+		$infos = array (
+			'id' => '',
+			'league_id' => $infos[2],
+			'season' => $infos[4],
+			'sport' => $infos[6],
+			'game_id' => $infos[8]
+		);
+		$keys = explode($import_delimiter, trim($rows[2]));
+		unset($rows[0], $rows[1], $rows[2]);
+		$table = array ();
+		foreach ($rows as $row) {
+			if ($row != '') {
+				$row = explode($import_delimiter, trim($row));
+				$row = array_combine($keys, $row);
+				if (is_numeric($row['player_id']) && $row['player_id'] != 0) $table[] = $row;
+			};
+		};
+		$scoresheets = array ();
+		foreach ($table as $row) {
+			$scoresheet = $infos;
+			$scoresheet['player_id'] = $row['player_id'];
+			unset($row['player_id']);
+			$scoresheet['stats'] = json_encode($row);
+			$scoresheets[] = $scoresheet;
+		};
+		foreach ($scoresheets as $scoresheet) {
+			$wpdb->insert(
+				$SM->objects->scoresheets->table,
+				$scoresheet
+			);
+		};
+	};
+	die;
+}
+
+add_action('wp_ajax_sm_import', 'sm_import');
+	
 function sm_row() {
 	global $wpdb;
 	$SM = new SportsManager_Backend;

@@ -51,6 +51,18 @@ class SportsManager {
 		$this->args = (object) array ();
 	}
 
+	function query_users($role = '') {
+		global $wpdb;
+		$table = $this->objects->users->table;
+		$q = "SELECT ID, display_name FROM $table ORDER BY display_name ASC";
+		$objects = array ();
+		$users = get_users('role='.$role);
+		foreach ($users as $user) {
+			$objects[] = new SportsManager_User($user);
+		};
+		return $this->order_array_objects_by('name', $objects);
+	}
+
 	function query_dependancies($filter) {
 		if (array_key_exists($filter, $this->dependancies)) {
 			foreach ($this->dependancies->$filter as $dependancy) {

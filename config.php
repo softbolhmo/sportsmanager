@@ -10,14 +10,15 @@
  * @return void
  */
 function sm_constants() {
-	define('SPORTSMANAGER_VERSION', '1.0');
+	define('SPORTSMANAGER_VERSION', '1.0.9.9');
 	define('SPORTSMANAGER_PREFIX', 'sportsmanager_');
 	define('SPORTSMANAGER_CAPABILITY_PREFIX', 'edit_sportsmanager_');
 	if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', rtrim(get_option('siteurl'), '/').'/'.'wp-content/');
 	if (!defined('WP_CONTENT_DIR')) define('WP_CONTENT_DIR', rtrim(ABSPATH, '/').'/'.'wp-content/');
 	if (!defined('WP_PLUGIN_URL')) define('WP_PLUGIN_URL', rtrim(WP_CONTENT_URL, '/').'/'.'plugins/');
 	if (!defined('WP_PLUGIN_DIR')) define('WP_PLUGIN_DIR', rtrim(WP_CONTENT_DIR, '/').'/'.'plugins/');
-	define('SPORTSMANAGER_ADMIN_URL_PREFIX', rtrim(get_admin_url(), '/').'/'.'admin.php?page=sportsmanager');
+	if (!defined('WP_ADMIN_URL')) define('WP_ADMIN_URL', rtrim(get_admin_url(), '/').'/');
+	define('SPORTSMANAGER_ADMIN_URL_PREFIX', rtrim(WP_ADMIN_URL, '/').'/'.'admin.php?page=sportsmanager');
 	define('SPORTSMANAGER_URL', rtrim(WP_PLUGIN_URL, '/').'/'.'sportsmanager/');
 	define('SPORTSMANAGER_DIR', rtrim(WP_PLUGIN_DIR, '/').'/'.'sportsmanager/');
 	if (!defined('SPORTSMANAGER_FILTER')) {

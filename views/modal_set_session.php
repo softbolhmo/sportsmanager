@@ -1,5 +1,5 @@
 
-<div id="sm_set_session_modal" class="sm_modal_box">
+<div id="sm_set_session_modal" class="sm_modal_box sm_modal_edit_info">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>
@@ -43,7 +43,7 @@
 
 	</select>
 	<h3 id="sm_current_session"><?php echo strtoupper($league.' '.$season.' '.$sport); ?></h3>
-	<div id="sm_session_ajax_return" style="display:none;"></div>
+	<div id="sm_session_ajax_return" class="sm_ajax_return"></div>
 </form>
 
 	</div>

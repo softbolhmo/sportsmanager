@@ -1,5 +1,5 @@
 
-<div id="sm_edit_players_id_modal" class="sm_modal_box">
+<div id="sm_edit_players_id_modal" class="sm_modal_box sm_modal_edit_info">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>
@@ -12,10 +12,15 @@
 
 <form id="sm_edit_players_id_form">
 
-<div id="sm_autocomplete" class="players_id">
-	<div class="sm_autocomplete_player_item blank" data-value=""></div>
+<div class="sm_autocomplete_added_container small">
+	<div class="sm_added_list_title">Player List (ID)</div>
+	<div class="sm_autocomplete_added_item blank" data-value=""></div>
 </div>
-<input type="text" name="players_id" value="" tabindex="1" />
+<input type="text" id="sm_current_input-edit_players_id" class="sm_current_input small" name="current_cell" value="" tabindex="1" />
+<div class="sm_autocomplete_container small">
+	<div class="sm_autocomplete_item sm_add_it blank" data-value=""></div>
+</div>
+<div class="clear"></div>
 
 </form>
 

@@ -19,7 +19,7 @@ class SportsManager_Backend extends SportsManager {
 			'locations' => array ('locations'),
 			'players' => array ('players', 'users'),
 			'scoresheets' => array ('scoresheets', 'games', 'leagues', 'players'),
-			'teams' => array ('teams', 'clubs', 'leagues'),
+			'teams' => array ('teams', 'clubs', 'leagues', 'players'),
 		);
 		$this->build(array (
 			'league_slug' => isset($_SESSION['sm_league']) ? $_SESSION['sm_league'] : '',
@@ -82,7 +82,7 @@ class SportsManager_Backend extends SportsManager {
 			),
 			(object) array (
 				'slug' => 'executive',
-				'capabilities' => array ('games', 'scoresheets', 'import')
+				'capabilities' => array ('games', 'scoresheets', 'import', 'faq', 'donate')
 			),
 			/*
 			(object) array (
@@ -99,21 +99,24 @@ class SportsManager_Backend extends SportsManager {
 			};
 			$role = new SportsManager_Role($data);
 			$role->add_capability($capabilities);
-			//$role->remove_capability(array ('', 'all', 'home', 'clubs', 'games', 'locations', 'leagues', 'players', 'scoresheets', 'teams', 'import', 'donate'));
+			//$role->remove_capability(array ('', 'all', 'home', 'clubs', 'games', 'locations', 'leagues', 'players', 'scoresheets', 'teams', 'import', 'faq', 'donate'));
 		};
 	}
 
 	function add_menu_items() {
 		$plugin_page = add_menu_page('Sports Manager', 'Sports Manager', 'edit_sportsmanager', 'sportsmanager', array (&$this, 'generate'), 'div', '26.6973216'); //26.6973216 is a random decimal number
-		add_action('admin_head', array (&$this, 'include_styles'));
-		add_action('admin_head-'.$plugin_page, array (&$this, 'include_scripts'));
+		add_action('admin_head', array (&$this, 'include_general'));
+		add_action('admin_head-'.$plugin_page, array (&$this, 'include_specific'));
 	}
 
-	function include_styles() {
+	function include_general() {
 		$this->include_view('header_styles');
 	}
 
-	function include_scripts() {
+	function include_specific() {
+		wp_enqueue_style('thickbox');
+		wp_enqueue_script('media-upload');
+		wp_enqueue_script('thickbox');
 		$this->include_view('header_scripts');
 	}
 
@@ -161,18 +164,6 @@ class SportsManager_Backend extends SportsManager {
 			};
 		};
 		return $objects;
-	}
-
-	function query_users($role = '') {
-		global $wpdb;
-		$table = $this->objects->users->table;
-		$q = "SELECT ID, display_name FROM $table ORDER BY display_name ASC";
-		$objects = array ();
-		$users = get_users('role='.$role);
-		foreach ($users as $user) {
-			$objects[] = new SportsManager_User($user);
-		};
-		return $this->order_array_objects_by('name', $objects);
 	}
 
 	function generate() {

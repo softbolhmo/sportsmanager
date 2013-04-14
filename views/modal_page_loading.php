@@ -1,5 +1,5 @@
 
-<div id="sm_page_loading_modal" class="sm_modal_box small pale">
+<div id="sm_page_loading_modal" class="sm_modal_box sm_modal_loading small pale">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>

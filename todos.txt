@@ -2,49 +2,57 @@
 
 IMPORTANT
 -create db importer (recover backup)
--change "games" stat to "games_played"
--verify all autocompletes
-	-clubs:
-		-league id: ok
-		-sport: todo
-	-games:
-		-league id: ok
-		-sport: todo
-		...
-	-leagues:
-	-locations: none
-	-players:
-		-user_id: todo
-	-scoresheets:
-		-league_id: ok
-		-player_id: todo
-	-teams:
-		-club_id: todo... error...
--put query_dependencies() in main SportsManager class, define $this->dependencies before $this->build() in __construct()
--build User class, user object...
--players_id modal
--update screenshot-1.jpg
--walkthrough steps: intro_modal, only disapears if sportsmanager_disable_intro is true
-	-add a league
-	-add clubs
-	-create WP users with Player role
-	-add players, matching them with your WP users
-	-add teams, with players
-	-add locations
-	-add games
-	-add scoresheets, a.k.a. game results
--'deactivate' menu links except Leagues if no league exists
--inner filter pages don't shoe up in IE7: js error? jQuery slide down?
+-create required fields
+	-if html() == '', put cell in red and prevent switching tab
+-slug authorized characters! remove spaces...
+	-when name is saved, if slug == '' => convert name to slug function()
+-DONE? set_options / delete_options
+	-DONE? on activation: set disable_intro
+	-DONE? on plugin removal: delete all 4 options
+-DONE? do backup when upgrading
 
 CAN WAIT
--test paypal donation
+-change "games" stat to "games_played"
+	-maybe... this would fuck up all the baseball stats
 -when session is set and new row added, automatically place session params in new row
+	-add_row response should be like {id: '#', sport: 'baseball', season: '2013'}
+	-there should be a $.parseJSON(response) made
 -add_stats by sports
+	-make it prettier
+	-add more stats
+	-add more sports
 -uniformiser functions/ajax.php
 -create standard classes: meta_box, post_typerole, taxonomy, user_meta_box
+-inner filter pages don't shoe up in IE7: js error? jQuery slide down?
+-PARTIALLY DONE: modal .close should only close the current modal, not all open ones
+	-also, backdrop should not be closed if other modals are open
 
 ONE DAY...
 -phpDoc that shit
 -create logo
 -change menu item icon & favicon
 -define color palette
+
+DONE
+-autocompletes
+	-clubs:
+		-league id: ok
+		-sport: ok
+	-games:
+		-league id: ok
+		-sport: todo
+		-home_team_id: ok
+		-away_team_is: ok
+		-winner_id: ok
+		-type: ok
+		-location: ok
+		-cancelled: ok
+	-leagues: none
+	-locations: none
+	-players:
+		-user_id: ok
+	-scoresheets:
+		-league_id: ok
+		-player_id: ok
+	-teams:
+		-club_id: ok

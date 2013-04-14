@@ -16,11 +16,11 @@
 		if ($k == 'home') {
 ?>
 
-<a href="<?php echo $admin_url; ?>" class="<?php echo $class; ?>"><?php echo $v; ?></a>
+<div class="sm_page_menu_item <?php echo $class; ?>"><?php echo $v; ?></div>
 
 <?php } else { ?>
 
-<a href="<?php echo $admin_url."&tab=".$k; ?>" class="<?php echo $class; ?>" data-tab="<?php echo $k; ?>"><?php echo $v; ?></a>
+<div class="sm_page_menu_item <?php echo $class; ?>" data-tab="<?php echo $k; ?>"><?php echo $v; ?></div>
 
 <?php
 		};

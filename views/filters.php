@@ -47,5 +47,6 @@
 <?php $SM->include_view('modal_edit_cell'); ?>
 <?php $SM->include_view('modal_edit_stats'); ?>
 <?php $SM->include_view('modal_edit_players_id'); ?>
+<?php $SM->include_view('modal_add_row'); ?>
 <?php $SM->include_view('modal_delete_row'); ?>
 <?php $SM->include_view('modal_set_session'); ?>

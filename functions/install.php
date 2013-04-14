@@ -3,6 +3,9 @@
 function sm_install_plugin() {
 	global $wpdb;
 	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+	update_option(SPORTSMANAGER_PREFIX.'disable_intro', 'enabled');
+	$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---UPGRADINGv'.SPORTSMANAGER_VERSION.'.sql';
+	sm_prepare_backup($file);
 	$tables = array (
 		'clubs'			=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
@@ -90,9 +93,18 @@ function save_plugin_activation_error() {
 
 register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_install_plugin');
 
+function sm_deactivate_plugin() {
+	$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
+	sm_prepare_backup($file);
+	foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+		delete_option(SPORTSMANAGER_PREFIX.$k);
+	};
+}
+
+register_deactivation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_uninstall_plugin');
+
 function sm_uninstall_plugin() {
 	global $wpdb;
-	$wpdb->show_errors();
 	$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
 	foreach ($tables as $table) {
 		$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;

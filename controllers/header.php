@@ -37,7 +37,6 @@ $page_subtitles = array (
 	'donate' => 'Support Sports Manager development'
 );
 $page_subtitle = isset($page_subtitles[SPORTSMANAGER_FILTER]) ? $page_subtitles[SPORTSMANAGER_FILTER] : $page_subtitles['default'];
-$admin_url = SPORTSMANAGER_ADMIN_URL_PREFIX;
 $prefix = SPORTSMANAGER_PREFIX;
 $menu = array (
 	'home' => "Home",
@@ -53,6 +52,4 @@ $menu = array (
 	'donate' => "Donate"
 );
 $active = SPORTSMANAGER_FILTER;
-$table = $this->objects->leagues->table;
-$q = "SELECT COUNT(*) FROM $table";
-$count = $wpdb->get_var($q);
+$count = $wpdb->get_var("SELECT COUNT(*) FROM ".$this->objects->leagues->table);

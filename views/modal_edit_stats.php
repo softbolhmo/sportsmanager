@@ -1,5 +1,5 @@
 
-<div id="sm_edit_stats_modal" class="sm_modal_box">
+<div id="sm_edit_stats_modal" class="sm_modal_box sm_modal_edit_info">
 	<div class="sm_modal_header">
 		<table class="title">
 			<tr>

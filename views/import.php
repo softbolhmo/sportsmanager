@@ -1,72 +1,59 @@
 
 <div class="sm_page_inside_container">
 
-<form id="sm_import_scoresheet_form" enctype="multipart/form-data" action="?page=sportsmanager_import&action=import" method="post">
-	<input type="hidden" name="max_file_size" value="100000" />
-	<p>Select import type: <select id="object_type" name="object_type">
-		<option value="scoresheets">Scoresheet</option>
+<table class="sm_inside_tabs">
+	<tr>
+
+<td class="sm_left_menu">
+	<div class="sm_left_menu_item active" data-tab="import_data">Import data</div>
+	<div class="sm_left_menu_item" data-tab="recover_backup">Recover backup</div>
+</td>
+
+<td class="sm_right_tabs">
+	<div class="sm_right_tab active" data-tab="import_data">
+
+
+<form id="sm_import_form">
+	<p>Select import type: <select id="sm_import_type" name="import_type">
+		<option value=""></option>
+		<option value="scoresheet">Scoresheet</option>
 	</select></p>
-	<p>Choose a file to upload: <input type="file" id="uploaded_file" name="uploaded_file" /></p>
-	<p>Define delimiter: <input type="text" id="delimiter" name="delimiter" /></p>
-	<input type="submit" value="Upload File" />
+
+<div class="sm_import_type_info" data-type="scoresheet">
+
+<p>To import a scoresheet after a game, fill out this blank scoresheets.</p>
+
+<table class="sm_import_blanks">
+	<tr>
+
+<?php foreach ($sports as $k => $v) { $class = !file_exists(SPORTSMANAGER_DIR.'imports/'.$k.'.csv') ? 'disabled' : ''; ?>
+	<td><a href="<?php echo SPORTSMANAGER_URL.'imports/'.$k.'.csv'; ?>" class="<?php echo $class; ?>" target="_blank"><?php echo $v; ?></a></td>
+<?php }; ?>
+
+	</tr>
+</table>
+
+</div>
+
+	<p>Choose a .csv file to upload: <input type="text" id="sm_import_file_url" name="import_file_url" /><button class="sm_import_upload_file">Upload</button></p>
+	<p>Define delimiter: <select id="sm_import_delimiter" name="import_delimiter">
+		<option value=""></option>
+		<option value=",">Comma (,)</option>
+		<option value=";">Semi-colon (;)</option>
+	</select></p>
+	<button type="submit" id="sm_import_btn">Import file</button>
+	<div id="sm_import_ajax_return" class="sm_ajax_return"></div>
 </form>
 
-<?php
-if (isset($_GET['action']) && $_GET['action'] == 'import' && isset($_FILES['uploaded_file']['tmp_name']) && $_FILES['uploaded_file']['tmp_name'] != '') {
-	if (isset($_POST['delimiter']) && $_POST['delimiter'] != '') {
-		$delimiter = $_POST['delimiter'];
-		$csv = file_get_contents($_FILES['uploaded_file']['tmp_name']);
-		$rows = explode("\n", $csv);
-		if (isset($_POST['object_type']) && $_POST['object_type'] != '') {
-?>
+	</div>
+	<div class="sm_right_tab" data-tab="recover_backup">
 
-<p><a href="?page=sportsmanager_import">Back to import page</a></p>
+<p>Not ready yet...</p>
 
-<?php
-			$object_type = $_POST['object_type'];
-			switch ($object_type) {
-				case 'scoresheets':
-					$infos = explode($delimiter, trim($rows[0]));
-					$infos = array (
-						'id' => '',
-						'league_id' => $infos[2],
-						'season' => $infos[4],
-						'sport' => $infos[6],
-						'game_id' => $infos[8]
-					);
-					$keys = explode($delimiter, trim($rows[2]));
-					unset($rows[0], $rows[1], $rows[2]);
-					$table = array ();
-					foreach ($rows as $row) {
-						$row = explode($delimiter, $row);
-						$row = array_combine($keys, $row);
-						if (is_numeric($row['player_id']) && $row['player_id'] != 0) $table[] = $row;
-					};
-					$scoresheets = array ();
-					foreach ($table as $row) {
-						$scoresheet = $infos;
-						$scoresheet['player_id'] = $row['player_id'];
-						unset($row['player_id']);
-						$scoresheet['stats'] = json_encode($row);
-						$scoresheets[] = $scoresheet;
-					};
-					foreach ($scoresheets as $scoresheet) {
-						$wpdb->insert(
-							$SM->objects->scoresheets->table,
-							$scoresheet
-						);
-					};
-?>
+	</div>
+</td>
 
-<h2>Scoresheets have been added to the database.</h2>
-<p><a href="?page=sportsmanager_scoresheets">Edit Scoresheets</a></p>
-
-<?php
-					break;
-			};
-		};
-	};
-};
-?>
+	</tr>
+</table>
 
 </div>
