@@ -1,12 +1,13 @@
 <?php
 
 function sm_prepare_backup($file, $echo = false) {
-	global $SM;
+	global $wpdb;
 	$to = get_option('sportsmanager_email', '');
 	$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
+	$objects = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
 	$tables = array ();
-	foreach ($SM->objects as $k => $object) {
-		if ($k != 'users') $tables[] = $object->table;
+	foreach ($objects as $object) {
+		$tables[] = $wpdb->prefix.SPORTSMANAGER_PREFIX.$object;
 	};
 	if (sm_backup($file, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, $tables)) {
 		if ($to != '') {
