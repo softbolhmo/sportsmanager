@@ -1,6 +1,7 @@
 <?php
 
 function sm_prepare_backup($file, $echo = false) {
+	global $SM;
 	$to = get_option('sportsmanager_email', '');
 	$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
 	if ($to != '') {

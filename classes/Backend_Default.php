@@ -27,6 +27,7 @@ class SportsManager_Backend_Default {
 	}
 
 	function build($data) {
+		global $wpdb, $SM;
 		foreach ($data as $k => $v) {
 			$this->$k = isset($v) ? $v : '';
 		};
@@ -34,7 +35,7 @@ class SportsManager_Backend_Default {
 			if (isset($this->user_id)) {
 				foreach (array ('first_name', 'last_name') as $k) {
 					if (!isset($this->$k)) {
-						$v = get_user_meta($object->user_id, $k, true);
+						$v = get_user_meta($this->user_id, $k, true);
 						if ($v != '') $this->$k = $v;
 					};
 				};
@@ -44,7 +45,7 @@ class SportsManager_Backend_Default {
 			};
 		} elseif ($this->filter == 'teams') {
 			if (isset($this->club_id)) {
-				$this->name = $wpdb->get_var("SELECT name FROM ".$this->objects->clubs->table." WHERE id = '".$this->club_id."'");
+				$this->name = $wpdb->get_var("SELECT name FROM ".$SM->objects->clubs->table." WHERE id = '".$this->club_id."'");
 			};
 		};
 	}

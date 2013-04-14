@@ -171,17 +171,16 @@ function sm_row() {
 	if ($data->do == 'edit' && isset($data->id)) {
 		$keys = array ('filter', 'id', 'column');
 		$values = explode('-', $data->id);
-		$data = array_combine($keys, $values);
-		$data = (object) $data;
+		$info = (object) array_combine($keys, $values);
 		$data->value = stripslashes($data->value);
 		$wpdb->update(
-			$SM->objects->{SPORTSMANAGER_FILTER}->table,
+			$SM->objects->{$info->filter}->table,
 			array (
-				$data->column => $data->value
+				$info->column => $data->value
 			),
-			array ('id' => $data->id)
+			array ('id' => $info->id)
 		);
-		echo $wpdb->get_var("SELECT $data->column FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table." WHERE id = $data->id");
+		echo $wpdb->get_var("SELECT $info->column FROM ".$SM->objects->{$info->filter}->table." WHERE id = $info->id");
 		die;
 	};
 

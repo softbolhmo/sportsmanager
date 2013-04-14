@@ -1,5 +1,6 @@
 /* pages */
 SM.behaviors.filters = function() {
+	var $ = jQuery;
 	SM.fn.init_filter_tables();
 
 	$(".sm_filter_table th").live("click", function(e) {
@@ -8,7 +9,7 @@ SM.behaviors.filters = function() {
 	});
 }
 
-SM.behaviors.home_settings = function() {
+SM.behaviors.home = function() {
 	var $ = jQuery;
 	$("#sm_save_options_form").live("submit", function () {
 		var form = $(this);
