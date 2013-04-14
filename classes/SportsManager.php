@@ -48,6 +48,12 @@ class SportsManager {
 				'table' => $wpdb->prefix.'users'
 			)
 		);
+		$this->args = (object) array ();
+		$this->db = (object) array ();
+		$this->languages = array (
+			'en' => 'English',
+			//'fr' => 'Français',
+		);
 		$this->sports = array (
 			'baseball' => 'Baseball',
 			'basketball' => 'Basketball',
@@ -60,11 +66,6 @@ class SportsManager {
 			'volleyball' => 'Volleyball',
 			'waterpolo' => 'Water Polo'
 		);
-		$this->languages = array (
-			'en' => 'English',
-			//'fr' => 'Français',
-		);
-		$this->args = (object) array ();
 	}
 
 	function query_users($role = '') {
