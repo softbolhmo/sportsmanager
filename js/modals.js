@@ -202,7 +202,7 @@ SM.behaviors.add_row = function() {
 			for (i = 1; i < new_row.columns.length; i++) {
 				new_row.data.push("");
 			}
-			if (SM.fn.is_number(response)) {
+			if (SM.fn.is_number(response) && parseFloat(response) > 0) {
 				new_row.data[new_row.data.length - 1] = '<button class="sm_delete_row_btn"><img src="' + SM.settings.SPORTSMANAGER_URL + 'images/icon_trashcan.png" /></button>';
 				var i = SM.filters.filter_data.fnAddData(new_row.data, false);
 				var added_row = $(SM.filters.filter_data.fnGetNodes(i));
