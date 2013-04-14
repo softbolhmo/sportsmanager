@@ -87,6 +87,7 @@ a:active {
 .sm_page_inside_container {
 	padding:0 10px;
 	min-height:250px;
+	font-size:16px;
 }
 .sm_page_footer {
 	border:1px solid #ccc;
@@ -125,6 +126,7 @@ a:active {
 .sm_left_menu {
 	padding:0;
 	width:200px;
+	min-width:200px;
 	border-right:1px solid #f0f0f0;
 	vertical-align:middle;
 }

@@ -28,6 +28,7 @@ function sm_activate_plugin() {
 								description text NOT NULL,
 								small_logo_url varchar(256) NOT NULL,
 								large_logo_url varchar(256) NOT NULL,
+								infos text NOT NULL,
 								PRIMARY KEY  (id)
 							);",
 		'games'			=> "CREATE TABLE @table_name@ (
@@ -43,6 +44,7 @@ function sm_activate_plugin() {
 								date datetime NOT NULL,
 								type varchar(2) NOT NULL,
 								location_id int(11) NOT NULL,
+								description text NOT NULL,
 								cancelled int(1) NOT NULL,
 								PRIMARY KEY  (id)
 							)",
@@ -53,6 +55,7 @@ function sm_activate_plugin() {
 								description text NOT NULL,
 								small_logo_url varchar(256) NOT NULL,
 								large_logo_url varchar(256) NOT NULL,
+								infos text NOT NULL,
 								PRIMARY KEY  (id)
 							)",
 		'locations'		=> "CREATE TABLE @table_name@ (
@@ -62,11 +65,15 @@ function sm_activate_plugin() {
 								description text NOT NULL,
 								small_logo_url varchar(256) NOT NULL,
 								large_logo_url varchar(256) NOT NULL,
+								infos text NOT NULL,
 								PRIMARY KEY  (id)
 							)",
 		'players'		=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
 								user_id int(11) NOT NULL,
+								small_logo_url varchar(256) NOT NULL,
+								large_logo_url varchar(256) NOT NULL,
+								infos text NOT NULL,
 								PRIMARY KEY  (id)
 							)",
 		'scoresheets'	=> "CREATE TABLE @table_name@ (
