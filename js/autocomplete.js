@@ -19,7 +19,7 @@ SM.behaviors.autocomplete = function() {
 				blank.attr("data-value", v.value).html(v.label).removeClass("blank");
 				$(".sm_autocomplete_container").append(blank);
 			});
-			if (array == "yes-no") {
+			if (array == "yes-no" || array == "game-type") {
 				$(".sm_autocomplete_item:not(.blank)").css("display", "inline-block");
 			};
 		}

@@ -6,7 +6,7 @@ SM.behaviors.modals = function() {
 		var parent = $(this).parents(".sm_modal_box");
 		parent.hide();
 		if ($(".sm_modal_box:visible").length == 0) {
-			if (parent.hasClass("sm_modal_alerts")) {
+			if (parent.hasClass("sm_modal_alerts") || parent.hasClass("sm_modal_intro")) {
 				$("#sm_backdrop_disabled").hide();
 			} else if (parent.hasClass("sm_modal_edit_info")) {
 				$("#sm_backdrop").hide();
@@ -298,11 +298,11 @@ SM.behaviors.set_session = function() {
 SM.behaviors.intro = function() {
 	var $ = jQuery;
 	if (SM.settings.intro.disabled != "disabled") {
-		$("#sm_plugin_intro_modal").show();
+		$("#sm_plugin_intro_modal, #sm_backdrop_disabled").show();
 	}
 
 	$(".sm_show_intro").live("click", function() {
-		$("#sm_plugin_intro_modal").show();
+		$("#sm_plugin_intro_modal, #sm_backdrop_disabled").show();
 		return false;
 	});
 
