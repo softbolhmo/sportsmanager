@@ -14,7 +14,7 @@ SM.behaviors.autocomplete = function() {
 		if (array != "" && typeof SM.settings.autocomplete.arrays[array] !== "undefined") {
 			var modal = $("#sm_edit_cell_modal");
 			if (cell.hasClass("column-players_id")) var modal = $("#sm_edit_players_id_modal");
-			$.each(SM.settings.autocomplete.arrays[array], function(k, v) {
+			$.each(SM.settings.autocomplete.arrays[array], function(i, v) {
 				var blank = modal.find(".sm_autocomplete_item.blank").clone();
 				blank.attr("data-value", v.value).html(v.label).removeClass("blank");
 				$(".sm_autocomplete_container").append(blank);

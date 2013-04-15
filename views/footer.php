@@ -12,7 +12,7 @@
 </div><!--end .sm_main_container-->
 
 <?php $this->include_view('modal_page_loading'); ?>
-<?php $this->include_view('modal_plugin_intro'); ?>
+<?php $this->include_view('modal_intro'); ?>
 <?php $this->include_view('modal_alerts'); ?>
 
 <div id="sm_backdrop"></div><!--end #sm_backdrop-->

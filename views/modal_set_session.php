@@ -12,38 +12,15 @@
 
 <form id="sm_set_session_form">
 	<input type="hidden" name="action" value="sm_session" />
-	<select name="sm_league" tabindex="1">
-
-<?php
-	foreach ($leagues as $k => $v) {
-		$selected = $k == $league ? ' selected="selected"' : '';
-		echo '<option value="'.$k.'"'.$selected.'>'.$v.'</option>'."\n";
-	};
-?>
-
+	<select name="sm_league" data-select="session_leagues" tabindex="1">
+		<option class="blank" value="">Choose a league...</option>
 	</select>
-	<select name="sm_season" tabindex="1">
-
-<?php
-	foreach ($years as $k => $v) {
-		$selected = $k == $season ? ' selected="selected"' : '';
-		echo '<option value="'.$k.'"'.$selected.'>'.$v.'</option>'."\n";
-	};
-?>
-
+	<select name="sm_season" data-select="session_seasons" tabindex="1">
+		<option class="blank" value="">Choose a season...</option>
 	</select>
-	<select name="sm_sport" tabindex="1">
-
-<?php
-	foreach ($sports as $k => $v) {
-		$selected = $k == $sport ? ' selected="selected"' : '';
-		echo '<option value="'.$k.'"'.$selected.'>'.$v.'</option>'."\n";
-	};
-?>
-
+	<select name="sm_sport" data-select="session_sports" tabindex="1">
+		<option class="blank" value="">Choose a sport...</option>
 	</select>
-	<h3 id="sm_current_session"><?php echo strtoupper($league.' '.$season.' '.$sport); ?></h3>
-	<div id="sm_session_ajax_return" class="sm_ajax_return"></div>
 </form>
 
 	</div>

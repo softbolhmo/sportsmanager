@@ -1,18 +1,23 @@
 ﻿TODOS
 
-IMPORTANT
+* IMPORTANT *
+Backend
 -create db importer (recover backup)
+-DONE? do backup when upgrading
+-if players_id == [], echo nothing...
+
+Frontend
+-
+
+* LESS IMPORTANT *
+Backend
+-besoin de capitaines??
+-make Session String more bullet proof: it's ugly when there's just the sport
 -create required fields
 	-if html() == '', put cell in red and prevent switching tab
+	-max # of characters e.g. season => varchar(5)
 -slug authorized characters! remove spaces...
 	-when name is saved, if slug == '' => convert name to slug function()
--DONE? set_options / delete_options
-	-DONE? on activation: set disable_intro
-	-DONE? on plugin removal: delete all 4 options
--DONE? do backup when upgrading
--SESSION season should maybe be 2013W for the winter season...
-
-CAN WAIT
 -change "games" stat to "games_played"
 	-maybe... this would fuck up all the baseball stats
 -when session is set and new row added, automatically place session params in new row
@@ -28,32 +33,11 @@ CAN WAIT
 -PARTIALLY DONE: modal .close should only close the current modal, not all open ones
 	-also, backdrop should not be closed if other modals are open
 
-ONE DAY...
+Frontend
+-
+
+* ONE DAY... *
 -phpDoc that shit
 -create logo
 -change menu item icon & favicon
 -define color palette
-
-DONE
--autocompletes
-	-clubs:
-		-league id: ok
-		-sport: ok
-	-games:
-		-league id: ok
-		-sport: todo
-		-home_team_id: ok
-		-away_team_is: ok
-		-winner_id: ok
-		-type: ok
-		-location: ok
-		-cancelled: ok
-	-leagues: none
-	-locations: none
-	-players:
-		-user_id: ok
-	-scoresheets:
-		-league_id: ok
-		-player_id: ok
-	-teams:
-		-club_id: ok

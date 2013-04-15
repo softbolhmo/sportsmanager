@@ -5,7 +5,7 @@ function sm_define_session() {
 	$out = array ();
 	$session = (object) array (
 		'sm_league' => '',
-		'sm_season' => date('Y'),
+		'sm_season' => '',
 		'sm_sport' => ''
 	);
 	foreach ($session as $k => $v) {

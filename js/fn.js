@@ -90,7 +90,10 @@ SM.fn.switch_tab = function(tab) {
 	$(".sm_main_container").load(SM.settings.SPORTSMANAGER_ADMIN_URL_PREFIX + "&tab=" + tab + " .sm_inner_container", function() {
 		SM.fn.init_filter_tables();
 		SM.fn.load_autocomplete();
-		$("#sm_page_loading_modal, #sm_backdrop_disabled").hide();
+		$("#sm_page_loading_modal").hide();
+		if ($(".sm_modal_box:visible").length == 0) {
+			$("#sm_backdrop_disabled").hide();
+		}
 	});
 }
 

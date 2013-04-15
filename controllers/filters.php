@@ -10,7 +10,8 @@ $headers = array (
 		'slug' => array ('Slug', ''),
 		'description' => array ('Description', ''),
 		'small_logo_url' => array ('Small Logo URL', ''),
-		'large_logo_url' => array ('Large Logo URL', '')
+		'large_logo_url' => array ('Large Logo URL', ''),
+		'infos' => array ('Infos', '')
 	),
 	'games' => array (
 		'id' => array ('ID', ''),
@@ -25,6 +26,7 @@ $headers = array (
 		'date' => array ('Date', ''),
 		'type' => array ('Type', ''),
 		'location_id' => array ('Location ID', ''),
+		'description' => array ('Description', ''),
 		'cancelled' => array ('Cancelled?', '')
 	),
 	'leagues' => array (
@@ -33,7 +35,8 @@ $headers = array (
 		'slug' => array ('Slug', ''),
 		'description' => array ('Description', ''),
 		'small_logo_url' => array ('Small Logo URL', ''),
-		'large_logo_url' => array ('Large Logo URL', '')
+		'large_logo_url' => array ('Large Logo URL', ''),
+		'infos' => array ('Infos', '')
 	),
 	'locations' => array (
 		'id' => array ('ID', ''),
@@ -41,11 +44,15 @@ $headers = array (
 		'slug' => array ('Slug', ''),
 		'description' => array ('Description', ''),
 		'small_logo_url' => array ('Small Logo URL', ''),
-		'large_logo_url' => array ('Large Logo URL', '')
+		'large_logo_url' => array ('Large Logo URL', ''),
+		'infos' => array ('Infos', '')
 	),
 	'players' => array (
 		'id' => array ('ID', ''),
 		'user_id' => array ('WP User ID', ''),
+		'small_logo_url' => array ('Small Logo URL', ''),
+		'large_logo_url' => array ('Large Logo URL', ''),
+		'infos' => array ('Infos', '')
 	),
 	'scoresheets' => array (
 		'id' => array ('ID', ''),

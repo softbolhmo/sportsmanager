@@ -4,7 +4,7 @@ Donate link: http://lac.roix.ca/en/sportsmanager/
 Tags: sports managing system, league managing system, sports league, sports, league, players stats, stats
 Requires at least: 3.5.1
 Tested up to: 3.5.1
-Stable tag: 1.0.9.9
+Stable tag: 1.0.1
 License: GPL2
 
 BETA VERSION. Manage your league like a pro! Sports Manager is a WordPress plugin that allows you to manage you sports leagues for your website.
@@ -19,7 +19,7 @@ Please, take note that version 1.0 is functional, but not production ready. Too 
 
 1. Upload the 'sportsmanager.zip' file via the plugin uploader in your admin section, '/wp-admin/plugin-install.php?tab=upload'.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Start managing your league!
+3. Start managing your league! (Follow the instructions on the intro screen)
 
 DARY.
 
@@ -41,6 +41,10 @@ Yes. You can manages, games, locations and more. But not individual player stats
 1. Here's an example of a Sports Manager plugin page. On this one, you can manage games.
 
 == Changelog ==
+
+= 1.0.1 =
+* Database changes.
+* Again, lots of bug fixes.
 
 = 1.0.9.9 =
 * Intro screen added.

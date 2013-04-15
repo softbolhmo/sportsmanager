@@ -24,6 +24,7 @@ SM.behaviors.menu = function() {
 		$(this).addClass("active");
 		$(".sm_right_tab").removeClass("active");
 		$(".sm_right_tab[data-tab='" + tab + "']").addClass("active");
+		$(".sm_right_tab.active [tabindex='1']").focus();
 	});
 }
 

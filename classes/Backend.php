@@ -139,8 +139,10 @@ class SportsManager_Backend extends SportsManager {
 		$q .= $this->mysql_where_string($wheres);
 		$objects = array ();
 		$results = $wpdb->get_results($q);
-		foreach ($results as $data) {
-			$objects[] = new SportsManager_Backend_Default($data, $filter);
+		if ($results != null) {
+			foreach ($results as $data) {
+				$objects[] = new SportsManager_Backend_Default($data, $filter);
+			};
 		};
 		return $objects;
 	}

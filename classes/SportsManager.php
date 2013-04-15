@@ -51,27 +51,65 @@ class SportsManager {
 		$this->args = (object) array ();
 		$this->db = (object) array ();
 		$this->languages = array (
-			'en' => 'English',
-			//'fr' => 'Français',
+			'en' => array ('English', 'English'),
+			'fr' => array ('French', 'Français')
 		);
 		$this->sports = array (
-			'baseball' => 'Baseball',
-			'basketball' => 'Basketball',
-			'cricket' => 'Cricket',
-			'handball' => 'Handball',
-			'hockey' => 'Hockey',
-			'football' => 'Football',
-			'soccer' => 'Soccer',
-			'rugby' => 'Rugby',
-			'volleyball' => 'Volleyball',
-			'waterpolo' => 'Water Polo'
+			'baseball' => array ('Baseball', 'Baseball'),
+			'basketball' => array ('Basketball', 'Basketball'),
+			'cricket' => array ('Cricket', 'Cricket'),
+			'handball' => array ('Handball', 'Handball'),
+			'hockey' => array ('Hockey', 'Hockey'),
+			'football' => array ('Football', 'Football'),
+			'soccer' => array ('Soccer', 'Soccer'),
+			'rugby' => array ('Rugby', 'Rugby'),
+			'volleyball' => array ('Volleyball', 'Volleyball'),
+			'waterpolo' => array ('Water Polo', 'Water Polo')
 		);
+	}
+
+	function query_leagues() {
+		global $wpdb;
+		$leagues = array ();
+		$table = $this->objects->leagues->table;
+		$q = "SELECT name, slug FROM $table ORDER BY name ASC";
+		$results = $wpdb->get_results($q);
+		if ($results != null) {
+			foreach ($results as $result) {
+				$leagues[$result->slug] = $result->name;
+			};
+		};
+		return $leagues;
+	}
+
+	function query_seasons() {
+		global $wpdb;
+		$seasons = array ();
+		$objects = array ('games', 'scoresheets', 'teams');
+		foreach ($objects as $object) {
+			$table = $this->objects->$object->table;
+			$q = "SELECT season FROM $table GROUP BY season ORDER BY season ASC";
+			$results = $wpdb->get_col($q);
+			$seasons = array_merge($seasons, $results);
+		};
+		return array_unique($seasons);
+	}
+
+	function query_sports() {
+		global $wpdb;
+		$sports = array ();
+		$objects = array ('clubs', 'games', 'scoresheets');
+		foreach ($objects as $object) {
+			$table = $this->objects->$object->table;
+			$q = "SELECT sport FROM $table GROUP BY sport ORDER BY sport ASC";
+			$results = $wpdb->get_col($q);
+			$sports = array_merge($sports, $results);
+		};
+		return array_unique($sports);
 	}
 
 	function query_users($role = '') {
 		global $wpdb;
-		$table = $this->objects->users->table;
-		$q = "SELECT ID, display_name FROM $table ORDER BY display_name ASC";
 		$objects = array ();
 		$users = get_users('role='.$role);
 		foreach ($users as $user) {

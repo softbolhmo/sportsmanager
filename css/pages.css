@@ -87,7 +87,7 @@ a:active {
 .sm_page_inside_container {
 	padding:0 10px;
 	min-height:250px;
-	font-size:16px;
+	font-size:14px;
 }
 .sm_page_footer {
 	border:1px solid #ccc;
@@ -112,7 +112,7 @@ a:active {
 }
 #sm_import_scoresheet_form {
 }
-#sm_plugin_intro_modal {
+#sm_intro_modal {
 	display:none;
 }
 
@@ -147,6 +147,9 @@ a:active {
 	height:250px;
 	display:none;
 	overflow:auto;
+}
+.sm_modal_box .sm_right_tab {
+	height:200px;
 }
 .sm_right_tab.active {
 	display:block;

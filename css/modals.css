@@ -156,13 +156,21 @@
 	width:100%;
 	border-radius:0 0 3px 3px;
 }
-.sm_current_input {
+input.sm_current_input {
 	width:100%;
 	font-size:180px;
 }
-.sm_current_input.small {
+input.sm_current_input.small {
 	width:50%;
 	font-size:80px;
+}
+textarea.sm_current_input {
+	margin:0;
+	padding:20px;
+	width:100%;
+	height:98%;
+	font-size:22px;
+	line-height:30px;
 }
 #sm_backdrop {
 	position:fixed;

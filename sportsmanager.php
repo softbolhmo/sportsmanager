@@ -3,7 +3,7 @@
 Plugin Name: Sports Manager
 Plugin URI: http://lac.roix.ca/en/sportsmanager/
 Description: Manage your sport league like a pro!
-Version: 1.0.9.9
+Version: 1.0.1
 Author: Charles-Alexandre Lacroix
 Author URI: http://lac.roix.ca/
 License: GPL2

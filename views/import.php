@@ -27,7 +27,7 @@
 	<tr>
 
 <?php foreach ($sports as $k => $v) { $class = !file_exists(SPORTSMANAGER_DIR.'imports/'.$k.'.csv') ? 'disabled' : ''; ?>
-	<td><a href="<?php echo SPORTSMANAGER_URL.'imports/'.$k.'.csv'; ?>" class="<?php echo $class; ?>" target="_blank"><?php echo $v; ?></a></td>
+	<td><a href="<?php echo SPORTSMANAGER_URL.'imports/'.$k.'.csv'; ?>" class="<?php echo $class; ?>" target="_blank"><?php echo $v[0]; ?></a></td>
 <?php }; ?>
 
 	</tr>

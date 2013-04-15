@@ -17,10 +17,10 @@
 	<p>Email: <input id="sm_option_email" name="option_email" type="text" value="<?php echo $option_email; ?>" /></p>
 	<p>Name: <input id="sm_option_email_name" name="option_email_name" type="text" value="<?php echo $option_email_name; ?>" /></p>
 	<p>Language: <select id="sm_option_language" name="option_language">
-		<option value="<?php echo $option_language; ?>"><?php echo $languages[$option_language]; ?></option>
+		<option value="<?php echo $option_language; ?>"><?php echo $languages[$option_language][1]; ?></option>
 
 <?php foreach ($languages as $k => $v) { if ($k != $option_language) { ?>
-		<option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+		<option value="<?php echo $k; ?>"><?php echo $v[1]; ?></option>
 <?php }}; ?>
 
 	</select></p>

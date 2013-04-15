@@ -34,7 +34,7 @@ function sm_activate_plugin() {
 		'games'			=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
 								league_id int(11) NOT NULL,
-								season year(4) NOT NULL,
+								season varchar(5) NOT NULL,
 								sport varchar(100) NOT NULL,
 								home_team_id int(11) NOT NULL,
 								away_team_id int(11) NOT NULL,
@@ -79,7 +79,7 @@ function sm_activate_plugin() {
 		'scoresheets'	=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
 								league_id int(11) NOT NULL,
-								season year(4) NOT NULL,
+								season varchar(5) NOT NULL,
 								sport varchar(100) NOT NULL,
 								game_id int(11) NOT NULL,
 								player_id int(11) NOT NULL,
@@ -89,7 +89,7 @@ function sm_activate_plugin() {
 		'teams'			=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
 								club_id int(11) NOT NULL,
-								season year(4) NOT NULL,
+								season varchar(5) NOT NULL,
 								players_id text NOT NULL,
 								PRIMARY KEY  (id)
 							)"

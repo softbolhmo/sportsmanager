@@ -28,9 +28,9 @@ SM.behaviors.modals = function() {
 
 SM.behaviors.edit_cell = function() {
 	var $ = jQuery;
-	$(".sm_filter_table td:not(.column-id, .column-stats, .column-players_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
+	$(".sm_filter_table td:not(.column-id, .column-description, .column-stats, .column-infos, .column-players_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
-		var input = $("input[name=current_cell]");
+		var input = $("#sm_edit_cell_modal input[name=current_cell]");
 		var value = SM.settings.current_cell.html();
 		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
 		if (value != "") {
@@ -65,6 +65,57 @@ SM.behaviors.edit_cell = function() {
 	});
 }
 
+SM.behaviors.edit_description = function() {
+	var $ = jQuery;
+	$(".sm_filter_table td.column-description").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
+		var form = $("#sm_edit_description_form");
+		var textareas = form.find("textarea");
+		var value = SM.settings.current_cell.html();
+		textareas.val("").removeAttr("checked").removeAttr("selected"); //clear form
+		if (typeof value !== "undefined" && value != "") {
+			try {
+				var descriptions = jQuery.parseJSON(SM.settings.current_cell.html());
+				$.each(descriptions, function(lang, value) {
+					form.find("textarea[data-lang='" + lang + "']").val(value); //or html()?
+				});
+			} catch (e) {};
+		}
+		$("#sm_edit_description_modal, #sm_backdrop").show();
+		form.find(".sm_right_tab.active textarea").select();
+	});
+
+	$("#sm_edit_description_btn").live("click", function() {
+		$(this).hide();
+		$(this).siblings(".loader").show();
+		var form = $("#sm_edit_description_form");
+		var textareas = form.find("textarea");
+		var descriptions = {};
+		$.each(textareas, function() {
+			var lang = $(this).attr("data-lang");
+			descriptions[lang] = $(this).val(); //html()?
+		});
+		var data = {
+			action: "sm_row",
+			do: "edit",
+			tab: SM.hash.tab,
+			id: SM.settings.current_cell.attr("id"),
+			value: SM.fn.return_object_to_json(descriptions)
+		};
+		$.post(SM.settings.ajax_url, data, function(response) {
+			SM.settings.current_cell.html(response).focus();
+			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			$("#sm_edit_description_modal .close").click();
+			$("#sm_edit_description_modal .loader").hide();
+			$("#sm_edit_description_btn").show();
+		});
+	});
+
+	$("#sm_edit_description_form").live("submit", function() {
+		return false;
+	});
+}
+
 SM.behaviors.edit_stats = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td.column-stats").live("dblclick", function() {
@@ -79,12 +130,12 @@ SM.behaviors.edit_stats = function() {
 			inputs.val("").removeAttr("checked").removeAttr("selected"); //clear form
 			form.find("tr.stat.all, tr.stat." + sport).show();
 			if (typeof value !== "undefined" && value != "") {
-				var stats = jQuery.parseJSON(SM.settings.current_cell.html());
-				if (typeof stats === "object") {
+				try {
+					var stats = jQuery.parseJSON(SM.settings.current_cell.html());
 					$.each(stats, function(stat, value) {
-						form.find("input[name=" + stat + "]").val(value);
+						form.find("input[name='" + stat + "']").val(value);
 					});
-				}
+				} catch (e) {};
 			}
 			$("#sm_edit_stats_modal, #sm_backdrop").show();
 			inputs.first().focus();
@@ -114,7 +165,6 @@ SM.behaviors.edit_stats = function() {
 			value: SM.fn.return_object_to_json(stats)
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.fn.load_autocomplete();
 			SM.settings.current_cell.html(response);
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_stats_modal .close").click();
@@ -128,6 +178,62 @@ SM.behaviors.edit_stats = function() {
 	});
 }
 
+SM.behaviors.edit_infos = function() {
+	var $ = jQuery;
+	$(".sm_filter_table td.column-infos").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
+		var form = $("#sm_edit_infos_form");
+		var rows = form.find("tr.info");
+		var inputs = rows.find("input:text");
+		var value = SM.settings.current_cell.html();
+		rows.hide();
+		inputs.val("").removeAttr("checked").removeAttr("selected"); //clear form
+		form.find("tr.info.all, tr.info." + SM.hash.tab).show();
+		if (typeof value !== "undefined" && value != "") {
+			try {
+				var infos = jQuery.parseJSON(SM.settings.current_cell.html());
+				$.each(infos, function(info, value) {
+					form.find("input[name='" + info + "']").val(value);
+				});
+			} catch (e) {};
+		}
+		$("#sm_edit_infos_modal, #sm_backdrop").show();
+		inputs.first().focus();
+	});
+
+	$("#sm_edit_infos_btn").live("click", function() {
+		$(this).hide();
+		$(this).siblings(".loader").show();
+		//only include data from visible inputs!!
+		var form = $("#sm_edit_infos_form");
+		var rows = form.find("tr.info:visible");
+		var inputs = rows.find("input:text");
+		var infos = {};
+		$.each(inputs, function() {
+			var name = $(this).attr("name");
+			infos[name] = $(this).val();
+		});
+		var data = {
+			action: "sm_row",
+			do: "edit",
+			tab: SM.hash.tab,
+			id: SM.settings.current_cell.attr("id"),
+			value: SM.fn.return_object_to_json(infos)
+		};
+		$.post(SM.settings.ajax_url, data, function(response) {
+			SM.settings.current_cell.html(response);
+			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			$("#sm_edit_infos_modal .close").click();
+			$("#sm_edit_infos_modal .loader").hide();
+			$("#sm_edit_infos_btn").show();
+		});
+	});
+
+	$("#sm_edit_infos_form").live("submit", function() {
+		return false;
+	});
+}
+
 SM.behaviors.edit_players_id = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td.column-players_id").live("dblclick", function() {
@@ -137,12 +243,12 @@ SM.behaviors.edit_players_id = function() {
 		var value = SM.settings.current_cell.html();
 		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
 		if (typeof value !== "undefined" && value != "") {
-			var players_id = jQuery.parseJSON(SM.settings.current_cell.html());
-			if (typeof players_id === "object") {
+			try {
+				var players_id = jQuery.parseJSON(SM.settings.current_cell.html());
 				$.each(players_id, function(i, id) {
 					var item = form.find(".sm_autocomplete_item[data-value='" + id + "']").click();
 				});
-			}
+			} catch (e) {};
 		}
 		$("#sm_edit_players_id_modal, #sm_backdrop").show();
 		input.select();
@@ -165,7 +271,6 @@ SM.behaviors.edit_players_id = function() {
 			value: SM.fn.return_array_to_json(array)
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.fn.load_autocomplete();
 			SM.settings.current_cell.html(response);
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_players_id_modal .close").click();
@@ -275,6 +380,19 @@ SM.behaviors.set_session = function() {
 	var $ = jQuery;
 	$(".sm_change_session_btn").live("click", function() {
 		$("#sm_set_session_modal, #sm_backdrop").show();
+		var form = $("#sm_set_session_form");
+		var selects = ["session_leagues", "session_seasons", "session_sports"];
+		form.find("option:not(.blank)").remove();
+		$.each(selects, function(i, k) {
+			var select = form.find("select[data-select='" + k + "']");
+			if (k != "" && typeof SM.settings.autocomplete.arrays[k] !== "undefined") {
+				$.each(SM.settings.autocomplete.arrays[k], function(i, v) {
+					var blank = select.find("option.blank").clone();
+					blank.val(v.value).html(v.label).removeClass("blank");
+					select.append(blank);
+				});
+			}
+		});
 		$("#sm_set_session_modal select").first().select();
 	});
 
@@ -298,11 +416,11 @@ SM.behaviors.set_session = function() {
 SM.behaviors.intro = function() {
 	var $ = jQuery;
 	if (SM.settings.intro.disabled != "disabled") {
-		$("#sm_plugin_intro_modal, #sm_backdrop_disabled").show();
+		$("#sm_intro_modal, #sm_backdrop_disabled").show();
 	}
 
 	$(".sm_show_intro").live("click", function() {
-		$("#sm_plugin_intro_modal, #sm_backdrop_disabled").show();
+		$("#sm_intro_modal, #sm_backdrop_disabled").show();
 		return false;
 	});
 

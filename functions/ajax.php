@@ -29,24 +29,41 @@ function sm_autocomplete() {
 				} else {
 					$array = array ();
 				};
-				$autocomplete->{$filter.'-name'} = $array;
+				$autocomplete->{$filter.'_name'} = $array;
 			};
 			$static = array (
-				'sports-slug' => array (
-					(object) array ('label' => 'Baseball', 'value' => 'baseball'),
-					(object) array ('label' => 'Soccer/Football', 'value' => 'soccer')
-				),
-				'game-type' => array (
+				'game_type' => array (
 					(object) array ('label' => 'Regular Season (S)', 'value' => 'S'),
 					(object) array ('label' => 'Finals (P1)', 'value' => 'P1'),
 					(object) array ('label' => 'Semi-finals (P2)', 'value' => 'P2'),
 					(object) array ('label' => 'Quarter-finals (P1)', 'value' => 'P3')
 				),
-				'yes-no' => array (
+				'yes_no' => array (
 					(object) array ('label' => 'Yes', 'value' => '1'),
 					(object) array ('label' => 'No', 'value' => '0')
-				)				
+				),
+				'sports_slug' => array (),
+				'session_leagues' => array (),
+				'session_seasons' => array (),
+				'session_sports' => array ()				
 			);
+			//sports-slug
+			foreach ($SM->sports as $k => $v) {
+				$static['sports_slug'][] = (object) array ('label' => $v[0], 'value' => $k);
+			};
+			//session-leagues
+			foreach ($SM->query_leagues() as $k => $v) {
+				$static['session_leagues'][] = (object) array ('label' => $v, 'value' => $k);
+			};
+			//session-seasons
+			foreach ($SM->query_seasons() as $k => $v) {
+				$static['session_seasons'][] = (object) array ('label' => $v, 'value' => $v);
+			};
+			//session-sports
+			foreach ($SM->query_sports() as $k => $v) {
+				$label = isset($SM->sports[$v][0]) ? $SM->sports[$v][0] : '"'.$v.'"';
+				$static['session_sports'][] = (object) array ('label' => $label, 'value' => $v);
+			};
 			foreach ($static as $k => $v) {
 				$autocomplete->$k = $v;
 			};
