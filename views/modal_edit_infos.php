@@ -16,7 +16,6 @@
 	<thead>
 		<tr>
 			<th>Info</th>
-			<th>Code</th>
 			<th>Value</th>
 		</tr>
 	</thead>
@@ -26,7 +25,6 @@
 
 		<tr class="info <?php foreach ($v[2] as $sport) echo $sport.' '; ?>">
 			<td><?php echo $v[1]; ?></td>
-			<td><?php echo $v[0]; ?></td>
 			<td><input type="text" id="infos-<?php echo $k; ?>" name="<?php echo $k; ?>" value="" tabindex="1" /></td>
 		</tr>
 

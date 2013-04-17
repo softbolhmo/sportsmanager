@@ -17,10 +17,10 @@
 <?php foreach ($faq as $k => $v) { $class = $k == 0 ? 'active' : ''; ?>
 	<div class="sm_right_tab <?php echo $class; ?>" data-tab="<?php echo $v->slug; ?>">
 
-<?php foreach ($v->questions as $question) { ?>
+<?php foreach ($v->questions as $q) { ?>
 <div class="sm_faq_item">
-	<div class="sm_faq_question">Q: <?php echo $question[0]; ?></div>
-	<div class="sm_faq_answer">A: <?php echo $question[1]; ?></div>
+	<div class="sm_faq_question">Q: <?php echo $q->question; ?></div>
+	<div class="sm_faq_answer">A: <?php echo $q->answer; ?></div>
 </div>
 <?php }; ?>
 

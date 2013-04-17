@@ -114,6 +114,7 @@ th:active {
 	clear:both;
 }
 .sm_below_filter_table {
+	margin:0 0 30px;
 	overflow:hidden;
 }
 
@@ -147,6 +148,7 @@ tr.even td.sorting_1 {
 	padding:3px 10px;
 	height:26px;
 	border-bottom:1px solid #f0f0f0;
+	color:#999;
 	cursor:pointer;
 }
 .sm_filter_table td:focus {
@@ -157,11 +159,20 @@ tr.even td.sorting_1 {
 .sm_filter_table td.center {
 	text-align:center;
 }
-.sm_filter_table .column-stats {
+.sm_filter_table td.column-description,
+.sm_filter_table td.column-stats,
+.sm_filter_table td.column-infos {
 	max-width:200px;
 	max-height:26px;
 	overflow:hidden;
-	cursor:pointer;
+	font-style:italic;
+}
+.sm_filter_table td.required {
+	color:#000;
+}
+.sm_filter_table td.invalid {
+	background:rgba(51,153,255,.05);
+	color:#39f;
 }
 .sm_filter_table .dataTables_empty {
 	text-align:center;
@@ -178,8 +189,9 @@ tr.even td.sorting_1 {
 	outline:none;
 	cursor:pointer;
 }
-.sm_add_row_btn {
-	margin:10px 0 30px;
+.sm_add_row_btn,
+.sm_add_rows_btn {
+	margin:5px 0;
 	padding:10px;
 	width:100%;
 	display:block;
@@ -190,7 +202,8 @@ tr.even td.sorting_1 {
 	font-size:16px;
 	cursor:pointer;
 }
-.sm_add_row_btn:hover {
+.sm_add_row_btn:hover,
+.sm_add_rows_btn:hover {
 	background: #f0f0f0;
 	box-shadow:0 0 10px 1px rgba(0,0,0,0.2);
 	border:1px solid #fff;

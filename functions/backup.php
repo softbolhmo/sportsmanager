@@ -4,7 +4,7 @@ function sm_prepare_backup($file, $echo = false) {
 	global $wpdb;
 	$to = get_option('sportsmanager_email', '');
 	$from = 'sportsmanager@'.get_option('mailserver_url', 'mail.example.com');
-	$objects = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
+	$objects = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams', 'faq');
 	$tables = array ();
 	foreach ($objects as $object) {
 		$tables[] = $wpdb->prefix.SPORTSMANAGER_PREFIX.$object;

@@ -2,6 +2,8 @@
 
 function sm_autocomplete() {
 	global $wpdb;
+	$SM = new SportsManager_Backend;
+	$data = (object) array ();
 	$keys = array ('do', 'tab');
 	foreach ($keys as $k) {
 		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
@@ -9,7 +11,6 @@ function sm_autocomplete() {
 
 	//load
 	if ($data->do == 'load') {
-		$SM = new SportsManager_Backend;
 		if ($SM->query_dependancies($data->tab)) {
 			$autocomplete = (object) array ();
 			foreach (array ('clubs', 'leagues', 'locations', 'players', 'teams', 'users') as $filter) {
@@ -61,8 +62,10 @@ function sm_autocomplete() {
 			};
 			//session-sports
 			foreach ($SM->query_sports() as $k => $v) {
-				$label = isset($SM->sports[$v][0]) ? $SM->sports[$v][0] : '"'.$v.'"';
-				$static['session_sports'][] = (object) array ('label' => $label, 'value' => $v);
+				if ($k != '') {
+					$label = isset($SM->sports[$v][0]) ? $SM->sports[$v][0] : '"'.$v.'"';
+					$static['session_sports'][] = (object) array ('label' => $label, 'value' => $v);
+				};
 			};
 			foreach ($static as $k => $v) {
 				$autocomplete->$k = $v;
@@ -89,14 +92,13 @@ function sm_db() {
 	//set_options
 	if ($data->do == 'set_options') {
 		$options = (object) array ();
-		foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+		foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
 			$key = 'option_'.$k;
 			$value = isset($$key) ? $$key : '';
-			$key = SPORTSMANAGER_PREFIX.$k;
+			$key = $SM->prefix.$k;
 			$options->$key = $value;
 			update_option($key, $options->$key);
 		};
-		//echo json_encode($options);
 		die;
 	};
 
@@ -120,6 +122,8 @@ function sm_import() {
 		$data->$k = isset($_REQUEST[$k]) ? $_REQUEST[$k] : '';
 	};
 	parse_str($data->value);
+
+	//file
 	$csv = file_get_contents($import_file_url);
 	$rows = explode("\n", $csv);
 	if (count($rows) < 4) die;
@@ -177,7 +181,7 @@ function sm_row() {
 	//add_new
 	if ($data->do == 'add_new') {
 		$wpdb->insert(
-			$SM->objects->{SPORTSMANAGER_FILTER}->table,
+			$SM->objects->{$SM->args->display}->table,
 			array ('id' => '')
 		);
 		echo $wpdb->insert_id;
@@ -203,8 +207,8 @@ function sm_row() {
 
 	//delete
 	if ($data->do == 'delete' && isset($data->id)) {
-		$wpdb->query("DELETE FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table." WHERE id = $data->id");
-		echo $wpdb->get_var("SELECT COUNT(*) FROM ".$SM->objects->{SPORTSMANAGER_FILTER}->table);
+		$wpdb->query("DELETE FROM ".$SM->objects->{$SM->args->display}->table." WHERE id = $data->id");
+		echo $wpdb->get_var("SELECT COUNT(*) FROM ".$SM->objects->{$SM->args->display}->table);
 		die;
 	};
 	die;

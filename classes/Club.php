@@ -53,16 +53,16 @@ class SportsManager_Club extends SportsManager_Frontend_Default {
 			};
 		};
 		$keys = array (
-			'id' => $data->id,
+			'id' => isset($data->id) ? $data->id : '',
 			'game_back' => '',
 			'games' => $games_played,
 			'losses' => $losses,
-			'name' => $data->name,
+			'name' => isset($data->name) ? $data->name : '',
 			'points_minus' => $points_minus,
 			'points_plus' => $points_plus,
 			'ranking' => '',
 			'wins' => $wins,
-			'club_link' => '<a href="'.SM_TEAMS_URL.$data->slug.'/'.'">'.$data->name.'</a>',
+			'club_link' => isset($data->name) ? '<a href="#">'.$data->name.'</a>' : '',
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';

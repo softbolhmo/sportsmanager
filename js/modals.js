@@ -6,7 +6,7 @@ SM.behaviors.modals = function() {
 		var parent = $(this).parents(".sm_modal_box");
 		parent.hide();
 		if ($(".sm_modal_box:visible").length == 0) {
-			if (parent.hasClass("sm_modal_alerts") || parent.hasClass("sm_modal_intro")) {
+			if (parent.is(".sm_modal_alerts, .sm_modal_intro")) {
 				$("#sm_backdrop_disabled").hide();
 			} else if (parent.hasClass("sm_modal_edit_info")) {
 				$("#sm_backdrop").hide();
@@ -30,14 +30,20 @@ SM.behaviors.edit_cell = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td:not(.column-id, .column-description, .column-stats, .column-infos, .column-players_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
-		var input = $("#sm_edit_cell_modal input[name=current_cell]");
-		var value = SM.settings.current_cell.html();
-		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
-		if (value != "") {
-			input.val(value);
+		var league_id = $(this).siblings(".column-league_id").html();
+		if ($(this).is(".column-home_team_id, .column-away_team_id, .column-winner_team_id") && (league_id == "" || league_id == "0")) {
+			$("#sm_alerts_modal, #sm_backdrop_disabled").show();
+			$("#sm_alerts_modal").find(".alert").html("You first need to define a league ID for this game.");
+		} else {
+			var input = $("#sm_edit_cell_modal input[name=current_cell]");
+			var value = SM.settings.current_cell.html();
+			input.val("").removeAttr("checked").removeAttr("selected"); //clear form
+			if (value != "") {
+				input.val(value);
+			}
+			$("#sm_edit_cell_modal, #sm_backdrop").show();
+			input.select();
 		}
-		$("#sm_edit_cell_modal, #sm_backdrop").show();
-		input.select();
 	});
 
 	$("#sm_edit_cell_btn").live("click", function() {
@@ -53,6 +59,7 @@ SM.behaviors.edit_cell = function() {
 		$.post(SM.settings.ajax_url, data, function(response) {
 			SM.fn.load_autocomplete();
 			SM.settings.current_cell.html(response).focus();
+			SM.fn.highlight_required();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_cell_modal .close").click();
 			$("#sm_edit_cell_modal .loader").hide();
@@ -119,9 +126,12 @@ SM.behaviors.edit_description = function() {
 SM.behaviors.edit_stats = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td.column-stats").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
 		var sport = $(this).siblings(".column-sport").html();
-		if (sport != "") {
-			SM.settings.current_cell = $(this);
+		if (sport == "") {
+			$("#sm_alerts_modal, #sm_backdrop_disabled").show();
+			$("#sm_alerts_modal").find(".alert").html("You first need to define a sport for this scoresheet.");
+		} else {
 			var form = $("#sm_edit_stats_form");
 			var rows = form.find("tr.stat");
 			var inputs = rows.find("input:text");
@@ -139,9 +149,6 @@ SM.behaviors.edit_stats = function() {
 			}
 			$("#sm_edit_stats_modal, #sm_backdrop").show();
 			inputs.first().focus();
-		} else {
-			$("#sm_alerts_modal, #sm_backdrop_disabled").show();
-			$("#sm_alerts_modal").find(".alert").html("You first need to define a sport for this scoresheet.");
 		};
 	});
 
@@ -314,12 +321,14 @@ SM.behaviors.add_row = function() {
 				added_row.attr("id", new_row.filter + "-" + new_row.id).attr("data-row", new_row.id);
 				added_row.find("td").each(function(i, cell) {
 					$(cell).attr("id", new_row.filter + "-" + new_row.id + "-" + new_row.columns[i]).addClass("column-" + new_row.columns[i]).attr("tabindex", 1);
+					if (SM.filters.filter_table.find("th.column-" + new_row.columns[i]).hasClass("required")) $(cell).addClass("required");
 				});
 				SM.filters.filter_data.fnResetAllFilters();
 				SM.filters.filter_input.val("");
 				SM.filters.filter_data.fnDraw();
 				SM.filters.filter_data.fnSort([[0, "desc"]]);
 				if (data.tab == "leagues") $(".sm_page_menu_item").removeClass("disabled");
+				SM.fn.highlight_required();
 				$("#sm_add_row_modal .close").click();
 			}
 		});
@@ -333,6 +342,16 @@ SM.behaviors.add_row = function() {
 		$(this).hide();
 		$(this).siblings(".loader").show();
 		$(".sm_add_row_btn").click();
+	});
+
+	$(".sm_add_rows_btn").live("click", function() {
+		$("#sm_add_rows_modal, #sm_backdrop").show();
+	});
+
+	$("#sm_add_rows_btn").live("click", function() {
+		$(this).hide();
+		$(this).siblings(".loader").show();
+		alert("Multiple rows"); //$(".sm_add_row_btn").click();
 	});
 }
 

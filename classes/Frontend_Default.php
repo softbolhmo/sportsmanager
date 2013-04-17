@@ -14,17 +14,4 @@ class SportsManager_Frontend_Default {
 		$this->db = $db;
 		$this->build($data);
 	}
-
-	function get_element_where($array, $key, $value, $property = '') { //why is this here?
-		foreach ($array as $k => $v) {
-			if ($v->$key == $value) {
-				if ($property == '') {
-					return $array[$k];
-				} else {
-					return $array[$k]->$property;
-				};
-				break;
-			};
-		};
-	}
 }

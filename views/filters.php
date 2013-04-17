@@ -7,7 +7,7 @@
 
 <?php foreach ($headers[$filter] as $k => $v) { ?>
 
-			<th class="column-<?php echo $k; ?>" scope="col" data-column="<?php echo $k; ?>" data-filter="<?php echo $filter; ?>" title="<?php echo $v[1]; ?>"><?php echo $v[0]; ?></th>
+			<th class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" scope="col" data-column="<?php echo $k; ?>" data-filter="<?php echo $filter; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>"><?php echo $v[0]; ?></th>
 
 <?php }; ?>
 
@@ -23,7 +23,7 @@
 
 <?php foreach ($headers[$filter] as $k => $v) { ?>
 
-			<td id="<?php echo $filter.'-'.$object->id.'-'.$k; ?>" class="column-<?php echo $k; ?>" tabindex="1"><?php echo $object->$k; ?></td>
+			<td id="<?php echo $filter.'-'.$object->id.'-'.$k; ?>" class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>" tabindex="1"><?php echo $object->$k; ?></td>
 
 <?php }; ?>
 
@@ -39,7 +39,12 @@
 <div class="clear"></div>
 
 <div class="sm_below_filter_table">
-	<button class="sm_add_row_btn">Add row</button>
+	<button class="sm_add_row_btn"><?php echo $add_row; ?></button>
+
+<?php if ($filter == 'games') { ?>
+	<button class="sm_add_rows_btn"><?php echo $add_rows; ?></button>
+<?php }; ?>
+
 </div>
 
 </div><!--end .sm_filter_container-->
@@ -50,5 +55,6 @@
 <?php $SM->include_view('modal_edit_infos'); ?>
 <?php $SM->include_view('modal_edit_players_id'); ?>
 <?php $SM->include_view('modal_add_row'); ?>
+<?php $SM->include_view('modal_add_rows'); ?>
 <?php $SM->include_view('modal_delete_row'); ?>
 <?php $SM->include_view('modal_set_session'); ?>

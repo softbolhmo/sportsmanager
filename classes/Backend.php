@@ -13,16 +13,38 @@ class SportsManager_Backend extends SportsManager {
 	function __construct() {
 		parent::__construct();
 		$this->dependancies = (object) array (
-			'clubs' => array ('clubs', 'leagues'), //always name primary object first
-			'games' => array ('games', 'leagues', 'locations', 'teams'),
-			'leagues' => array ('leagues'),
-			'locations' => array ('locations'),
-			'players' => array ('players', 'users'),
-			'scoresheets' => array ('scoresheets', 'games', 'leagues', 'players'),
-			'teams' => array ('teams', 'clubs', 'leagues', 'players'),
+			'clubs' => (object) array (
+				'tables' => array ('clubs', 'leagues'), //always name primary object first
+				'args' => array ('')
+			),
+			'games' => (object) array (
+				'tables' => array ('games', 'leagues', 'locations', 'teams'),
+				'args' => array ('')
+			),
+			'leagues' => (object) array (
+				'tables' => array ('leagues'),
+				'args' => array ('')
+			),
+			'locations' => (object) array (
+				'tables' => array ('locations'),
+				'args' => array ('')
+			),
+			'players' => (object) array (
+				'tables' => array ('players', 'users'),
+				'args' => array ('')
+			),
+			'scoresheets' => (object) array (
+				'tables' => array ('scoresheets', 'games', 'leagues', 'players'),
+				'args' => array ('')
+			),
+			'teams' => (object) array (
+				'tables' => array ('teams', 'clubs', 'leagues', 'players'),
+				'args' => array ('')
+			),
 		);
 		if (!session_id()) session_start();
 		$this->build(array (
+			'display' => SPORTSMANAGER_FILTER,
 			'league_slug' => isset($_SESSION['sm_season']) ? $_SESSION['sm_league'] : '',
 			'season' => isset($_SESSION['sm_season']) ? $_SESSION['sm_season'] : '',
 			'sport' => isset($_SESSION['sm_sport']) ? $_SESSION['sm_sport'] : ''
@@ -42,6 +64,7 @@ class SportsManager_Backend extends SportsManager {
 					'read' => true
 				)
 			),
+			/*
 			(object) array (
 				'slug' => 'captain',
 				'name' => 'Captain',
@@ -55,6 +78,7 @@ class SportsManager_Backend extends SportsManager {
 					'upload_files' => true
 				)
 			),
+			*/
 			(object) array (
 				'slug' => 'executive',
 				'name' => 'Executive',
@@ -136,7 +160,7 @@ class SportsManager_Backend extends SportsManager {
 		if (isset($this->args->sport) && $this->args->sport != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
 			$wheres[] = "sport IN ('".$this->args->sport."', '')";
 		};
-		$q .= $this->mysql_where_string($wheres);
+		$q .= sm_where_string($wheres);
 		$objects = array ();
 		$results = $wpdb->get_results($q);
 		if ($results != null) {
@@ -162,12 +186,12 @@ class SportsManager_Backend extends SportsManager {
 			'faq' => 'faq',
 			'donate' => 'donate'
 		);
-		$view = isset($views[SPORTSMANAGER_FILTER]) ? $views[SPORTSMANAGER_FILTER] : $views['default'];
+		$view = isset($views[$this->args->display]) ? $views[$this->args->display] : $views['default'];
 		$this->include_view('header');
-		if (current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.SPORTSMANAGER_FILTER) || current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.'all')) {
+		if (current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.$this->args->display) || current_user_can(SPORTSMANAGER_CAPABILITY_PREFIX.'all')) {
 			if ($view == 'filters') {
-				if ($this->query_dependancies(SPORTSMANAGER_FILTER)) {
-					$primary_object = reset($this->dependancies->{SPORTSMANAGER_FILTER});
+				if ($this->query_dependancies($this->args->display)) {
+					$primary_object = reset($this->dependancies->{$this->args->display}->tables);
 					$this->rows = $this->db->$primary_object;
 					$this->include_view($view);
 				};

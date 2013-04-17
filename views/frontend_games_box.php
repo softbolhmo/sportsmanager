@@ -1,7 +1,5 @@
 <?php
-if (function_exists('order_array_objects_by')) {
-	$this->rows = order_array_objects_by('time', $this->rows);
-};
+$this->rows = sm_order_array_objects_by('time', $this->rows);
 foreach ($this->rows as $i => $row) {
 	if (isset($row->time) && $row->time >= time()) {
 		$next_game = $i;

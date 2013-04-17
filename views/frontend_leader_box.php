@@ -27,10 +27,7 @@ foreach ($this->db->games as $game) {
 $min_game_count = count($game_count) >= 1 ? min($game_count) : 0;
 
 foreach ($leaders as $leader_k => $leader_v) {
-	if (function_exists('order_array_objects_by')) {
-		$this->rows = order_array_objects_by(array ($leader_k), $this->rows, true);
-	};
-	
+	$this->rows = sm_order_array_objects_by(array ($leader_k), $this->rows, true);
 	$leader = $this->rows[0];
 ?>
 

@@ -16,13 +16,16 @@ class SportsManager_User extends SportsManager_Frontend_Default {
 	}
 
 	function build($data) {
-		$first_name = get_user_meta($data->ID, 'first_name', true);
-		$last_name = get_user_meta($data->ID, 'last_name', true);
-		$name = $first_name.' '.$last_name;
-		if ($name == ' ') $name = $data->display_name;
+		$names = array ();
+		$names['first'] = isset($data->ID) ? get_user_meta($data->ID, 'first_name', true) : '';
+		$names['last'] = isset($data->ID) ? get_user_meta($data->ID, 'last_name', true) : '';
+		$names['full'] = implode(' ', $names);
+		if (in_array($names['full'], array ('', ' '))) $names['full'] = isset($data->display_name) ? $data->display_name : '';
 		$keys = array (
-			'id' => $data->ID,
-			'name' => $name,
+			'id' => isset($data->ID) ? $data->ID : '',
+			'name' => $names['full'],
+			'first_name' => $names['first'],
+			'last_name' => $names['last'],
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';

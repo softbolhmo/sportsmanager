@@ -18,12 +18,12 @@ class SportsManager_Player extends SportsManager_Frontend_Default {
 	function build($data) {
 		$scoresheets = array ();
 		$stats = array ();
-		$data->player_id = $this->get_player_id($data->user_id);
-		$data->user = function_exists('_get_user') ? _get_user($data->user_id) : (object) array (); //TODO: make sure dependancy is ok
+		$data->user = isset($data->user_id) ? sm_search_array_objects_for('id', $data->user_id, $this->db->users) : (object) array ();
 		foreach ($this->db->scoresheets as $scoresheet) {
-			if ($scoresheet->player_id == $data->player_id) {
+			if (isset($scoresheet->player_id, $data->id) && $scoresheet->player_id == $data->id) {
 				$scoresheets[] = $scoresheet;
-				$stats[] = json_decode($scoresheet->stats);
+				$decode = isset ($scoresheet->stats) ? json_decode($scoresheet->stats) : (object) array ();
+				$stats[] = !is_null($decode) ? $decode : (object) array ();
 			};
 		};
 		$stats_keys = array ();
@@ -43,27 +43,26 @@ class SportsManager_Player extends SportsManager_Frontend_Default {
 				};
 			};
 		};
-		$meta_keys = array (
-			'facebook_id',
-			'team'
-		);
-		if (isset($data->user->ID)) {
-			$metas = object_metas('user', $data->user->ID, $meta_keys);
-		};
+		$infos = json_decode($data->infos);
+		$names = array ();
+		$names['first'] = isset($infos->first_name) && !in_array($infos->first_name, array ('', '0')) ? $infos->first_name : (isset($data->user->first_name) ? $data->user->first_name : '');
+		$names['last'] = isset($infos->last_name) && !in_array($infos->last_name, array ('', '0')) ? $infos->last_name : (isset($data->user->last_name) ? $data->user->last_name : '');
+		$names['full'] = implode(' ', $names);
+		if (in_array($names['full'], array ('', ' '))) $names['full'] = isset($data->user->name) ? $data->user->name : '';
 		$keys = array (
-			'id' => $data->id,
-			'user_id' => $data->user_id,
-			'player_id' => $data->player_id,
-			'first_name' => isset($data->user->first_name) ? $data->user->first_name : '',
-			'last_name' => isset($data->user->last_name) ? $data->user->last_name : '',
-			'full_name' => isset($data->user->full_name) ? $data->user->full_name : '',
-			'team_slug' => isset($metas['team']) ? $metas['team'] : '',
-			'facebook_id' => isset($metas['facebook_id']) ? $metas['facebook_id'] : '',
-			'player_link' => isset($data->user->user_nicename) ? SM_PLAYERS_URL.$data->user->user_nicename.'/' : '',
+			'id' => isset($data->id) ? $data->id : '',
+			'user_id' => isset($data->user_id) ? $data->user_id : '',
+			'first_name' => $names['first'],
+			'last_name' => $names['last'],
+			'name' => $names['full'],
+			'nick_name' => isset($infos->nick_name) && !in_array($infos->nick_name, array ('', '0')) ? $infos->nick_name : '',
+			'facebook_id' => isset($infos->facebook_id) && !in_array($infos->facebook_id, array ('', '0')) ? $infos->facebook_id : '',
+			'birth_date' => isset($infos->birth_date) && !in_array($infos->birth_date, array ('', '0')) ? $infos->birth_date : '',
+			'hometown' => isset($infos->home_town) && !in_array($infos->home_town, array ('', '0')) ? $infos->home_town : '',
+			'player_link' => '<a href="#">'.$names['full'].'</a>',
 			//stats
-			//'games' => count($scoresheets)
+			//'games' => count($scoresheets) //no because in one scoresheet, you can enter stats for multiple games, or even an entire year! It also depends on what league your refering to!
 		);
-		$keys['player_link'] = $data->user->user_nicename != '' ? '<a href="'.SM_PLAYERS_URL.$data->user->user_nicename.'/'.'">'.$keys['full_name'].'</a>' : '';
 		foreach ((array) $stats_total as $k => $v) {
 			$keys[$k] = $v;
 		};
@@ -71,11 +70,5 @@ class SportsManager_Player extends SportsManager_Frontend_Default {
 			$this->$k = isset($v) ? $v : '';
 		};
 		unset($this->db);
-	}
-
-	function get_player_id($user_id) {
-		foreach ($this->db->players as $player) {
-			if ($player->user_id == $user_id) return $player->id;
-		};
 	}
 }

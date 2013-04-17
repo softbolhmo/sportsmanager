@@ -24,6 +24,7 @@
 <?php }}; ?>
 
 	</select></p>
+	<p>Custom CSS class for frontend tables e.g. <i>custom_table my_sm_table</i>: <input id="sm_option_custom_class_table" name="option_custom_class_table" type="text" value="<?php echo $option_custom_class_table; ?>" /></p>
 	<button type="submit" id="sm_save_options_btn">Save options</button>
 	<div id="sm_options_ajax_return" class="sm_ajax_return"></div>
 </form>

@@ -2,6 +2,7 @@
 SM.behaviors.filters = function() {
 	var $ = jQuery;
 	SM.fn.init_filter_tables();
+	SM.fn.highlight_required();
 
 	$(".sm_filter_table th").live("click", function(e) {
 		var i = $(this).index();
@@ -12,6 +13,7 @@ SM.behaviors.filters = function() {
 SM.behaviors.home = function() {
 	var $ = jQuery;
 	$("#sm_save_options_form").live("submit", function () {
+		$("#sm_save_options_btn").hide();
 		var form = $(this);
 		var data = {
 			action: "sm_db",
@@ -25,6 +27,7 @@ SM.behaviors.home = function() {
 			} else {
 				$("#sm_options_ajax_return").html("Error: " + response);
 			}
+			$("#sm_save_options_btn").show();
 		});
 		return false;
 	});

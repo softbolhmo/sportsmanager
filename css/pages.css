@@ -201,3 +201,12 @@ a:active {
 .sm_faq_answer {
 	font-style:italic;
 }
+.sm_faq_answer pre {
+	margin:10px 0 0;
+	padding:15px 20px;
+	overflow:auto;
+	background:#f9f9f9;
+	border:1px solid #f0f0f0;
+	border-radius:3px;
+	font-style:normal;
+}

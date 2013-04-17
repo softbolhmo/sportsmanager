@@ -11,10 +11,8 @@ function sm_define_session() {
 	foreach ($session as $k => $v) {
 		if (isset($_REQUEST[$k])) {
 			$_SESSION[$k] = $_REQUEST[$k];
-		} else {
-			$_SESSION[$k] = $v;
 		};
-		$out[] = $_SESSION[$k];
+		$out[] = isset($_SESSION[$k]) ? $_SESSION[$k] : $session->$k;
 	};
 	return strtoupper(implode(' ', $out));
 };

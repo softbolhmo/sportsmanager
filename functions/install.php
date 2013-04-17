@@ -92,6 +92,13 @@ function sm_activate_plugin() {
 								season varchar(5) NOT NULL,
 								players_id text NOT NULL,
 								PRIMARY KEY  (id)
+							)",
+		'faq'		=> "CREATE TABLE @table_name@ (
+								id int(11) NOT NULL AUTO_INCREMENT,
+								type varchar(100) NOT NULL,
+								question text NOT NULL,
+								answer text NOT NULL,
+								PRIMARY KEY  (id)
 							)"
 	);
 	foreach ($tables as $k => $v) {
@@ -106,7 +113,7 @@ register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_activate_plu
 function sm_deactivate_plugin() {
 	//$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
 	//sm_prepare_backup($file);
-	foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+	foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
 		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
 }
@@ -115,12 +122,12 @@ register_deactivation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_deactivate
 
 function sm_uninstall_plugin() {
 	global $wpdb;
-	$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams');
+	$tables = array ('clubs', 'games', 'leagues', 'locations', 'players', 'scoresheets', 'teams', 'faq');
 	foreach ($tables as $table) {
 		$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
 		$wpdb->query($q);
 	};
-	foreach (array ('disable_intro', 'email', 'email_name', 'language') as $k) {
+	foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
 		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
 }

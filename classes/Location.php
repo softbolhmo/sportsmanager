@@ -17,12 +17,12 @@ class SportsManager_Location extends SportsManager_Frontend_Default {
 
 	function build($data) {
 		$keys = array (
-			'id' => $data->id,
-			'name' => $data->name,
-			'address' => $data->address,
-			'zip_code' => $data->zip_code,
-			'neighbourhood' => $data->neighbourhood,
-			'link' => isset($data->slug) ? SM_LOCATIONS_URL.$data->slug.'/' : '',
+			'id' => isset($data->id) ? $data->id : '',
+			'name' => isset($data->name) ? $data->name : '',
+			'address' => isset($data->address) ? $data->address : '',
+			'zip_code' => isset($data->zip_code) ? $data->zip_code : '',
+			'neighbourhood' => isset($data->neighbourhood) ? $data->neighbourhood : '',
+			'link' => isset($data->slug) ? $data->slug : '',
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';

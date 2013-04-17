@@ -2,12 +2,24 @@
  * functions
  */
 /* navigation */
-SM.fn.highlight = function(e, style, delay) {
+SM.fn.highlight = function(element, style, delay) {
 	if (typeof delay === "undefined") delay = 2000;
-	e.addClass(style);
+	element.addClass(style);
 	setTimeout(function() {
-		e.removeClass(style);
+		element.removeClass(style);
 	}, delay);
+}
+
+SM.fn.highlight_required = function() {
+	var $ = jQuery;
+	var cells = $(".sm_filter_table td.required");
+	cells.removeClass("invalid");
+	cells.each(function() {
+		var html = $(this).html();
+		if (html == "" || html == "0") {
+			$(this).addClass("invalid");
+		}
+	});
 }
 
 SM.fn.init_filter_tables = function() {
@@ -89,6 +101,7 @@ SM.fn.switch_tab = function(tab) {
 	$("#sm_page_loading_modal, #sm_backdrop_disabled").show();
 	$(".sm_main_container").load(SM.settings.SPORTSMANAGER_ADMIN_URL_PREFIX + "&tab=" + tab + " .sm_inner_container", function() {
 		SM.fn.init_filter_tables();
+		SM.fn.highlight_required();
 		SM.fn.load_autocomplete();
 		$("#sm_page_loading_modal").hide();
 		if ($(".sm_modal_box:visible").length == 0) {

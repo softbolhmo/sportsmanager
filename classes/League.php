@@ -17,9 +17,9 @@ class SportsManager_League extends SportsManager_Frontend_Default {
 
 	function build($data) {
 		$keys = array (
-			'id' => $data->id,
-			'name' => $data->name,
-			'slug' => $data->slug
+			'id' => isset($data->id) ? $data->id : '',
+			'name' => isset($data->name) ? $data->name : '',
+			'slug' => isset($data->slug) ? $data->slug : ''
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';
