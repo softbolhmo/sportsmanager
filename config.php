@@ -10,7 +10,7 @@
  * @return void
  */
 function sm_constants() {
-	define('SPORTSMANAGER_VERSION', '1.0.1');
+	define('SPORTSMANAGER_VERSION', '1.1');
 	define('SPORTSMANAGER_PREFIX', 'sportsmanager_');
 	define('SPORTSMANAGER_CAPABILITY_PREFIX', 'edit_sportsmanager_');
 	if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', rtrim(get_option('siteurl'), '/').'/'.'wp-content/');
