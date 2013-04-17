@@ -49,9 +49,6 @@ Yes. You can manages, games, locations and more. But not individual player stats
 
 = 1.1 =
 * Database changes.
-* Again, lots of bug fixes.
-
-= 1.0.9.9 =
 * Intro screen added.
 * UI improved.
 * Scoresheet imported added.
@@ -79,6 +76,3 @@ Frontend starts to take form!
 
 = 1.1 =
 Major upgrade. Completely new database structure. An upgrade requires erasing all Sports Manager tables.
-
-= 1.0 =
-First working version of Sports Manager.
