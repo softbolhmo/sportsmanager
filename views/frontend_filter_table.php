@@ -1,7 +1,9 @@
 
-<div id="filter_table-<?php echo $filter;?>" class="filter_table <?php echo $filter;?> <?php echo $sortable; ?>">
+<!--start Sports Manager-->
 
-<table class="display <?php echo $option_custom_class_table; ?>">
+<div id="sm_filter_table-<?php echo $filter;?>" class="sm_filter_table <?php echo $filter;?> <?php echo $sortable; ?>">
+
+<table class="sm_default_table_class <?php echo $option_custom_class_table; ?>">
 	<thead>
 		<tr>
 
@@ -37,4 +39,6 @@
 
 </table>
 
-</div><!--end .filter_table-->
+</div>
+
+<!--end Sports Manager-->

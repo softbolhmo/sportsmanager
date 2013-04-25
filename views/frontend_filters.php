@@ -92,7 +92,7 @@ foreach ($this->rows as $k => $row) {
 };
 
 if ($this->args->display == 'leaders_stats') {
-	$this->include_view('frontend_leader_box');
+	$this->include_view('frontend_leaders_box');
 } elseif ($this->args->display == 'game_results') {
 	$this->include_view('frontend_games_box');
 } else {

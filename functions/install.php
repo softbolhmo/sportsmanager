@@ -113,7 +113,7 @@ register_activation_hook(SPORTSMANAGER_DIR.'sportsmanager.php', 'sm_activate_plu
 function sm_deactivate_plugin() {
 	//$file = SPORTSMANAGER_DIR.'backups/SportsManager---'.DB_NAME.'---DEACTIVATION.sql';
 	//sm_prepare_backup($file);
-	foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
+	foreach (array ('disable_intro') as $k) { //, 'email', 'email_name', 'language', 'custom_class_table'
 		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
 }
@@ -127,7 +127,19 @@ function sm_uninstall_plugin() {
 		$q = "DROP TABLE IF EXISTS ".$wpdb->prefix.SPORTSMANAGER_PREFIX.$table;
 		$wpdb->query($q);
 	};
-	foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
+	$keys = array (
+		'disable_intro',
+		'email',
+		'email_name',
+		'language',
+		'custom_class_table',
+		'default_locations_url',
+		'default_players_url',
+		'default_stats_url',
+		'default_results_url',
+		'default_teams_url'
+	);
+	foreach ($keys as $k) {
 		delete_option(SPORTSMANAGER_PREFIX.$k);
 	};
 }

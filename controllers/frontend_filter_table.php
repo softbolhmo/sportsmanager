@@ -124,7 +124,9 @@ $headers = array (
 
 $filter = $this->args->display;
 $rows = $this->rows;
-if (in_array($filter, array ('schedule'))) {
+if (in_array($filter, array('rankings'))) {
+	$rows = sm_order_array_objects_by('ranking', $rows);
+} elseif (in_array($filter, array ('schedule'))) {
 	$rows = sm_order_array_objects_by('time', $rows, true);
 	foreach ($rows as $i => $row) {
 		if (isset($row->time) && $row->time >= time()) {
@@ -132,8 +134,8 @@ if (in_array($filter, array ('schedule'))) {
 			break;
 		};
 	};
-} elseif (in_array($filter, array('rankings'))) {
-	$rows = sm_order_array_objects_by('ranking', $rows);
+} elseif (in_array($filter, array ('stats'))) {
+	//$rows = sm_order_array_objects_by('batting_average', $rows, true);
 };
 $option_custom_class_table = get_option('sportsmanager_custom_class_table', '');
 $sortable = isset($this->args->sortable) && !$this->args->sortable ? '' : 'sortable';

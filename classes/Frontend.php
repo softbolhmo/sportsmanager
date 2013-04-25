@@ -22,15 +22,15 @@ class SportsManager_Frontend extends SportsManager {
 				'args' => array ('display')
 			),
 			'leaders_stats' => (object) array (
-				'tables' => array ('players', 'scoresheets', 'games'),
+				'tables' => array ('players', 'scoresheets', 'games', 'users'),
 				'args' => array ('display')
 			),
 			'pitching_stats' => (object) array (
-				'tables' => array ('players', 'scoresheets'),
+				'tables' => array ('players', 'scoresheets', 'users'),
 				'args' => array ('display')
 			),
 			'player_stats' => (object) array (
-				'tables' => array ('players', 'scoresheets'),
+				'tables' => array ('players', 'scoresheets', 'users'),
 				'args' => array ('display')
 			),
 			'players_stats' => (object) array (
@@ -50,15 +50,15 @@ class SportsManager_Frontend extends SportsManager {
 				'args' => array ('display')
 			),
 			'team_players_stats' => (object) array (
-				'tables' => array ('players', 'clubs', 'scoresheets', 'teams'),
+				'tables' => array ('players', 'clubs', 'scoresheets', 'teams', 'users'),
 				'args' => array ('display')
 			),
 			'team_stats' => (object) array (
-				'tables' => array ('players', 'clubs', 'scoresheets', 'teams'),
+				'tables' => array ('players', 'clubs', 'scoresheets', 'teams', 'users'),
 				'args' => array ('display')
 			),
 			'teams_stats' => (object) array (
-				'tables' => array ('players', 'clubs', 'scoresheets', 'teams'),
+				'tables' => array ('players', 'clubs', 'scoresheets', 'teams', 'users'),
 				'args' => array ('display')
 			)
 		);

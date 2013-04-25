@@ -52,6 +52,8 @@ class SportsManager_Club extends SportsManager_Frontend_Default {
 				};
 			};
 		};
+		$default_clubs_url = get_option('sportsmanager_default_stats_url', '');
+		$link = $default_clubs_url != '' ? $default_clubs_url.$data->slug : '#';
 		$keys = array (
 			'id' => isset($data->id) ? $data->id : '',
 			'game_back' => '',
@@ -62,7 +64,7 @@ class SportsManager_Club extends SportsManager_Frontend_Default {
 			'points_plus' => $points_plus,
 			'ranking' => '',
 			'wins' => $wins,
-			'club_link' => isset($data->name) ? '<a href="#">'.$data->name.'</a>' : '',
+			'club_link' => isset($data->name) ? '<a href="'.$link.'">'.$data->name.'</a>' : '',
 		);
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';

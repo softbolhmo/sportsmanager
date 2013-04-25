@@ -66,7 +66,12 @@ class SportsManager {
 			'team_slug' => '',
 			'user_id' => '',
 			'top' => '',
-			'sortable' => true
+			'sortable' => true,
+			'default_locations_url' => get_option('sportsmanager_default_locations_url', ''),
+			'default_players_url' => get_option('sportsmanager_default_players_url', ''),
+			'default_stats_url' => get_option('sportsmanager_default_stats_url', ''),
+			'default_results_url' => get_option('sportsmanager_default_results_url', ''),
+			'default_teams_url' => get_option('sportsmanager_default_teams_url', '')
 		);
 		$this->db = (object) array ();
 		$this->languages = array (
@@ -173,7 +178,7 @@ class SportsManager {
 	function verify_required_args($filter) {
 		if ($filter != '' && isset($this->dependancies->$filter)) {
 			foreach ($this->dependancies->$filter->args as $arg) {
-				if (is_string ($arg)) {
+				if (is_string($arg)) {
 					if ($this->args->$arg == '') {
 						$error = "<p>(Sports Manager Error: '%s' attribute is required)</p>\n";
 						echo sprintf($error, $arg);

@@ -34,6 +34,7 @@ function sm_autocomplete() {
 			};
 			$static = array (
 				'game_type' => array (
+					(object) array ('label' => 'Exhibition (E)', 'value' => 'E'),
 					(object) array ('label' => 'Regular Season (S)', 'value' => 'S'),
 					(object) array ('label' => 'Finals (P1)', 'value' => 'P1'),
 					(object) array ('label' => 'Semi-finals (P2)', 'value' => 'P2'),
@@ -91,8 +92,20 @@ function sm_db() {
 
 	//set_options
 	if ($data->do == 'set_options') {
+		$keys = array (
+			'disable_intro',
+			'email',
+			'email_name',
+			'language',
+			'custom_class_table',
+			'default_locations_url',
+			'default_players_url',
+			'default_stats_url',
+			'default_results_url',
+			'default_teams_url'
+		);
 		$options = (object) array ();
-		foreach (array ('disable_intro', 'email', 'email_name', 'language', 'custom_class_table') as $k) {
+		foreach ($keys as $k) {
 			$key = 'option_'.$k;
 			$value = isset($$key) ? $$key : '';
 			$key = $SM->prefix.$k;

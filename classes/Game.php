@@ -39,7 +39,7 @@ class SportsManager_Game extends SportsManager_Frontend_Default {
 			'location_slug' => isset($data->location_id) ? sm_search_array_objects_for('id', $data->location_id, $this->db->locations, 'slug') : '',
 			'cancelled' => isset($data->cancelled) ? $data->cancelled : ''
 		);
-		$keys['location_link'] = $keys['location_name'] != '' ? '<a href="#">'.$keys['location_name'].'</a>' : ''; //look into $data->info
+		$keys['location_link'] = $keys['location_name'] != '' ? '<a href="#">'.$keys['location_name'].'</a>' : '';
 		$keys['home_team_link'] = $keys['home_team_slug'] != '' ? '<a href="#">'.$keys['home_team_name'].'</a>' : '';
 		$keys['away_team_link'] = $keys['away_team_slug'] != '' ? '<a href="#">'.$keys['away_team_name'].'</a>' : '';
 		$keys['stats_link'] = '<a href="#">Stats</a>';

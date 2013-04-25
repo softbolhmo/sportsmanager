@@ -35,26 +35,9 @@ a:active {
 	border-bottom:none;
 	border-radius:3px 3px 0 0;
 }
-.sm_page_menu {
-	border:1px solid #f0f0f0;
-	border-bottom:none;
-}
-.sm_page_menu_item {
-	padding:10px 20px;
-	display:block;
-	float:left;
-	font-size:16px;
-	line-height:16px;
-	cursor:pointer;
-}
-.sm_page_menu_item:hover {
-	background:#f9f9f9;
-}
-.sm_page_menu_item.active {
-	background:#f3f3f3;
-}
-.sm_page_menu_item.disabled {
-	color:#ccc;
+.sm_page_header table {
+	width:100%;
+	vertical-align:middle;
 }
 .sm_page_title,
 .sm_page_subtitle {
@@ -62,16 +45,14 @@ a:active {
 	text-shadow:1px 1px #666;
 }
 .sm_page_title {
-	margin:10px 0;
-	float:left;
-	font-size:60px;
-	line-height:60px;
+	font-size:40px;
+	text-align:left;
+	line-height:40px;
 }
 .sm_page_subtitle {
-	margin:25px 0;
-	float:right;
-	font-size:30px;
-	line-height:30px;
+	font-size:20px;
+	text-align:right;
+	line-height:20px;
 }
 .sm_change_session_btn {
 	color:#f0f0f0;
@@ -82,6 +63,7 @@ a:active {
 }
 .sm_page_inside {
 	padding:10px 0;
+	overflow:hidden;
 	border:1px solid #f0f0f0;
 }
 .sm_page_inside_container {
@@ -116,6 +98,85 @@ a:active {
 	display:none;
 }
 
+/* top menu */
+.sm_page_menu {
+	border:1px solid #f0f0f0;
+	border-bottom:none;
+}
+.sm_page_menu_item {
+	padding:10px 20px;
+	display:block;
+	float:left;
+	font-size:16px;
+	line-height:16px;
+	cursor:pointer;
+}
+.sm_page_menu_item:hover {
+	background:#f9f9f9;
+}
+.sm_page_menu_item.active {
+	background:#f3f3f3;
+}
+.sm_page_menu_item.disabled {
+	color:#ccc;
+}
+
+/* form controls */
+form label,
+form input,
+form button,
+form select,
+form textarea {
+	font-size:14px;
+	line-height:20px;
+	cursor:pointer;
+}
+form label {
+	margin-bottom:5px;
+	display:block;
+}
+form .sm_control_group {
+	margin-bottom:20px;
+	display:table;
+	clear:both;
+}
+form .sm_control_label {
+	margin-bottom:5px;
+	padding-top:5px;
+	width:200px;
+	display:block;
+	float:left;
+	font-size:14px;
+	font-weight:normal;
+	text-align:right;
+	line-height:20px;
+}
+form .sm_controls {
+	margin-left:220px;
+}
+form .sm_controls input,
+form .sm_controls textarea,
+form .sm_controls select,
+form .sm_controls .help_line, {
+	margin-bottom:0;
+	display:inline-block;
+	vertical-align:middle;
+}
+form .sm_controls input[type="text"],
+form .sm_controls select {
+	width:250px;
+}
+form .sm_checkbox,
+form .sm_radio {
+	min-height:20px;
+	padding-left:20px;
+}
+form .sm_checkbox input[type="checkbox"] {
+	margin:4px 0 0 -20px;
+	width:auto;
+	float:left;
+}
+
 /* inside tabs */
 .sm_inside_tabs {
 	width:100%;
@@ -142,9 +203,13 @@ a:active {
 .sm_left_menu_item.active {
 	background:#f3f3f3;
 }
+.sm_right_tabs {
+	margin:0;
+	padding:0;
+}
 .sm_right_tab {
-	padding:30px 20px;
-	height:250px;
+	padding:30px 0;
+	height:400px;
 	display:none;
 	overflow:auto;
 }

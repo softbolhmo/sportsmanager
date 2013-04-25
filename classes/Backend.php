@@ -150,14 +150,14 @@ class SportsManager_Backend extends SportsManager {
 		$table = $this->objects->$filter->table;
 		$q = "SELECT * FROM $table ";
 		$wheres = array ();
-		if (isset($this->args->league_slug) && $this->args->league_slug != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
+		if (isset($this->args->league_slug) && $this->args->league_slug != '' && in_array($filter, array ('clubs', 'games', 'scoresheets'))) {
 			$id = $wpdb->get_var("SELECT id FROM ".$this->objects->leagues->table." WHERE slug = '".$this->args->league_slug."'");
 			$wheres[] = "league_id IN ('$id', '')";
 		};
 		if (isset($this->args->season) && $this->args->season != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
 			$wheres[] = "season IN ('".$this->args->season."', '')";
 		};
-		if (isset($this->args->sport) && $this->args->sport != '' && in_array($filter, array ('games', 'scoresheets', 'teams'))) {
+		if (isset($this->args->sport) && $this->args->sport != '' && in_array($filter, array ('clubs', 'games', 'scoresheets'))) {
 			$wheres[] = "sport IN ('".$this->args->sport."', '')";
 		};
 		$q .= sm_where_string($wheres);

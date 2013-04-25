@@ -3,9 +3,14 @@
 	<div class="sm_inner_container">
 
 <div class="sm_page_header fancyfont">
-	<p class="sm_page_title"><?php echo $page_title; ?></p>
-	<p class="sm_page_subtitle"><?php echo $page_subtitle; ?></p>
-	<div class="clear"></div>
+	<table>
+		<tr>
+
+<td class="sm_page_title"><?php echo $page_title; ?></td>
+<td class="sm_page_subtitle"><?php echo $page_subtitle; ?></td>
+
+		</tr>
+	</table>
 </div><!--end .sm_page_header-->
 <div class="sm_page_menu">
 
