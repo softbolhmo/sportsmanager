@@ -1,0 +1,6 @@
+GAMES,,,,,,,,,,,,
+League ID,Season,Sport,Home Team ID,Away Team ID,Home Score,Away Score,Winner ID,Date,Type,Location ID,Description,Cancelled?
+league_id,season,sport,home_team_id,away_team_id,home_score,away_score,winner_team_id,date,type,location_id,description,cancelled
+0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0
