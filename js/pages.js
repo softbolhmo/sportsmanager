@@ -17,7 +17,7 @@ SM.behaviors.home = function() {
 		var form = $(this);
 		var data = {
 			action: "sm_db",
-			do: "set_options",
+			"do": "set_options",
 			value: form.serialize()
 		};
 		$.get(SM.settings.ajax_url, data, function(response) {
@@ -37,7 +37,7 @@ SM.behaviors.home = function() {
 		var d = SM.fn.return_date_str();
 		var data = {
 			action: "sm_db",
-			do: "backup_db",
+			"do": "backup_db",
 			filter: "",
 			date_time: d.Y + "-" + d.M + "-" + d.D + "-" + d.H + "-" + d.M + "-" + d.S
 		};
@@ -71,7 +71,7 @@ SM.behaviors.import = function() {
 			$("#sm_import_file_url").val(url);
 			tb_remove();
 		}
-		tb_show('', SM.settings.WP_ADMIN_URL + 'media-upload.php?type=image&tab=type&TB_iframe=true');
+		tb_show("", SM.settings.WP_ADMIN_URL + "media-upload.php?type=image&tab=type&TB_iframe=true");
 		return false;
 	});
 
@@ -87,12 +87,18 @@ SM.behaviors.import = function() {
 			$("#sm_import_btn").hide();
 			var data = {
 				action: "sm_import",
-				do: $("#sm_import_type").val(),
+				"do": $("#sm_import_type").val(),
 				value: form.serialize()
 			};
 			$.get(SM.settings.ajax_url, data, function(response) {
 				if (response == "") {
 					$("#sm_import_ajax_return").html("Data added!").show();
+					setTimeout(function() {
+						$("#sm_import_ajax_return").html("").hide();
+					}, 3000);
+					$("#sm_import_type").val("");
+					$("#sm_import_file_url").val("");
+					$("#sm_import_btn").show();
 					SM.fn.highlight(form, "sm_current_cell");
 				} else {
 					$("#sm_import_ajax_return").html("Error: " + response).show();

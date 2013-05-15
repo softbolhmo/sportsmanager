@@ -13,13 +13,13 @@ var SM = SM || {
 };
 
 /* is js enabled? */
-SM.fn.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
+SM.fn.is_js_enabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
 
 /* load behaviors */
 SM.fn.load_behaviors = function(context) {
 	var $ = jQuery;
 	context = context || document;
-	if (SM.fn.jsEnabled) {
+	if (SM.fn.is_js_enabled) {
 		$.each(SM.behaviors, function() {
 			this(context);
 		});
@@ -99,7 +99,7 @@ SM.fn.update_address = function(query) {
 /**
  * init
  */
-if (SM.fn.jsEnabled) {
+if (SM.fn.is_js_enabled) {
 	jQuery(document.documentElement).addClass("js");
 	jQuery(document).ready(function() {
 		SM.fn.address();

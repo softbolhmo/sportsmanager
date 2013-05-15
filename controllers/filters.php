@@ -1,10 +1,9 @@
 <?php
 
-global $SM;
 $headers = array (
 	'clubs' => array (
 		'id' => array ('ID', '', false),
-		'league_id' => array ('League ID', '', true),
+		'league_id' => array ('League', '', true),
 		'sport' => array ('Sport', '', true),
 		'name' => array ('Name', '', true),
 		'slug' => array ('Slug', '', true),
@@ -15,17 +14,17 @@ $headers = array (
 	),
 	'games' => array (
 		'id' => array ('ID', '', false),
-		'league_id' => array ('League ID', '', true),
+		'league_id' => array ('League', '', true),
 		'season' => array ('Season', '', true),
 		'sport' => array ('Sport', '', true),
-		'home_team_id' => array ('Home Team ID', '', true),
-		'away_team_id' => array ('Away Team ID', '', true),
+		'home_team_id' => array ('Home Team', '', true),
+		'away_team_id' => array ('Away Team', '', true),
 		'home_score' => array ('Home Score', '', false),
 		'away_score' => array ('Away Score', '', false),
-		'winner_team_id' => array ('Winner ID', '', false),
+		'winner_team_id' => array ('Winner', '', false),
 		'date' => array ('Date', '', false),
 		'type' => array ('Type', '', true),
-		'location_id' => array ('Location ID', '', false),
+		'location_id' => array ('Location', '', false),
 		'description' => array ('Description', '', false),
 		'cancelled' => array ('Cancelled?', '', false)
 	),
@@ -40,6 +39,7 @@ $headers = array (
 	),
 	'locations' => array (
 		'id' => array ('ID', '', false),
+		'league_id' => array ('League', '', true),
 		'name' => array ('Name', '', true),
 		'slug' => array ('Slug', '', true),
 		'description' => array ('Description', '', false),
@@ -50,13 +50,14 @@ $headers = array (
 	'players' => array (
 		'id' => array ('ID', '', false),
 		'user_id' => array ('WP User ID', '', false),
+		'slug' => array ('Slug', '', true),
 		'small_logo_url' => array ('Small Logo URL', '', false),
 		'large_logo_url' => array ('Large Logo URL', '', false),
 		'infos' => array ('Infos', '', false)
 	),
 	'scoresheets' => array (
 		'id' => array ('ID', '', false),
-		'league_id' => array ('League ID', '', true),
+		'league_id' => array ('League', '', true),
 		'season' => array ('Season', '', true),
 		'sport' => array ('Sport', '', true),
 		'game_id' => array ('Game ID', '', true),
@@ -65,9 +66,11 @@ $headers = array (
 	),
 	'teams' => array (
 		'id' => array ('ID', '', false),
-		'club_id' => array ('Club ID', '', true),
+		'club_id' => array ('Club', '', true),
 		'season' => array ('Season', '', true),
-		'players_id' => array ('Players ID', '', false)
+		'players_id' => array ('Players IDs', '', false),
+		'captains_id' => array ('Captains IDs', '', false),
+		'inactive' => array ('Inactive?', '', false)
 	)
 );
 $icon_url = SPORTSMANAGER_URL.'images/icon_trashcan.png';

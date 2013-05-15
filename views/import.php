@@ -16,8 +16,27 @@
 <form id="sm_import_form">
 	<p>Select import type: <select id="sm_import_type" name="import_type">
 		<option value=""></option>
+		<option value="games">Games</option>
 		<option value="scoresheet">Scoresheet</option>
 	</select></p>
+
+<div class="sm_import_type_info" data-type="games">
+
+<p>To import games, fill out this blank schedule.</p>
+
+<table class="sm_import_blanks">
+	<tr>
+
+<?php
+	$f = SPORTSMANAGER_DIR.'imports/games.csv';
+	$class = !file_exists($f) ? 'disabled' : '';
+?>
+<td><a href="<?php echo $f; ?>" class="<?php echo $class; ?>" target="_blank">Games</a></td>
+
+	</tr>
+</table>
+
+</div>
 
 <div class="sm_import_type_info" data-type="scoresheet">
 
@@ -26,8 +45,12 @@
 <table class="sm_import_blanks">
 	<tr>
 
-<?php foreach ($sports as $k => $v) { $class = !file_exists(SPORTSMANAGER_DIR.'imports/'.$k.'.csv') ? 'disabled' : ''; ?>
-	<td><a href="<?php echo SPORTSMANAGER_URL.'imports/'.$k.'.csv'; ?>" class="<?php echo $class; ?>" target="_blank"><?php echo $v[0]; ?></a></td>
+<?php
+	foreach ($sports as $k => $v) {
+		$f = SPORTSMANAGER_DIR.'imports/'.$k.'.csv';
+		$class = !file_exists($f) ? 'disabled' : '';
+?>
+	<td><a href="<?php echo $f; ?>" class="<?php echo $class; ?>" target="_blank"><?php echo $v[0]; ?></a></td>
 <?php }; ?>
 
 	</tr>
@@ -37,7 +60,6 @@
 
 	<p>Choose a .csv file to upload: <input type="text" id="sm_import_file_url" name="import_file_url" /><button class="sm_import_upload_file">Upload</button></p>
 	<p>Define delimiter: <select id="sm_import_delimiter" name="import_delimiter">
-		<option value=""></option>
 		<option value=",">Comma (,)</option>
 		<option value=";">Semi-colon (;)</option>
 	</select></p>

@@ -10,7 +10,7 @@
  * @return void
  */
 function sm_constants() {
-	define('SPORTSMANAGER_VERSION', '1.2.1');
+	define('SPORTSMANAGER_VERSION', '1.3.0');
 	define('SPORTSMANAGER_PREFIX', 'sportsmanager_');
 	define('SPORTSMANAGER_CAPABILITY_PREFIX', 'edit_sportsmanager_');
 	if (!defined('WP_CONTENT_URL')) define('WP_CONTENT_URL', rtrim(get_option('siteurl'), '/').'/'.'wp-content/');
@@ -34,12 +34,11 @@ function sm_constants() {
  * Gather all required files (functions or classes)
  * @param string $type
  * @param array $files
- * @param bool $is_folder
  */
 function sm_gather_files($type, $files, $is_folder = false) {
 	foreach ($files as $file) {
-		if ($is_folder) $file .= '/'.$file;
-		$f = SPORTSMANAGER_DIR.$type.'/'.$file.'.php';
+		if ($type != '') $type .= '/';
+		$f = SPORTSMANAGER_DIR.$type.$file.'.php';
 		if (file_exists($f)) {require_once($f);} else {die($f.' '.$type.' file does not exist');};
 	};
 }

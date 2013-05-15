@@ -1,7 +1,7 @@
 <?php
 
-//game_stats table
-if ($this->args->display == 'game_stats') {
+//stats_game table
+if ($this->args->display == 'stats_game') {
 	$players_id = array();
 	foreach ($this->rows as $row) {
 		$players_id[] = $row->player_id;
@@ -10,7 +10,7 @@ if ($this->args->display == 'game_stats') {
 	foreach ($this->db->players as $row) {
 		if (in_array($row->id, $players_id)) {
 			$class = $this->objects->players->class;
-			$this->rows[] = new $class($row, $this->db);
+			$this->rows[] = new $class($row, $this->db, $this->args);
 		};
 	};
 };
@@ -39,6 +39,7 @@ foreach ($this->rows as $k => $row) {
 		$team_wins = $row->wins;
 		$team_losses = $row->losses;
 		$row->game_back = (($leader_wins - $leader_losses) - ($team_wins - $team_losses)) / 2;
+		if ($row->game_back == 0) $row->game_back = '-';
 	};
 	//on_base_percentage
 	if (isset($row->hits, $row->bases_on_balls, $row->hits_by_pitch, $row->at_bat, $row->bunts)) {
@@ -91,7 +92,7 @@ foreach ($this->rows as $k => $row) {
 	};
 };
 
-if ($this->args->display == 'leaders_stats') {
+if ($this->args->display == 'stats_leaders') {
 	$this->include_view('frontend_leaders_box');
 } elseif ($this->args->display == 'game_results') {
 	$this->include_view('frontend_games_box');

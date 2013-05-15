@@ -10,8 +10,9 @@
  * @package SportsManager
  */
 class SportsManager_Club extends SportsManager_Frontend_Default {
-	function __construct($data = '', $db) {
+	function __construct($data = '', $db, $args) {
 		$this->filter = 'clubs';
+		$this->args = $args;
 		parent::__construct($data, $db);
 	}
 
@@ -52,10 +53,10 @@ class SportsManager_Club extends SportsManager_Frontend_Default {
 				};
 			};
 		};
-		$default_clubs_url = get_option('sportsmanager_default_stats_url', '');
-		$link = $default_clubs_url != '' ? $default_clubs_url.$data->slug : '#';
+		$infos = json_decode($data->infos);
 		$keys = array (
 			'id' => isset($data->id) ? $data->id : '',
+			'slug' => isset($data->slug) ? $data->slug : '',
 			'game_back' => '',
 			'games' => $games_played,
 			'losses' => $losses,
@@ -64,11 +65,19 @@ class SportsManager_Club extends SportsManager_Frontend_Default {
 			'points_plus' => $points_plus,
 			'ranking' => '',
 			'wins' => $wins,
-			'club_link' => isset($data->name) ? '<a href="'.$link.'">'.$data->name.'</a>' : '',
+			'small_logo_url' => isset($data->small_logo_url) ? $data->small_logo_url : '',
+			'large_logo_url' => isset($data->large_logo_url) ? $data->large_logo_url : '',
+			'website_url' => isset($infos->website_url) ? $infos->website_url : '',
+			'facebook_page_url' => isset($infos->facebook_page_url) ? $infos->facebook_page_url : '',
+			'email' => isset($infos->email) ? $infos->email : ''
 		);
+		//club
+		$club_url = str_replace(array ('%id%', '%slug%'), array ($keys['id'], $keys['slug']), $this->args->default_clubs_url);
+		if ($club_url == '') $club_url = '#';
+		$keys['club_link'] = '<a href="'.$club_url.'">'.$keys['name'].'</a>';
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';
 		};
-		unset($this->db);
+		unset($this->args, $this->db);
 	}
 }

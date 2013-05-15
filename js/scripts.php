@@ -10,7 +10,8 @@
 		'pages.js',
 		'fn.js'
 	);
+	ob_start('ob_gzhandler');
 	foreach ($files as $f) {
-		$js .= file_get_contents($f)."\n\n";
+		$js .= @file_get_contents($f)."\n\n";
 	}
 	echo $js;

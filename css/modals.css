@@ -141,6 +141,13 @@
 	border-right:1px solid #f0f0f0;
 	border-radius:0 0 0 3px;
 }
+.sm_modal_box .disabled,
+.sm_modal_box .disabled:hover {
+	background:none;
+	box-shadow:none;
+	color:#999;
+	cursor:default;
+}
 .sm_modal_box .loader {
 	left:0;
 	display:none;
@@ -163,6 +170,10 @@ input.sm_current_input {
 input.sm_current_input.small {
 	width:50%;
 	font-size:80px;
+}
+input.sm_current_input.invalid {
+	box-shadow:0 0 10px #f00;
+	border:1px solid #f00;
 }
 textarea.sm_current_input {
 	margin:0;

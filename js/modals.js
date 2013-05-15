@@ -2,10 +2,10 @@
 SM.behaviors.modals = function() {
 	var $ = jQuery;
 	$(".sm_modal_box .close").live("click", function() {
-		SM.fn.reset_form($(".sm_modal_box form"));
 		var parent = $(this).parents(".sm_modal_box");
+		SM.fn.reset_form(parent.find("form"));
 		parent.hide();
-		if ($(".sm_modal_box:visible").length == 0) {
+		if ($(".sm_modal_box").filter(":visible").length == 0) {
 			if (parent.is(".sm_modal_alerts, .sm_modal_intro")) {
 				$("#sm_backdrop_disabled").hide();
 			} else if (parent.hasClass("sm_modal_edit_info")) {
@@ -28,7 +28,7 @@ SM.behaviors.modals = function() {
 
 SM.behaviors.edit_cell = function() {
 	var $ = jQuery;
-	$(".sm_filter_table td:not(.column-id, .column-description, .column-stats, .column-infos, .column-players_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
+	$(".sm_filter_table td:not(.column-id, .column-description, .column-small_logo_url, .column-large_logo_url, .column-stats, .column-infos, .column-players_id, .column-captains_id, .column-delete, .dataTables_empty)").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
 		var league_id = $(this).siblings(".column-league_id").html();
 		if ($(this).is(".column-home_team_id, .column-away_team_id, .column-winner_team_id") && (league_id == "" || league_id == "0")) {
@@ -36,31 +36,55 @@ SM.behaviors.edit_cell = function() {
 			$("#sm_alerts_modal").find(".alert").html("You first need to define a league ID for this game.");
 		} else {
 			var input = $("#sm_edit_cell_modal input[name=current_cell]");
-			var value = SM.settings.current_cell.html();
+			var value = "";
+			var mask_value = SM.settings.current_cell.attr("data-mask-value");
+			if (mask_value == "1") {
+				value = SM.settings.current_cell.attr("data-value");
+			} else if (mask_value == "0") {
+				value = SM.settings.current_cell.html();
+			};
 			input.val("").removeAttr("checked").removeAttr("selected"); //clear form
 			if (value != "") {
 				input.val(value);
 			}
 			$("#sm_edit_cell_modal, #sm_backdrop").show();
-			input.select();
+			input.keyup().select();
 		}
 	});
 
-	$("#sm_edit_cell_btn").live("click", function() {
+	$("#sm_edit_cell_btn:not(.disabled)").live("click", function() {
 		$(this).hide();
 		$(this).siblings(".loader").show();
+		var restricted_limit = SM.settings.current_cell.attr("data-restricted-limit");
+		if (typeof restricted_limit !== "undefined" && restricted_limit != "" && SM.fn.is_number(restricted_limit)) {
+			var input = $("#sm_current_input-edit_cell");
+			var count = input.val().length;
+			if (count > restricted_limit) {
+				$("#sm_alerts_modal").show();
+				$("#sm_alerts_modal").find(".alert").html("The maximum number of characters for this cell is " + restricted_limit + ".");
+				$("#sm_edit_cell_modal .loader").hide();
+				$("#sm_edit_cell_btn").show().addClass("disabled");
+				SM.fn.highlight(input, "invalid");
+				return false;
+			}
+		}
 		var data = {
 			action: "sm_row",
-			do: "edit",
+			"do": "edit",
 			tab: SM.hash.tab,
 			id: SM.settings.current_cell.attr("id"),
 			value: $("#sm_current_input-edit_cell").val()
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
+			var returned = {name: "", value: ""};
+			try {
+				var returned = jQuery.parseJSON(response);
+			} catch (e) {};
 			SM.fn.load_autocomplete();
-			SM.settings.current_cell.html(response).focus();
+			SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
 			SM.fn.highlight_required();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			SM.filters.filter_table.fnDraw(); //doesn't do the trick...
 			$("#sm_edit_cell_modal .close").click();
 			$("#sm_edit_cell_modal .loader").hide();
 			$("#sm_edit_cell_btn").show();
@@ -69,6 +93,22 @@ SM.behaviors.edit_cell = function() {
 
 	$("#sm_edit_cell_form").live("submit", function() {
 		return false;
+	});
+
+	$("#sm_current_input-edit_cell").live("keyup", function(e) {
+		$("#sm_edit_cell_btn").removeClass("disabled");
+		$(this).removeClass("invalid");
+		var restricted_type = SM.settings.current_cell.attr("data-restricted-type");
+		if (typeof restricted_type !== "undefined" && restricted_type != "") {
+			if (restricted_type == "slug") {
+				var slug = $(this).val();
+				if (slug != "" && slug.search(/[^-_a-zA-Z0-9]/) != -1) {
+					$("#sm_edit_cell_btn").addClass("disabled");
+					SM.fn.highlight($(this), "invalid");
+					return false;
+				}
+			}
+		}
 	});
 }
 
@@ -104,13 +144,17 @@ SM.behaviors.edit_description = function() {
 		});
 		var data = {
 			action: "sm_row",
-			do: "edit",
+			"do": "edit",
 			tab: SM.hash.tab,
 			id: SM.settings.current_cell.attr("id"),
 			value: SM.fn.return_object_to_json(descriptions)
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.settings.current_cell.html(response).focus();
+			var returned = {name: "", value: ""};
+			try {
+				var returned = jQuery.parseJSON(response);
+			} catch (e) {};
+			SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_description_modal .close").click();
 			$("#sm_edit_description_modal .loader").hide();
@@ -119,6 +163,124 @@ SM.behaviors.edit_description = function() {
 	});
 
 	$("#sm_edit_description_form").live("submit", function() {
+		return false;
+	});
+}
+
+SM.behaviors.edit_logo_url = function() {
+	var $ = jQuery;
+	var file_frame;
+	$(".sm_filter_table td.column-small_logo_url, .sm_filter_table td.column-large_logo_url").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
+		if (file_frame) {
+			file_frame.open();
+			return;
+		}
+		file_frame = wp.media.frames.file_frame = wp.media({
+			title: "Sports Manager",
+			button: {
+				//text: "Use image"
+			},
+			multiple: false
+		});
+		file_frame.on("select", function() { //callback when an image is selected
+			attachment = file_frame.state().get("selection").first().toJSON();
+			var url = attachment.url;
+			var data = {
+				action: "sm_row",
+				"do": "edit",
+				tab: SM.hash.tab,
+				id: SM.settings.current_cell.attr("id"),
+				value: url
+			};
+			$.post(SM.settings.ajax_url, data, function(response) {
+				var returned = {name: "", value: ""};
+				try {
+					var returned = jQuery.parseJSON(response);
+				} catch (e) {};
+				SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
+				SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			});
+		});
+		file_frame.open();
+
+		/*
+		window.send_to_editor = function(html) {
+			var url = $(html).attr("href");
+			var data = {
+				action: "sm_row",
+				"do": "edit",
+				tab: SM.hash.tab,
+				id: SM.settings.current_cell.attr("id"),
+				value: url
+			};
+			$.post(SM.settings.ajax_url, data, function(response) {
+				var returned = {name: "", value: ""};
+				try {
+					var returned = jQuery.parseJSON(response);
+				} catch (e) {};
+				SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
+				SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+				tb_remove();
+			});
+		}
+		tb_show("", SM.settings.WP_ADMIN_URL + "media-upload.php?type=image&tab=type&TB_iframe=true");
+		*/
+
+		return false;
+	});
+}
+
+SM.behaviors.edit_players_id = function() {
+	var $ = jQuery;
+	$(".sm_filter_table td.column-players_id, .sm_filter_table td.column-captains_id").live("dblclick", function() {
+		SM.settings.current_cell = $(this);
+		var form = $("#sm_edit_players_id_form");
+		var input = form.find("input:text");
+		var value = SM.settings.current_cell.html();
+		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
+		if (typeof value !== "undefined" && value != "") {
+			try {
+				var players_id = jQuery.parseJSON(SM.settings.current_cell.html());
+				$.each(players_id, function(i, id) {
+					var item = form.find(".sm_autocomplete_item[data-value='" + id + "']").click();
+				});
+			} catch (e) {};
+		}
+		$("#sm_edit_players_id_modal, #sm_backdrop").show();
+		input.select();
+	});
+
+	$("#sm_edit_players_id_btn").live("click", function() {
+		$(this).hide();
+		$(this).siblings(".loader").show();
+		var modal = $(this).parents(".sm_modal_box");
+		var added_items = modal.find(".sm_autocomplete_added_item:not(.blank)");
+		var array = [];
+		$.each(added_items, function() {
+			array.push($(this).attr("data-value"));
+		});
+		var data = {
+			action: "sm_row",
+			"do": "edit",
+			tab: SM.hash.tab,
+			id: SM.settings.current_cell.attr("id"),
+			value: SM.fn.return_array_to_json(array)
+		};
+		$.post(SM.settings.ajax_url, data, function(response) {
+			var returned = {name: "", value: ""};
+			try {
+				var returned = jQuery.parseJSON(response);
+			} catch (e) {};
+			SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
+			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
+			$("#sm_edit_players_id_modal .close").click();
+			$("#sm_edit_players_id_modal .loader").hide();
+			$("#sm_edit_players_id_btn").show();
+		});
+	});
+
+	$("#sm_edit_players_id_form").live("submit", function() {
 		return false;
 	});
 }
@@ -157,7 +319,7 @@ SM.behaviors.edit_stats = function() {
 		$(this).siblings(".loader").show();
 		//only include data from visible inputs!!
 		var form = $("#sm_edit_stats_form");
-		var rows = form.find("tr.stat:visible");
+		var rows = form.find("tr.stat").filter(":visible");
 		var inputs = rows.find("input:text");
 		var stats = {};
 		$.each(inputs, function() {
@@ -166,13 +328,17 @@ SM.behaviors.edit_stats = function() {
 		});
 		var data = {
 			action: "sm_row",
-			do: "edit",
+			"do": "edit",
 			tab: SM.hash.tab,
 			id: SM.settings.current_cell.attr("id"),
-			value: SM.fn.return_object_to_json(stats)
+			value: SM.fn.return_object_to_json(stats, "0")
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.settings.current_cell.html(response);
+			var returned = {name: "", value: ""};
+			try {
+				var returned = jQuery.parseJSON(response);
+			} catch (e) {};
+			SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_stats_modal .close").click();
 			$("#sm_edit_stats_modal .loader").hide();
@@ -205,7 +371,7 @@ SM.behaviors.edit_infos = function() {
 			} catch (e) {};
 		}
 		$("#sm_edit_infos_modal, #sm_backdrop").show();
-		inputs.first().focus();
+		inputs.filter(":visible").first().focus();
 	});
 
 	$("#sm_edit_infos_btn").live("click", function() {
@@ -213,7 +379,7 @@ SM.behaviors.edit_infos = function() {
 		$(this).siblings(".loader").show();
 		//only include data from visible inputs!!
 		var form = $("#sm_edit_infos_form");
-		var rows = form.find("tr.info:visible");
+		var rows = form.find("tr.info").filter(":visible");
 		var inputs = rows.find("input:text");
 		var infos = {};
 		$.each(inputs, function() {
@@ -222,13 +388,17 @@ SM.behaviors.edit_infos = function() {
 		});
 		var data = {
 			action: "sm_row",
-			do: "edit",
+			"do": "edit",
 			tab: SM.hash.tab,
 			id: SM.settings.current_cell.attr("id"),
 			value: SM.fn.return_object_to_json(infos)
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.settings.current_cell.html(response);
+			var returned = {name: "", value: ""};
+			try {
+				var returned = jQuery.parseJSON(response);
+			} catch (e) {};
+			SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
 			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
 			$("#sm_edit_infos_modal .close").click();
 			$("#sm_edit_infos_modal .loader").hide();
@@ -241,63 +411,13 @@ SM.behaviors.edit_infos = function() {
 	});
 }
 
-SM.behaviors.edit_players_id = function() {
-	var $ = jQuery;
-	$(".sm_filter_table td.column-players_id").live("dblclick", function() {
-		SM.settings.current_cell = $(this);
-		var form = $("#sm_edit_players_id_form");
-		var input = form.find("input:text");
-		var value = SM.settings.current_cell.html();
-		input.val("").removeAttr("checked").removeAttr("selected"); //clear form
-		if (typeof value !== "undefined" && value != "") {
-			try {
-				var players_id = jQuery.parseJSON(SM.settings.current_cell.html());
-				$.each(players_id, function(i, id) {
-					var item = form.find(".sm_autocomplete_item[data-value='" + id + "']").click();
-				});
-			} catch (e) {};
-		}
-		$("#sm_edit_players_id_modal, #sm_backdrop").show();
-		input.select();
-	});
-
-	$("#sm_edit_players_id_btn").live("click", function() {
-		$(this).hide();
-		$(this).siblings(".loader").show();
-		var modal = $(this).parents(".sm_modal_box");
-		var added_items = modal.find(".sm_autocomplete_added_item:not(.blank)");
-		var array = [];
-		$.each(added_items, function() {
-			array.push($(this).attr("data-value"));
-		});
-		var data = {
-			action: "sm_row",
-			do: "edit",
-			tab: SM.hash.tab,
-			id: SM.settings.current_cell.attr("id"),
-			value: SM.fn.return_array_to_json(array)
-		};
-		$.post(SM.settings.ajax_url, data, function(response) {
-			SM.settings.current_cell.html(response);
-			SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
-			$("#sm_edit_players_id_modal .close").click();
-			$("#sm_edit_players_id_modal .loader").hide();
-			$("#sm_edit_players_id_btn").show();
-		});
-	});
-
-	$("#sm_edit_players_id_form").live("submit", function() {
-		return false;
-	});
-}
-
 SM.behaviors.add_row = function() {
 	var $ = jQuery;
 	$(".sm_add_row_btn").live("click", function() {
 		var btn = $(this);
 		var data = {
 			action: "sm_row",
-			do: "add_new",
+			"do": "add_new",
 			tab: SM.hash.tab
 		};
 		$.get(SM.settings.ajax_url, data, function(response) {
@@ -369,7 +489,7 @@ SM.behaviors.delete_row = function() {
 		$(this).siblings(".loader").show();
 		var data = {
 			action: "sm_row",
-			do: "delete",
+			"do": "delete",
 			tab: SM.hash.tab,
 			id: $("#sm_delete_row_id").val()
 		};

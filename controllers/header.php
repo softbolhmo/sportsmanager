@@ -32,8 +32,8 @@ if ($session_string == '') {
 $session_string .= "<span class='sm_change_session_btn'>($session_action)</span>";
 $page_subtitles = array (
 	'default' => $session_string,
-	'home' => 'Your favorite WordPress league manager.',
-	'import' => 'Tool to import scoresheet',
+	'home' => 'Your favorite WordPress league manager',
+	'import' => 'Tool to import scoresheets and schedule',
 	'faq' => 'Frequently asked questions',
 	'donate' => 'Support Sports Manager development'
 );

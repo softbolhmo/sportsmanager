@@ -52,28 +52,65 @@ class SportsManager {
 				'table' => $wpdb->prefix.'users'
 			)
 		);
-		$this->args = (object) array (
+		$this->default_args = (object) array (
 			'display' => '',
 			'filter' => '',
 			'game_id' => '',
 			'game_type' => '',
+			'lang' => 'en',
+			'location_id' => '',
+			'location_name' => '',
+			'location_slug' => '',
 			'league_id' => '',
 			'league_name' => '',
 			'league_slug' => '',
+			'player_id' => '',
+			'player_slug' => '',
 			'season' => '',
 			'sport' => '',
 			'team_id' => '',
+			'team_name' => '',
 			'team_slug' => '',
 			'user_id' => '',
-			'top' => '',
+			'top' => 0,
 			'sortable' => true,
+			'default_clubs_url' => get_option('sportsmanager_default_clubs_url', ''),
 			'default_locations_url' => get_option('sportsmanager_default_locations_url', ''),
 			'default_players_url' => get_option('sportsmanager_default_players_url', ''),
-			'default_stats_url' => get_option('sportsmanager_default_stats_url', ''),
 			'default_results_url' => get_option('sportsmanager_default_results_url', ''),
+			'default_stats_url' => get_option('sportsmanager_default_stats_url', ''),
 			'default_teams_url' => get_option('sportsmanager_default_teams_url', '')
 		);
+		$this->options = array (
+			'disable_intro',
+			'email',
+			'email_name',
+			'language',
+			'custom_class_table',
+			'default_clubs_url',
+			'default_locations_url',
+			'default_players_url',
+			'default_results_url',
+			'default_stats_url',
+			'default_teams_url'
+		);
 		$this->db = (object) array ();
+		$this->restricted_backend_keys = array (
+			'season' => array ('slug', '5'),
+			'slug' => array ('slug')
+		);
+		$this->special_backend_keys = array (
+			'away_team_id' => array ('query', 'club_id', 'teams', '_team_name'),
+			'cancelled' => array ('constant', 'yes_no'),
+			'club_id' => array ('query', 'name', 'clubs'),
+			'home_team_id' => array ('query', 'club_id', 'teams', '_team_name'),
+			'inactive' => array ('constant', 'yes_no'),
+			'league_id' => array ('query', 'name', 'leagues'),
+			'location_id' => array ('query', 'name', 'locations'),
+			'sport' => array ('constant', 'sports'),
+			'winner_team_id' => array ('query', 'club_id', 'teams', '_team_name'),
+			'_team_name' => array ('query', 'name', 'clubs'),
+		);
 		$this->languages = array (
 			'en' => array ('English', 'English'),
 			'fr' => array ('French', 'Français')
@@ -90,6 +127,51 @@ class SportsManager {
 			'volleyball' => array ('Volleyball', 'Volleyball'),
 			'waterpolo' => array ('Water Polo', 'Water Polo')
 		);
+		$this->yes_no = array (
+			'0' => array ('No', 'No'),
+			'1' => array ('Yes', 'Yes')
+		);
+		$this->lang = (object) array ();
+	}
+
+	function __($k) {
+		return isset($this->lang->{$this->args->lang}[$k]) ? $this->lang->{$this->args->lang}[$k] : $k;
+	}
+
+	function is_restricted_backend_key($k) {
+		return isset($this->restricted_backend_keys[$k]);
+	}
+
+	function is_special_backend_key($k) {
+		return isset($this->special_backend_keys[$k]);
+	}
+
+	function get_special_backend_key_name($k, $v) {
+		global $wpdb;
+		if (isset($this->special_backend_keys[$k])) {
+			$key = $this->special_backend_keys[$k];
+			if ($key[0] == 'query') {
+				$name = $v != '' ? $wpdb->get_var("SELECT ".$key[1]." FROM ".$this->objects->{$key[2]}->table." WHERE id = $v") : '';
+				if (isset($key[3])) $name = $this->get_special_backend_key_name($key[3], $name);
+			} elseif ($key[0] == 'constant') {
+				if (isset($this->{$key[1]}[$v])) {
+					$constant = $this->{$key[1]}[$v];
+					if (is_array($constant)) {
+						$name = $this->{$key[1]}[$v][0];
+					} else {
+						$name =  $this->{$key[1]}[$v];
+					};
+				} else {
+					$name = '';
+				};
+			} else {
+				$name = $v;
+			};
+			if (!in_array($v, array('', 0)) && $name == '') $name = '?';
+		} else {
+			$name = $v;
+		};
+		return $name;
 	}
 
 	function query_leagues() {
@@ -151,7 +233,7 @@ class SportsManager {
 		$users = array ();
 		$results = get_users('role='.$role);
 		foreach ($results as $result) {
-			$objects[] = new SportsManager_User($result);
+			$users[] = new SportsManager_User($result);
 		};
 		return sm_order_array_objects_by('name', $users);
 	}
@@ -210,26 +292,71 @@ class SportsManager {
 
 	function build($args = array ()) {
 		global $wpdb;
+		$this->args = clone $this->default_args;
 		foreach ($args as $k => $v) {
 			$this->args->$k = $v;
 		};
+		//leagues
 		if ($this->args->league_id == '' && $this->args->league_slug != '') {
 			$table = $this->objects->leagues->table;
 			$slug = $this->args->league_slug;
-			$q = "SELECT id FROM $table WHERE slug = '$slug'";
+			$q = "SELECT id FROM $table WHERE slug = '$slug' ORDER BY id DESC LIMIT 1";
 			$this->args->league_id = $wpdb->get_var($q);
+			if ($this->args->league_id == '') $this->args->league_id = 0;
 		} elseif ($this->args->league_id == '' && $this->args->league_slug == '' && $this->args->league_name != '') {
 			$table = $this->objects->leagues->table;
 			$name = $this->args->league_name;
-			$q = "SELECT id FROM $table WHERE name = '$name'";
+			$q = "SELECT id FROM $table WHERE name = '$name' ORDER BY id DESC LIMIT 1";
 			$this->args->league_id = $wpdb->get_var($q);
+			if ($this->args->league_id == '') $this->args->league_id = 0;
+		};
+		//locations
+		if ($this->args->location_id == '' && $this->args->location_slug != '') {
+			$table = $this->objects->locations->table;
+			$slug = $this->args->location_slug;
+			$q = "SELECT id FROM $table WHERE slug = '$slug' ORDER BY id DESC LIMIT 1";
+			$this->args->location_id = $wpdb->get_var($q);
+			if ($this->args->location_id == '') $this->args->location_id = 0;
+		} elseif ($this->args->location_id == '' && $this->args->location_slug == '' && $this->args->location_name != '') {
+			$table = $this->objects->locations->table;
+			$name = $this->args->location_name;
+			$q = "SELECT id FROM $table WHERE name = '$name' ORDER BY id DESC LIMIT 1";
+			$this->args->location_id = $wpdb->get_var($q);
+			if ($this->args->location_id == '') $this->args->location_id = 0;
+		};
+		//teams
+		if ($this->args->team_id == '' && $this->args->team_slug != '') {
+			$table = $this->objects->clubs->table;
+			$slug = $this->args->team_slug;
+			$q = "SELECT id FROM $table WHERE slug = '$slug'";
+			$club_id = $wpdb->get_var($q);
+			$table = $this->objects->teams->table;
+			$season = $this->args->season != '' && is_numeric($this->args->season) ? " AND season = '".$this->args->season."' " : ' ';
+			$q = "SELECT id FROM $table WHERE club_id = '$club_id'".$season."ORDER BY id DESC LIMIT 1";
+			$this->args->team_id = $wpdb->get_var($q);
+			if ($this->args->team_id == '') $this->args->team_id = 0;
+		} elseif ($this->args->team_id == '' && $this->args->team_slug == '' && $this->args->team_name != '') {
+			$table = $this->objects->clubs->table;
+			$name = $this->args->team_name;
+			$q = "SELECT id FROM $table WHERE name = '$name'";
+			$club_id = $wpdb->get_var($q);
+			$table = $this->objects->teams->table;
+			$season = $this->args->season != '' && is_numeric($this->args->season) ? " AND season = '".$this->args->season."' " : ' ';
+			$q = "SELECT id FROM $table WHERE club_id = '$club_id'".$season."ORDER BY id DESC LIMIT 1";
+			$this->args->team_id = $wpdb->get_var($q);
+			if ($this->args->team_id == '') $this->args->team_id = 0;
 		};
 	}
 
-	function include_view($s) {
-		$f = SPORTSMANAGER_DIR.'controllers/'.$s.'.php';
+	function include_language($k) {
+		$f = SPORTSMANAGER_DIR.'languages/'.$k.'.php';
+		if (file_exists($f)) {include($f);} else {echo $f.' language file does not exist';};
+	}
+
+	function include_view($k) {
+		$f = SPORTSMANAGER_DIR.'controllers/'.$k.'.php';
 		if (file_exists($f)) {include($f);};
-		$f = SPORTSMANAGER_DIR.'views/'.$s.'.php';
+		$f = SPORTSMANAGER_DIR.'views/'.$k.'.php';
 		if (file_exists($f)) {include($f);} else {echo $f.' view file does not exist';};
 	}
 }

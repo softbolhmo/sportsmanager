@@ -13,20 +13,20 @@ SM.behaviors.autocomplete = function() {
 		$(".sm_autocomplete_item:not(.blank), .sm_autocomplete_added_item:not(.blank)").remove();
 		if (array != "" && typeof SM.settings.autocomplete.arrays[array] !== "undefined") {
 			var modal = $("#sm_edit_cell_modal");
-			if (cell.hasClass("column-players_id")) var modal = $("#sm_edit_players_id_modal");
+			if (cell.hasClass("column-players_id") || cell.hasClass("column-captains_id")) var modal = $("#sm_edit_players_id_modal");
 			$.each(SM.settings.autocomplete.arrays[array], function(i, v) {
 				var blank = modal.find(".sm_autocomplete_item.blank").clone();
 				blank.attr("data-value", v.value).html(v.label).removeClass("blank");
 				$(".sm_autocomplete_container").append(blank);
 			});
-			if (array == "yes-no" || array == "game-type") {
+			if (array == "yes_no" || array == "game_type") {
 				$(".sm_autocomplete_item:not(.blank)").css("display", "inline-block");
-			};
+			}
 		}
 	});
 
 	$(".sm_current_input").live("keyup", function() {
-		if (SM.settings.current_array != "yes-no") {
+		if (SM.settings.current_array != "game_type" && SM.settings.current_array != "inactive" && SM.settings.current_array != "yes_no") {
 			var needle = SM.fn.return_clean_str($(this).val());
 			var items = $(".sm_autocomplete_item:not(.blank)");
 			items.hide();

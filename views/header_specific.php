@@ -30,8 +30,10 @@
 				map: {
 					away_team_id: "teams_name",
 					cancelled: "yes_no",
+					captains_id: "players_name",
 					club_id: "clubs_name",
 					home_team_id: "teams_name",
+					inactive: "yes_no",
 					league_id: "leagues_name",
 					location_id: "locations_name",
 					player_id: "players_name",

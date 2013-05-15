@@ -1,16 +1,18 @@
 <?php
 
 $infos = array (
-	'info' => array ('', "Common Info", array ("all")),
+	//'info' => array ('', "Common Info", array ("all")),
+	'email' => array ('', "Email", array ("clubs", "leagues", "players")),
 
 	//clubs
-	'club_info' => array ('', "Club Info", array ("clubs")),
+	'website_url' => array ('', "Website URL", array ("clubs")),
+	'facebook_page_url' => array ('', "Facebook Page URL", array ("clubs")),
 
 	//leagues
-	'league_info' => array ('', "League Info", array ("leagues")),
+	//'league_info' => array ('', "League Info", array ("leagues")),
 
 	//locations
-	'location_info' => array ('', "Location Info", array ("locations")),
+	'coordinates' => array ('', "Coordinates", array ("locations")),
 
 	//players
 	'first_name' => array ('', "First Name", array ("players")),
@@ -18,6 +20,6 @@ $infos = array (
 	'nick_name' => array ('', "Nickname", array ("players")),
 	'facebook_id' => array ('', "Facebook ID", array ("players")),
 	'birth_date' => array ('', "Birth Date", array ("players")),
-	'home_town' => array ('', "Hometown", array ("players"))
-	
+	'home_town' => array ('', "Hometown", array ("players")),
+
 );

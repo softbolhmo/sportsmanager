@@ -60,6 +60,7 @@ function sm_activate_plugin() {
 							)",
 		'locations'		=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
+								league_id int(11) NOT NULL,
 								name varchar(100) NOT NULL,
 								slug varchar(100) NOT NULL,
 								description text NOT NULL,
@@ -71,6 +72,7 @@ function sm_activate_plugin() {
 		'players'		=> "CREATE TABLE @table_name@ (
 								id int(11) NOT NULL AUTO_INCREMENT,
 								user_id int(11) NOT NULL,
+								slug varchar(100) NOT NULL,
 								small_logo_url varchar(256) NOT NULL,
 								large_logo_url varchar(256) NOT NULL,
 								infos text NOT NULL,
@@ -91,6 +93,8 @@ function sm_activate_plugin() {
 								club_id int(11) NOT NULL,
 								season varchar(5) NOT NULL,
 								players_id text NOT NULL,
+								captains_id text NOT NULL,
+								inactive int(1) NOT NULL,
 								PRIMARY KEY  (id)
 							)",
 		'faq'		=> "CREATE TABLE @table_name@ (
@@ -133,10 +137,11 @@ function sm_uninstall_plugin() {
 		'email_name',
 		'language',
 		'custom_class_table',
+		'default_clubs_url',
 		'default_locations_url',
 		'default_players_url',
-		'default_stats_url',
 		'default_results_url',
+		'default_stats_url',
 		'default_teams_url'
 	);
 	foreach ($keys as $k) {

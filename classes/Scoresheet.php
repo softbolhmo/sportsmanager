@@ -10,8 +10,9 @@
  * @package SportsManager
  */
 class SportsManager_Scoresheet extends SportsManager_Frontend_Default {
-	function __construct($data = '', $db) {
+	function __construct($data = '', $db, $args) {
 		$this->filter = 'scoresheets';
+		$this->args = $args;
 		parent::__construct($data, $db);
 	}
 
@@ -27,6 +28,6 @@ class SportsManager_Scoresheet extends SportsManager_Frontend_Default {
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';
 		};
-		unset($this->db);
+		unset($this->args, $this->db);
 	}
 }

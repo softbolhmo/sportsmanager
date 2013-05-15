@@ -38,7 +38,8 @@ function sm_autocomplete() {
 					(object) array ('label' => 'Regular Season (S)', 'value' => 'S'),
 					(object) array ('label' => 'Finals (P1)', 'value' => 'P1'),
 					(object) array ('label' => 'Semi-finals (P2)', 'value' => 'P2'),
-					(object) array ('label' => 'Quarter-finals (P1)', 'value' => 'P3')
+					(object) array ('label' => 'Quarter-finals (P4)', 'value' => 'P4'),
+					(object) array ('label' => '3rd Place Consolation (C3)', 'value' => 'C3')
 				),
 				'yes_no' => array (
 					(object) array ('label' => 'Yes', 'value' => '1'),
@@ -63,7 +64,7 @@ function sm_autocomplete() {
 			};
 			//session-sports
 			foreach ($SM->query_sports() as $k => $v) {
-				if ($k != '') {
+				if ($v != '') {
 					$label = isset($SM->sports[$v][0]) ? $SM->sports[$v][0] : '"'.$v.'"';
 					$static['session_sports'][] = (object) array ('label' => $label, 'value' => $v);
 				};
@@ -92,20 +93,8 @@ function sm_db() {
 
 	//set_options
 	if ($data->do == 'set_options') {
-		$keys = array (
-			'disable_intro',
-			'email',
-			'email_name',
-			'language',
-			'custom_class_table',
-			'default_locations_url',
-			'default_players_url',
-			'default_stats_url',
-			'default_results_url',
-			'default_teams_url'
-		);
 		$options = (object) array ();
-		foreach ($keys as $k) {
+		foreach ($SM->options as $k) {
 			$key = 'option_'.$k;
 			$value = isset($$key) ? $$key : '';
 			$key = $SM->prefix.$k;
@@ -141,6 +130,32 @@ function sm_import() {
 	$rows = explode("\n", $csv);
 	if (count($rows) < 4) die;
 	$infos = explode($import_delimiter, trim($rows[0]));
+
+	//games
+	if ($data->do == 'games') {
+		$infos = array ();
+		$keys = explode($import_delimiter, trim($rows[2]));
+		unset($rows[0], $rows[1], $rows[2]);
+		$table = array ();
+		foreach ($rows as $row) {
+			if ($row != '') {
+				$row = explode($import_delimiter, trim($row));
+				$row = array_combine($keys, $row);
+				if (is_numeric($row['league_id']) && $row['league_id'] != 0) $table[] = $row;
+			};
+		};
+		$games = array ();
+		foreach ($table as $row) {
+			$games[] = $row;
+		};
+		foreach ($games as $game) {
+			$wpdb->insert(
+				$SM->objects->games->table,
+				$game
+			);
+		};
+		die;
+	};
 
 	//scoresheet
 	if ($data->do == 'scoresheet') {
@@ -185,6 +200,7 @@ add_action('wp_ajax_sm_import', 'sm_import');
 function sm_row() {
 	global $wpdb;
 	$SM = new SportsManager_Backend;
+	$response = (object) array ('name' => '', 'value' => '');
 	$data = (object) array ();
 	$keys = array ('do', 'id', 'column', 'value');
 	foreach ($keys as $k) {
@@ -214,7 +230,9 @@ function sm_row() {
 			),
 			array ('id' => $info->id)
 		);
-		echo $wpdb->get_var("SELECT $info->column FROM ".$SM->objects->{$info->filter}->table." WHERE id = $info->id");
+		$response->value = $wpdb->get_var("SELECT $info->column FROM ".$SM->objects->{$info->filter}->table." WHERE id = $info->id");
+		$response->name = $SM->get_special_backend_key_name($info->column, $response->value);
+		echo json_encode($response);
 		die;
 	};
 

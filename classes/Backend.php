@@ -26,7 +26,7 @@ class SportsManager_Backend extends SportsManager {
 				'args' => array ('')
 			),
 			'locations' => (object) array (
-				'tables' => array ('locations'),
+				'tables' => array ('locations', 'leagues'),
 				'args' => array ('')
 			),
 			'players' => (object) array (
@@ -64,21 +64,6 @@ class SportsManager_Backend extends SportsManager {
 					'read' => true
 				)
 			),
-			/*
-			(object) array (
-				'slug' => 'captain',
-				'name' => 'Captain',
-				'capabilities' => array (
-					'delete_posts' => true,
-					'delete_published_posts' => true,
-					'edit_posts' => true,
-					'edit_published_posts' => true,
-					'publish_posts' => true,
-					'read' => true,
-					'upload_files' => true
-				)
-			),
-			*/
 			(object) array (
 				'slug' => 'executive',
 				'name' => 'Executive',
@@ -109,12 +94,6 @@ class SportsManager_Backend extends SportsManager {
 				'slug' => 'executive',
 				'capabilities' => array ('games', 'scoresheets', 'import', 'faq', 'donate')
 			),
-			/*
-			(object) array (
-				'slug' => 'subscriber',
-				'capabilities' => array ()
-			)
-			*/
 		);
 		foreach ($roles as $role) {
 			$data = (object) array ('slug' => $role->slug);
@@ -139,9 +118,7 @@ class SportsManager_Backend extends SportsManager {
 	}
 
 	function include_specific() {
-		wp_enqueue_style('thickbox');
-		wp_enqueue_script('media-upload');
-		wp_enqueue_script('thickbox');
+		wp_enqueue_media();
 		$this->include_view('header_specific');
 	}
 

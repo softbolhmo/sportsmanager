@@ -16,7 +16,7 @@ SM.fn.highlight_required = function() {
 	cells.removeClass("invalid");
 	cells.each(function() {
 		var html = $(this).html();
-		if (html == "" || html == "0") {
+		if (html == "" || html == "0" || html == "?") {
 			$(this).addClass("invalid");
 		}
 	});
@@ -53,7 +53,7 @@ SM.fn.load_autocomplete = function() {
 	if (SM.hash.tab != "") {
 		var data = {
 			action: "sm_autocomplete",
-			do: "load",
+			"do": "load",
 			tab: SM.hash.tab
 		};
 		$.post(SM.settings.ajax_url, data, function(response) {
@@ -104,7 +104,7 @@ SM.fn.switch_tab = function(tab) {
 		SM.fn.highlight_required();
 		SM.fn.load_autocomplete();
 		$("#sm_page_loading_modal").hide();
-		if ($(".sm_modal_box:visible").length == 0) {
+		if ($(".sm_modal_box").filter(":visible").length == 0) {
 			$("#sm_backdrop_disabled").hide();
 		}
 	});
@@ -136,15 +136,29 @@ SM.fn.return_date_str = function() {
 	return d;
 }
 
-SM.fn.return_array_to_json = function(array) {
+SM.fn.return_array_to_json = function(array, default_value) {
 	var $ = jQuery;
-	var json = "[";
+	if (typeof default_value === "undefined") default_value = "";
+	var json = "";
 	$.each(array.sort(), function(k, v) {
-		if (v == "") v = 0;
-		json += '"' + v + '",';
+		if (v == "") v = default_value;
+		if (v != "") json += '"' + v + '",';
 	});
 	json = json.replace(/,$/gi, "");
-	json += "]";
+	if (json != "") json = "[" + json + "]";
+	return json;
+}
+
+SM.fn.return_object_to_json = function(object, default_value) {
+	var $ = jQuery;
+	if (typeof default_value === "undefined") default_value = "";
+	var json = "";
+	$.each(object, function(k, v) {
+		if (v == "") v = default_value;
+		if (v != "") json += '"' + k + '":"' + v + '",';
+	});
+	json = json.replace(/,$/gi, "");
+	if (json != "") json = "{" + json + "}";
 	return json;
 }
 
@@ -163,18 +177,6 @@ SM.fn.return_form_to_json = function(form) {
 		}
 	});
 	return SM.fn.return_object_to_json(o);
-}
-
-SM.fn.return_object_to_json = function(object) {
-	var $ = jQuery;
-	var json = "{";
-	$.each(object, function(k, v) {
-		if (v == "") v = 0;
-		json += '"' + k + '":"' + v + '",';
-	});
-	json = json.replace(/,$/gi, "");
-	json += "}";
-	return json;
 }
 
 SM.fn.return_clean_str = function(s) {

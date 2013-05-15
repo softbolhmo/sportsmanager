@@ -32,17 +32,23 @@ class SportsManager_Backend_Default {
 			$this->$k = isset($v) ? $v : '';
 		};
 		if ($this->filter == 'players') {
+			$names = array ('first' => '', 'last' => '', 'full' => '');
+			$data->user = (object) array ();
 			if (isset($this->user_id)) {
-				foreach (array ('first_name', 'last_name') as $k) {
-					if (!isset($this->$k)) {
-						$v = get_user_meta($this->user_id, $k, true);
-						if ($v != '') $this->$k = $v;
-					};
+				foreach (array ('first_name', 'last_name', 'display_name') as $k) {
+					$v = get_user_meta($this->user_id, $k, true);
+					if ($v != '') $data->user->$k = $v;
 				};
-				if (isset($this->first_name, $this->last_name)) {
-					$this->name = $this->first_name.' '.$this->last_name;
-				};
+				$data->user->name = get_user_meta($this->user_id, 'display_name', true);
 			};
+			if (isset($this->infos)) $infos = json_decode($this->infos);
+			$names['first'] = isset($infos->first_name) && !in_array($infos->first_name, array ('', '0')) ? $infos->first_name : (isset($datauser->first_name) ? $data->user->first_name : '');
+			$names['last'] = isset($infos->last_name) && !in_array($infos->last_name, array ('', '0')) ? $infos->last_name : (isset($data->user->last_name) ? $data->user->last_name : '');
+			$names['full'] = implode(' ', $names);
+			if (in_array($names['full'], array ('', ' '))) $names['full'] = isset($data->user->name) ? $data->user->name : '';
+			$this->first_name = $names['first'];
+			$this->last_name = $names['last'];
+			$this->name = $names['full'];
 		} elseif ($this->filter == 'teams') {
 			if (isset($this->club_id)) {
 				$this->name = $wpdb->get_var("SELECT name FROM ".$SM->objects->clubs->table." WHERE id = '".$this->club_id."'");

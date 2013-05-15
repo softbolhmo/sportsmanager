@@ -23,7 +23,24 @@
 
 <?php foreach ($headers[$filter] as $k => $v) { ?>
 
-			<td id="<?php echo $filter.'-'.$object->id.'-'.$k; ?>" class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>" tabindex="1"><?php echo $object->$k; ?></td>
+<?php
+	$value = '';
+	$name = $object->$k;
+	$mask_value = false;
+	$restricted_type = "";
+	$restricted_limit = "";
+	if ($this->is_special_backend_key($k)) {
+		$value = $object->$k;
+		$name = $this->get_special_backend_key_name($k, $value);
+		$mask_value = true;
+	};
+	if ($this->is_restricted_backend_key($k)) {
+		$restricted_type = isset($this->restricted_backend_keys[$k][0]) ? $this->restricted_backend_keys[$k][0] : '';
+		$restricted_limit = isset($this->restricted_backend_keys[$k][1]) ? $this->restricted_backend_keys[$k][1] : '';
+	};
+?>
+
+			<td id="<?php echo $filter.'-'.$object->id.'-'.$k; ?>" class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" data-value="<?php echo $value; ?>" data-mask-value="<?php echo $mask_value ? '1' : '0'; ?>" data-restricted-type="<?php echo $restricted_type; ?>" data-restricted-limit="<?php echo $restricted_limit; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>" tabindex="1"><?php echo $name; ?></td>
 
 <?php }; ?>
 
@@ -49,12 +66,12 @@
 
 </div><!--end .sm_filter_container-->
 
-<?php $SM->include_view('modal_edit_cell'); ?>
-<?php $SM->include_view('modal_edit_description'); ?>
-<?php $SM->include_view('modal_edit_stats'); ?>
-<?php $SM->include_view('modal_edit_infos'); ?>
-<?php $SM->include_view('modal_edit_players_id'); ?>
-<?php $SM->include_view('modal_add_row'); ?>
-<?php $SM->include_view('modal_add_rows'); ?>
-<?php $SM->include_view('modal_delete_row'); ?>
-<?php $SM->include_view('modal_set_session'); ?>
+<?php $this->include_view('modal_edit_cell'); ?>
+<?php $this->include_view('modal_edit_description'); ?>
+<?php $this->include_view('modal_edit_stats'); ?>
+<?php $this->include_view('modal_edit_infos'); ?>
+<?php $this->include_view('modal_edit_players_id'); ?>
+<?php $this->include_view('modal_add_row'); ?>
+<?php $this->include_view('modal_add_rows'); ?>
+<?php $this->include_view('modal_delete_row'); ?>
+<?php $this->include_view('modal_set_session'); ?>

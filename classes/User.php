@@ -10,8 +10,9 @@
  * @package SportsManager
  */
 class SportsManager_User extends SportsManager_Frontend_Default {
-	function __construct($data = '', $db = '') {
+	function __construct($data = '', $db = '', $args = '') {
 		$this->filter = 'users';
+		$this->args = $args;
 		parent::__construct($data, $db);
 	}
 
@@ -23,6 +24,7 @@ class SportsManager_User extends SportsManager_Frontend_Default {
 		if (in_array($names['full'], array ('', ' '))) $names['full'] = isset($data->display_name) ? $data->display_name : '';
 		$keys = array (
 			'id' => isset($data->ID) ? $data->ID : '',
+			'slug' => isset($data->user_nicename) ? $data->user_nicename : '',
 			'name' => $names['full'],
 			'first_name' => $names['first'],
 			'last_name' => $names['last'],
@@ -30,6 +32,6 @@ class SportsManager_User extends SportsManager_Frontend_Default {
 		foreach ($keys as $k => $v) {
 			$this->$k = isset($v) ? $v : '';
 		};
-		unset($this->db);
+		unset($this->args, $this->db);
 	}
 }

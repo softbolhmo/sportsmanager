@@ -5,12 +5,18 @@
 	<tr>
 
 <td class="sm_left_menu">
-	<div class="sm_left_menu_item active" data-tab="options">Options</div>
+	<div class="sm_left_menu_item active" data-tab="welcome">Welcome</div>
+	<div class="sm_left_menu_item" data-tab="options">Options</div>
 	<div class="sm_left_menu_item" data-tab="backup">Backup</div>
 </td>
 
 <td class="sm_right_tabs">
-	<div class="sm_right_tab active" data-tab="options">
+	<div class="sm_right_tab active" data-tab="welcome">
+
+<p>Welcome to Sports Manager</p>
+
+	</div>
+	<div class="sm_right_tab" data-tab="options">
 
 <form id="sm_save_options_form">
 	<h3>Profile</h3>
@@ -64,37 +70,44 @@
 	<h3>Default URLs</h3>
 
 <div class="sm_control_group">
+	<label class="sm_control_label">Default URL for clubs</label>
+	<div class="sm_controls">
+		<input id="sm_option_default_clubs_url" name="option_default_clubs_url" type="text" value="<?php echo $option_default_clubs_url; ?>" placeholder="http://myleague.com/teams/slug" />
+	</div>
+</div>
+
+<div class="sm_control_group">
 	<label class="sm_control_label">Default URL for locations</label>
 	<div class="sm_controls">
-		<input id="sm_option_default_locations_url" name="option_default_locations_url" type="text" value="<?php echo $option_default_locations_url; ?>" placeholder="http://myleague.com/locations" />
+		<input id="sm_option_default_locations_url" name="option_default_locations_url" type="text" value="<?php echo $option_default_locations_url; ?>" placeholder="http://myleague.com/locations/slug" />
 	</div>
 </div>
 
 <div class="sm_control_group">
 	<label class="sm_control_label">Default URL for players</label>
 	<div class="sm_controls">
-		<input id="sm_option_default_players_url" name="option_default_players_url" type="text" value="<?php echo $option_default_players_url; ?>" placeholder="http://myleague.com/players" />
-	</div>
-</div>
-
-<div class="sm_control_group">
-	<label class="sm_control_label">Default URL for stats</label>
-	<div class="sm_controls">
-		<input id="sm_option_default_stats_url" name="option_default_stats_url" type="text" value="<?php echo $option_default_stats_url; ?>" placeholder="http://myleague.com/stats" />
+		<input id="sm_option_default_players_url" name="option_default_players_url" type="text" value="<?php echo $option_default_players_url; ?>" placeholder="http://myleague.com/players/slug" />
 	</div>
 </div>
 
 <div class="sm_control_group">
 	<label class="sm_control_label">Default URL for results</label>
 	<div class="sm_controls">
-		<input id="sm_option_default_results_url" name="option_default_results_url" type="text" value="<?php echo $option_default_results_url; ?>" placeholder="http://myleague.com/results" />
+		<input id="sm_option_default_results_url" name="option_default_results_url" type="text" value="<?php echo $option_default_results_url; ?>" placeholder="http://myleague.com/results/id" />
+	</div>
+</div>
+
+<div class="sm_control_group">
+	<label class="sm_control_label">Default URL for stats</label>
+	<div class="sm_controls">
+		<input id="sm_option_default_stats_url" name="option_default_stats_url" type="text" value="<?php echo $option_default_stats_url; ?>" placeholder="http://myleague.com/stats/id" />
 	</div>
 </div>
 
 <div class="sm_control_group">
 	<label class="sm_control_label">Default URL for teams</label>
 	<div class="sm_controls">
-		<input id="sm_option_default_teams_url" name="option_default_teams_url" type="text" value="<?php echo $option_default_teams_url; ?>" placeholder="http://myleague.com/teams" />
+		<input id="sm_option_default_teams_url" name="option_default_teams_url" type="text" value="<?php echo $option_default_teams_url; ?>" placeholder="http://myleague.com/teams/slug/season" />
 	</div>
 </div>
 
