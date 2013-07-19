@@ -1,0 +1,6 @@
+STATS,LEAGUE ID:,1,SEASON:,2013,SPORT:,baseball,GAME ID:,1,,,,,,,,,,,,,,,,,,,
+ID,G,AB,R,B,1B,2B,3B,HR,RBI,BB,SO,HBP,SB,CS,ROE,FC,G,W,L,SV,IP,R,ER,ERA,K,BB,BB
+player_id,games,at_bat,runs,bunts,singles,doubles,triples,home_runs,runs_batted_in,bases_on_balls,strike_outs,hits_by_pitch,stolen_bases,caught_stealing,reached_on_error,fielders_choice,pitching_games,pitching_wins,pitching_losses,pitching_saves,pitching_innings_pitched,pitching_runs_allowed,pitching_earned_runs,pitching_earned_runs_average,pitching_strike_outs,pitching_bases_on_balls,pitching_bases_on_balls
+1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
