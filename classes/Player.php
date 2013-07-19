@@ -64,6 +64,7 @@ class SportsManager_Player extends SportsManager_Frontend_Default {
 			'large_logo_url' => isset($data->large_logo_url) ? $data->large_logo_url : '',
 			'birth_date' => isset($infos->birth_date) && !in_array($infos->birth_date, array ('', '0')) ? $infos->birth_date : '',
 			'hometown' => isset($infos->home_town) && !in_array($infos->home_town, array ('', '0')) ? $infos->home_town : '',
+			'description' => isset($data->description) ? json_decode($data->description) : '',
 			//stats
 			//'games' => count($scoresheets) //no because in one scoresheet, you can enter stats for multiple games, or even an entire year! It also depends on what league your refering to!
 		);

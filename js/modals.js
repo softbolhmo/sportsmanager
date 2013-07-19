@@ -185,13 +185,12 @@ SM.behaviors.edit_logo_url = function() {
 		});
 		file_frame.on("select", function() { //callback when an image is selected
 			attachment = file_frame.state().get("selection").first().toJSON();
-			var url = attachment.url;
 			var data = {
 				action: "sm_row",
 				"do": "edit",
 				tab: SM.hash.tab,
 				id: SM.settings.current_cell.attr("id"),
-				value: url
+				value: attachment.url
 			};
 			$.post(SM.settings.ajax_url, data, function(response) {
 				var returned = {name: "", value: ""};
@@ -203,30 +202,6 @@ SM.behaviors.edit_logo_url = function() {
 			});
 		});
 		file_frame.open();
-
-		/*
-		window.send_to_editor = function(html) {
-			var url = $(html).attr("href");
-			var data = {
-				action: "sm_row",
-				"do": "edit",
-				tab: SM.hash.tab,
-				id: SM.settings.current_cell.attr("id"),
-				value: url
-			};
-			$.post(SM.settings.ajax_url, data, function(response) {
-				var returned = {name: "", value: ""};
-				try {
-					var returned = jQuery.parseJSON(response);
-				} catch (e) {};
-				SM.settings.current_cell.attr("data-value", returned.value).html(returned.name).focus();
-				SM.fn.highlight(SM.settings.current_cell, "sm_current_cell");
-				tb_remove();
-			});
-		}
-		tb_show("", SM.settings.WP_ADMIN_URL + "media-upload.php?type=image&tab=type&TB_iframe=true");
-		*/
-
 		return false;
 	});
 }
@@ -289,7 +264,7 @@ SM.behaviors.edit_stats = function() {
 	var $ = jQuery;
 	$(".sm_filter_table td.column-stats").live("dblclick", function() {
 		SM.settings.current_cell = $(this);
-		var sport = $(this).siblings(".column-sport").html();
+		var sport = $(this).siblings(".column-sport").attr("data-value");
 		if (sport == "") {
 			$("#sm_alerts_modal, #sm_backdrop_disabled").show();
 			$("#sm_alerts_modal").find(".alert").html("You first need to define a sport for this scoresheet.");

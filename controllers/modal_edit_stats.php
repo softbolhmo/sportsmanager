@@ -6,8 +6,9 @@ $stats = array (
 	'minutes_played' => array ('MIN', "Minutes Played", array ('basketball')),
 
 	//common
-	'assists' => array ('AST', "Assists", array ('basketball')),
+	'assists' => array ('AST', "Assists", array ('basketball', 'hockey')),
 	'blocks' => array ('BLK', "Blocks", array ('basketball')),
+	'goals' => array ('G', "Goals", array ('hockey', 'soccer')),
 	'steals' => array ('STL', "Steals", array ('basketball')),
 	'turnovers' => array ('TO', "Turnovers", array ('basketball')),
 
@@ -51,5 +52,4 @@ $stats = array (
 	'personal_fouls' => array ('PF', "Personal Fouls", array ('basketball')),
 
 	//soccer
-	'goals' => array ('G', "Goals", array ('soccer')),
 );

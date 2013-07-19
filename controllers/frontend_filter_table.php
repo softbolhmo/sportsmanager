@@ -3,8 +3,9 @@ $common_stats = array (
 	'games' => array ('G', "Games Played", array ('all')),
 
 	//common
-	'assists' => array ('AST', "Assists", array ('basketball')),
+	'assists' => array ('AST', "Assists", array ('basketball', 'hockey')),
 	'blocks' => array ('BLK', "Blocks", array ('basketball')),
+	'goals' => array ('G', "Goals", array ('hockey', 'soccer')),
 	'steals' => array ('STL', "Steals", array ('basketball')),
 	'turnovers' => array ('TO', "Turnovers", array ('basketball')),
 
@@ -42,8 +43,12 @@ $common_stats = array (
 	'defensive_rebounds' => array ('DREB', "Defensive Rebounds", array ('basketball')),
 	'personal_fouls' => array ('PF', "Personal Fouls", array ('basketball')),
 
+	//hockey
+	'goals_against_average' => array ('GAA', "Goals Against Average", array ('hockey')),
+	'hockey_points' => array ('P', "Points", array ('hockey')),
+	'save_percentage' => array ('S%', "Save Percentage", array ('hockey')),
+
 	//soccer
-	'goals' => array ('G', "Goals", array ('soccer')),
 );
 $headers = array (
 	'rankings' => array (
@@ -101,7 +106,7 @@ if (in_array($filter, array('rankings'))) {
 } elseif (is_int(strpos($filter, 'schedule'))) {
 	$rows = sm_order_array_objects_by('time', $rows);
 	foreach ($rows as $i => $row) {
-		if (isset($row->time) && $row->time >= time()) {
+		if (isset($row->time) && $row->time >= time() && $row->cancelled != 1) {
 			$next_game = $i;
 			break;
 		};

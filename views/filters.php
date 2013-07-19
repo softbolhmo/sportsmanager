@@ -7,7 +7,20 @@
 
 <?php foreach ($headers[$filter] as $k => $v) { ?>
 
-			<th class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" scope="col" data-column="<?php echo $k; ?>" data-filter="<?php echo $filter; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>"><?php echo $v[0]; ?></th>
+<?php
+	$mask_value = false;
+	$restricted_type = "";
+	$restricted_limit = "";
+	if ($this->is_special_backend_key($k)) {
+		$mask_value = true;
+	};
+	if ($this->is_restricted_backend_key($k)) {
+		$restricted_type = isset($this->restricted_backend_keys[$k][0]) ? $this->restricted_backend_keys[$k][0] : '';
+		$restricted_limit = isset($this->restricted_backend_keys[$k][1]) ? $this->restricted_backend_keys[$k][1] : '';
+	};
+?>
+
+			<th class="column-<?php echo $k; ?> <?php echo $v[2] ? 'required' : ''; ?>" scope="col" data-column="<?php echo $k; ?>" data-filter="<?php echo $filter; ?>" data-mask-value="<?php echo $mask_value ? '1' : '0'; ?>" data-restricted-type="<?php echo $restricted_type; ?>" data-restricted-limit="<?php echo $restricted_limit; ?>" title="<?php echo $v[2] ? 'required' : ''; ?>"><?php echo $v[0]; ?></th>
 
 <?php }; ?>
 
@@ -60,6 +73,10 @@
 
 <?php if ($filter == 'games') { ?>
 	<button class="sm_add_rows_btn"><?php echo $add_rows; ?></button>
+<?php }; ?>
+
+<?php if ($filter == 'scoresheets') { ?>
+	<button class="sm_delete_rows_btn" onclick="javascript:alert('Not ready yet');"><?php echo $delete_rows; ?></button>
 <?php }; ?>
 
 </div>

@@ -192,7 +192,8 @@ tr.even td.sorting_1 {
 	cursor:pointer;
 }
 .sm_add_row_btn,
-.sm_add_rows_btn {
+.sm_add_rows_btn,
+.sm_delete_rows_btn {
 	margin:5px 0;
 	padding:10px;
 	width:100%;
@@ -205,7 +206,8 @@ tr.even td.sorting_1 {
 	cursor:pointer;
 }
 .sm_add_row_btn:hover,
-.sm_add_rows_btn:hover {
+.sm_add_rows_btn:hover,
+.sm_delete_rows_btn:hover {
 	background: #f0f0f0;
 	box-shadow:0 0 10px 1px rgba(0,0,0,0.2);
 	border:1px solid #fff;

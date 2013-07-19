@@ -55,6 +55,7 @@ SM.behaviors.home = function() {
 
 SM.behaviors.import = function() {
 	var $ = jQuery;
+	var file_frame;
 	$("#sm_import_type").live("change", function() {
 		var type = $("select option:selected").val();
 		$(".sm_import_type_info").removeClass("active");
@@ -66,12 +67,22 @@ SM.behaviors.import = function() {
 	});
 
 	$(".sm_import_upload_file").live("click", function() {
-		window.send_to_editor = function(html) {
-			var url = $(html).attr("href");
-			$("#sm_import_file_url").val(url);
-			tb_remove();
+		if (file_frame) {
+			file_frame.open();
+			return;
 		}
-		tb_show("", SM.settings.WP_ADMIN_URL + "media-upload.php?type=image&tab=type&TB_iframe=true");
+		file_frame = wp.media.frames.file_frame = wp.media({
+			title: "Sports Manager",
+			button: {
+				//text: "Use image"
+			},
+			multiple: false
+		});
+		file_frame.on("select", function() { //callback when an image is selected
+			attachment = file_frame.state().get("selection").first().toJSON();
+			$("#sm_import_file_url").val(attachment.url).focus();
+		});
+		file_frame.open();
 		return false;
 	});
 
@@ -101,7 +112,7 @@ SM.behaviors.import = function() {
 					$("#sm_import_btn").show();
 					SM.fn.highlight(form, "sm_current_cell");
 				} else {
-					$("#sm_import_ajax_return").html("Error: " + response).show();
+					$("#sm_import_ajax_return").html("Error: <pre>" + response + "</pre>").show();
 				};
 			});
 		};

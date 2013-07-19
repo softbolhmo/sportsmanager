@@ -67,6 +67,7 @@ class SportsManager {
 			'player_id' => '',
 			'player_slug' => '',
 			'season' => '',
+			'seasons_array' => array (),
 			'sport' => '',
 			'team_id' => '',
 			'team_name' => '',

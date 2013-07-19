@@ -73,6 +73,7 @@ function sm_activate_plugin() {
 								id int(11) NOT NULL AUTO_INCREMENT,
 								user_id int(11) NOT NULL,
 								slug varchar(100) NOT NULL,
+								description text NOT NULL,
 								small_logo_url varchar(256) NOT NULL,
 								large_logo_url varchar(256) NOT NULL,
 								infos text NOT NULL,

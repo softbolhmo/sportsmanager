@@ -123,6 +123,7 @@ $(document).ready(function() {
 			active.removeClass("active");
 			new_active.addClass("active");
 		}
+		return false;
 	});
 });
 </script>

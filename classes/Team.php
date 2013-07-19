@@ -70,6 +70,7 @@ class SportsManager_Team extends SportsManager_Frontend_Default {
 			'points_plus' => $points_plus,
 			'ranking' => '',
 			'wins' => $wins,
+			'players_id' => isset($data->players_id) ? json_decode($data->players_id) : '',
 			'small_logo_url' => isset($club->small_logo_url) ? $club->small_logo_url : '',
 			'large_logo_url' => isset($club->large_logo_url) ? $club->large_logo_url : '',
 			'website_url' => isset($infos->website_url) ? $infos->website_url : '',

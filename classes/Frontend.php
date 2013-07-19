@@ -17,10 +17,6 @@ class SportsManager_Frontend extends SportsManager {
 				'tables' => array ('games', 'clubs', 'locations', 'teams'), //always name primary object first
 				'args' => array ('display')
 			),
-			'stats_game' => (object) array (
-				'tables' => array ('scoresheets', 'players', 'users'),
-				'args' => array ('display', 'game_id', 'sport')
-			),
 			'list_games' => (object) array (
 				'tables' => array ('games', 'clubs', 'locations', 'teams'),
 				'args' => array ('display')
@@ -41,9 +37,17 @@ class SportsManager_Frontend extends SportsManager {
 				'tables' => array ('teams', 'clubs', 'games'),
 				'args' => array ('display', array ('league_id', 'league_slug', 'league_name'))
 			),
+			'player_stats' => (object) array (
+				'tables' => array ('players', 'scoresheets', 'users'),
+				'args' => array ('display', array ('league_id', 'league_slug', 'league_name'), 'seasons_array', 'sport')
+			),
 			'schedule' => (object) array (
 				'tables' => array ('games', 'clubs', 'locations', 'teams'),
 				'args' => array ('display')
+			),
+			'stats_game' => (object) array (
+				'tables' => array ('scoresheets', 'players', 'users'),
+				'args' => array ('display', 'game_id', 'sport')
 			),
 			'stats_leaders' => (object) array (
 				'tables' => array ('players', 'scoresheets', 'games', 'users'),
@@ -55,11 +59,11 @@ class SportsManager_Frontend extends SportsManager {
 			),
 			'stats_players' => (object) array (
 				'tables' => array ('players', 'scoresheets', 'users'),
-				'args' => array ('display', array ('league_id', 'league_slug', 'league_name'), 'season', 'sport')
+				'args' => array ('display', array ('league_id', 'league_slug', 'league_name'), 'sport')
 			),
 			'stats_team_players' => (object) array (
 				'tables' => array ('players', 'clubs', 'scoresheets', 'teams', 'users'),
-				'args' => array ('display', array ('team_id', 'team_slug', 'team_name'), 'season', 'sport')
+				'args' => array ('display', 'season', 'sport', array ('team_id', 'team_slug', 'team_name'))
 			),
 			'stats_team' => (object) array (
 				'tables' => array ('teams', 'clubs', 'games', 'players', 'scoresheets', 'users'),
@@ -131,17 +135,22 @@ class SportsManager_Frontend extends SportsManager {
 			$primary_object = reset($this->dependancies->$filter->tables);
 			foreach ($this->db->$primary_object as $row) {
 				$class = $this->objects->$primary_object->class;
+				if (isset($row->slug) && $row->slug == '') continue;
 				$this->rows[] = new $class($row, $this->db, $this->args);
 			};
 			if ($primary_object == 'players') {
-				if (in_array($this->args->display, array ('list_players', 'stats_team_players')) && $this->args->team_id != '') {
+				if (in_array($this->args->display, array ('list_players', 'stats_team_players')) && $this->args->team_id !== '') {
 					global $wpdb;
 					$table = $this->objects->teams->table;
 					$team_id = $this->args->team_id;
-					$q = "SELECT players_id FROM $table WHERE id = '$team_id'";
-					$players_id = json_decode($wpdb->get_var($q));
-					foreach ($this->rows as $k => $v) {
-						if (!is_array($players_id) || !in_array($v->id, $players_id)) unset($this->rows[$k]);
+					if ($this->args->team_id == 0) {
+						$this->rows = array ();
+					} else {
+						$q = "SELECT players_id FROM $table WHERE id = '$team_id'";
+						$players_id = json_decode($wpdb->get_var($q));
+						foreach ($this->rows as $k => $v) {
+							if (!is_array($players_id) || !in_array($v->id, $players_id)) unset($this->rows[$k]);
+						};
 					};
 				};
 			};

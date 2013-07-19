@@ -7,8 +7,8 @@
 	foreach ($headers as $stat_k => $stat_v) {
 		if (in_array('all', $stat_v[2]) || in_array($sport, $stat_v[2])) {
 			$rows = sm_order_array_objects_by(array ($stat_k), $rows, true);
-			$leader = $rows[0];
-			$img_link = 'http://graph.facebook.com/'.$leader->facebook_id.'/picture?type=square';
+			$leader = isset($rows[0]) ? $rows[0] : '';
+			$img_link = isset($leader->facebook_id) ? 'http://graph.facebook.com/'.$leader->facebook_id.'/picture?type=square' : '';
 			$stat_url = str_replace(array ('%slug%'), array ($stat_k), $this->args->default_stats_url);
 			if ($stat_url == '') $stat_url = '#';
 ?>

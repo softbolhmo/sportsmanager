@@ -51,6 +51,7 @@ $headers = array (
 		'id' => array ('ID', '', false),
 		'user_id' => array ('WP User ID', '', false),
 		'slug' => array ('Slug', '', true),
+		'description' => array ('Description', '', false),
 		'small_logo_url' => array ('Small Logo URL', '', false),
 		'large_logo_url' => array ('Large Logo URL', '', false),
 		'infos' => array ('Infos', '', false)
@@ -91,3 +92,4 @@ $add_rows = array (
 	'games' => 'Add multiple games',
 );
 $add_rows = isset($add_rows[$filter]) ? $add_rows[$filter] : $add_rows['default'];
+$delete_rows = 'Delete a game';

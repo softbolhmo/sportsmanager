@@ -38,7 +38,7 @@ class SportsManager_Game extends SportsManager_Frontend_Default {
 			'home_score' => isset($data->home_score) ? $data->home_score : '',
 			'away_score' => isset($data->away_score) ? $data->away_score : '',
 			'winner_team_id' => isset($data->winner_team_id) ? $data->winner_team_id : '',
-			'date' => isset($data->date) ? ucfirst(strftime("%m-%d %R", strtotime($data->date))) : '',
+			'date' => isset($data->date) ? $data->date : '', //ucfirst(strftime("%m-%d %R", strtotime($data->date))) : '',
 			'date_str' => isset($data->date) ? ucfirst(strftime("%A, %e %B", strtotime($data->date))) : '',
 			'time' => isset($data->date) ? strtotime($data->date) : '',
 			'time_str' => isset($data->date) ? ucfirst(strftime("%R", strtotime($data->date))) : '',
